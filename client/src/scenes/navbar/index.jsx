@@ -29,7 +29,7 @@ const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px");
 
   const theme = useTheme();
@@ -42,7 +42,7 @@ const Navbar = () => {
   const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    <FlexBetween p="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
         <Typography
           onClick={() => navigate("/home")}
@@ -63,7 +63,7 @@ const Navbar = () => {
             backgroundColor={neutralLight}
             borderRadius="9px"
             gap="3rem"
-            padding="0.1rem 1.5rem"
+            p="0.1rem 1.5rem"
           >
             <InputBase placeholder="Search..." />
             <IconButton>
@@ -92,7 +92,7 @@ const Navbar = () => {
                 backgroundColor: neutralLight,
                 width: "150px",
                 borderRadius: "0.25rem",
-                p: "0.25rem 1 rem",
+                p: "0.25rem 1rem",
                 "& .MuiSvgIcon-root": {
                   pr: "0.25rem",
                   width: "3rem",
