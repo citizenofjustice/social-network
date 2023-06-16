@@ -29,12 +29,12 @@ const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px");
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
-  const dark = theme.palette.dark;
+  const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
@@ -72,6 +72,7 @@ const Navbar = () => {
           </FlexBetween>
         )}
       </FlexBetween>
+
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
@@ -117,6 +118,7 @@ const Navbar = () => {
           <Menu />
         </IconButton>
       )}
+
       {/* MOBILE NAV */}
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
@@ -137,6 +139,7 @@ const Navbar = () => {
               <Close />
             </IconButton>
           </Box>
+
           {/* MENU ITEMS */}
           <FlexBetween
             display="flex"
@@ -165,7 +168,7 @@ const Navbar = () => {
                   backgroundColor: neutralLight,
                   width: "150px",
                   borderRadius: "0.25rem",
-                  p: "0.25rem 1 rem",
+                  p: "0.25rem 1rem",
                   "& .MuiSvgIcon-root": {
                     pr: "0.25rem",
                     width: "3rem",
