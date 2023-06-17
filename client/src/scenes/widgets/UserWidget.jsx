@@ -30,7 +30,6 @@ const UserWidget = ({ userId, picturePath }) => {
     });
     const data = await response.json();
     setUser(data);
-    console.log(response, "response", Date.now());
   };
 
   useEffect(() => {
@@ -38,7 +37,6 @@ const UserWidget = ({ userId, picturePath }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) return null;
-  console.log(user, "user", Date.now());
   const {
     firstName,
     lastName,
@@ -48,8 +46,6 @@ const UserWidget = ({ userId, picturePath }) => {
     impressions,
     friends,
   } = user;
-
-  console.log(friends, "friends", Date.now());
 
   return (
     <WidgetWrapper>
@@ -75,7 +71,7 @@ const UserWidget = ({ userId, picturePath }) => {
             >
               {firstName} {lastName}
             </Typography>
-            {/* <Typography color={medium}>{friends.length} friends</Typography> */}
+            <Typography color={medium}>{friends.length} friends</Typography>
           </Box>
         </FlexBetween>
         <ManageAccountsOutlined />
