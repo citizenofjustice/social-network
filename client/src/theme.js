@@ -69,36 +69,36 @@ export const themeSettings = (mode) => {
               light: colorTokens.grey[50],
             },
             background: {
-              default: colorTokens.grey[900],
-              alt: colorTokens.grey[800],
+              default: colorTokens.grey[10],
+              alt: colorTokens.grey[0],
             },
           }),
     },
-    typeography: {
-      fontDisplay: ["Rubic", "sans-serif"].join(","),
+    typography: {
+      fontFamily: ["Rubik", "sans-serif"].join(","),
       fontSize: 12,
       h1: {
-        fontDisplay: ["Rubic", "sans-serif"].join(","),
+        fontFamily: ["Rubik", "sans-serif"].join(","),
         fontSize: 40,
       },
       h2: {
-        fontDisplay: ["Rubic", "sans-serif"].join(","),
+        fontFamily: ["Rubik", "sans-serif"].join(","),
         fontSize: 32,
       },
       h3: {
-        fontDisplay: ["Rubic", "sans-serif"].join(","),
+        fontFamily: ["Rubik", "sans-serif"].join(","),
         fontSize: 24,
       },
       h4: {
-        fontDisplay: ["Rubic", "sans-serif"].join(","),
+        fontFamily: ["Rubik", "sans-serif"].join(","),
         fontSize: 20,
       },
       h5: {
-        fontDisplay: ["Rubic", "sans-serif"].join(","),
+        fontFamily: ["Rubik", "sans-serif"].join(","),
         fontSize: 16,
       },
       h6: {
-        fontDisplay: ["Rubic", "sans-serif"].join(","),
+        fontFamily: ["Rubik", "sans-serif"].join(","),
         fontSize: 14,
       },
     },

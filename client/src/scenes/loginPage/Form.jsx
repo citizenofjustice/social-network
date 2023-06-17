@@ -31,7 +31,7 @@ const loginSchema = yup.object().shape({
   password: yup.string().required("required"),
 });
 
-const initalValuesRegister = {
+const initialValuesRegister = {
   firstName: "",
   lastName: "",
   email: "",
@@ -41,7 +41,7 @@ const initalValuesRegister = {
   picture: "",
 };
 
-const initalValuesLogin = {
+const initialValuesLogin = {
   email: "",
   password: "",
 };
@@ -62,6 +62,7 @@ const Form = () => {
       formData.append(value, values[value]);
     }
     formData.append("picturePath", values.picture.name);
+
     const savedUserResponse = await fetch(
       "http://localhost:3001/auth/register",
       {
@@ -85,11 +86,10 @@ const Form = () => {
     });
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
-
     if (loggedIn) {
       dispatch(
         setLogin({
-          user: loggedIn,
+          user: loggedIn.user,
           token: loggedIn.token,
         })
       );
@@ -105,7 +105,7 @@ const Form = () => {
   return (
     <Formik
       onSubmit={handleFormSubmit}
-      initialValues={isLogin ? initalValuesLogin : initalValuesRegister}
+      initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
     >
       {({
@@ -180,10 +180,10 @@ const Form = () => {
                   p="1rem"
                 >
                   <Dropzone
-                    acceptFiles=".jpg,.jpeg,.png"
+                    acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
-                    onDrop={(acceptFiles) =>
-                      setFieldValue("picture", acceptFiles[0])
+                    onDrop={(acceptedFiles) =>
+                      setFieldValue("picture", acceptedFiles[0])
                     }
                   >
                     {({ getRootProps, getInputProps }) => (
@@ -212,6 +212,7 @@ const Form = () => {
                 </Box>
               </>
             )}
+
             <TextField
               label="Email"
               onBlur={handleBlur}
@@ -258,7 +259,10 @@ const Form = () => {
               sx={{
                 textDecoration: "underline",
                 color: palette.primary.main,
-                "&:hover": { cursor: "pointer", color: palette.primary.light },
+                "&:hover": {
+                  cursor: "pointer",
+                  color: palette.primary.light,
+                },
               }}
             >
               {isLogin

@@ -16,6 +16,7 @@ const LoginPage = () => {
           StayInTouch
         </Typography>
       </Box>
+
       <Box
         width={isNonMobileScreens ? "50%" : "93%"}
         p="2rem"
