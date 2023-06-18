@@ -40,11 +40,11 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const handleOpenProfile = () => {
     if (isOneself) {
       navigate(`/profile/${_id}`);
-      navigate(0);
+      // navigate(0);
       return;
     }
     navigate(`/profile/${friendId}`);
-    navigate(0);
+    // navigate(0);
   };
 
   return (
