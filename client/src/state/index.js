@@ -5,6 +5,10 @@ const initialState = {
   user: null,
   token: null,
   posts: [],
+  dateTimeFormat: {
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    locale: Intl.DateTimeFormat().resolvedOptions().locale,
+  },
 };
 
 export const authSlice = createSlice({
@@ -37,9 +41,20 @@ export const authSlice = createSlice({
       });
       state.posts = updatedPosts;
     },
+    setDateTimeFormat: (state, action) => {
+      state.dateTimeFormat.timezone = action.payload.timezone;
+      state.dateTimeFormat.locale = action.payload.locale;
+    },
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost } =
-  authSlice.actions;
+export const {
+  setMode,
+  setLogin,
+  setLogout,
+  setFriends,
+  setPosts,
+  setPost,
+  setDateTimeFormat,
+} = authSlice.actions;
 export default authSlice.reducer;

@@ -3,6 +3,7 @@ import {
   FavoriteBorderOutlined,
   FavoriteOutlined,
   ShareOutlined,
+  EditOutlined,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
@@ -15,6 +16,8 @@ import { setPost } from "state";
 const PostWidget = ({
   postId,
   postUserId,
+  createdAt,
+  updatedAt,
   name,
   description,
   location,
@@ -22,6 +25,7 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  isEdited,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -30,9 +34,15 @@ const PostWidget = ({
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
 
+  const { timezone, locale } = useSelector((state) => state.dateTimeFormat);
+  const postCreateDate = new Date(createdAt).toLocaleString(locale, {
+    timezone,
+  });
+
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
+  const medium = palette.neutral.medium;
 
   const patchLike = async () => {
     const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
@@ -86,12 +96,26 @@ const PostWidget = ({
             </IconButton>
             <Typography>{comments.length}</Typography>
           </FlexBetween>
+          <FlexBetween gap="0.3rem">
+            <IconButton>
+              <ShareOutlined />
+            </IconButton>
+          </FlexBetween>
         </FlexBetween>
 
-        <IconButton>
-          <ShareOutlined />
-        </IconButton>
+        <FlexBetween>
+          {isEdited && (
+            <EditOutlined sx={{ color: medium }} fontSize="0.4rem" />
+          )}
+          <Typography
+            color={main}
+            sx={{ fontSize: "0.65rem", color: medium, pl: "0.25rem" }}
+          >
+            {postCreateDate}
+          </Typography>
+        </FlexBetween>
       </FlexBetween>
+
       {isComments && (
         <Box mt="0.5rem">
           {comments.map((comment, index) => (

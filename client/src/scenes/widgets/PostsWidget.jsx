@@ -43,6 +43,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         ({
           _id,
           userId,
+          createdAt,
+          updatedAt,
           firstName,
           lastName,
           description,
@@ -51,11 +53,14 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           userPicturePath,
           likes,
           comments,
+          isEdited,
         }) => (
           <PostWidget
             key={_id}
             postId={_id}
             postUserId={userId}
+            createdAt={createdAt}
+            updatedAt={updatedAt}
             name={`${firstName} ${lastName}`}
             description={description}
             location={location}
@@ -63,6 +68,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             userPicturePath={userPicturePath}
             likes={likes}
             comments={comments}
+            isEdited={isEdited}
           />
         )
       )}
