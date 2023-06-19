@@ -163,6 +163,7 @@ export const posts = [
       "another random comment",
       "yet another random comment",
     ],
+    isEdited: false,
   },
   {
     _id: new mongoose.Types.ObjectId(),
@@ -186,6 +187,7 @@ export const posts = [
       "no more random comments",
       "I lied, one more random comment",
     ],
+    isEdited: false,
   },
   {
     _id: new mongoose.Types.ObjectId(),
@@ -210,6 +212,7 @@ export const posts = [
       "Why am I doing this?",
       "I'm bored",
     ],
+    isEdited: false,
   },
   {
     _id: new mongoose.Types.ObjectId(),
@@ -234,6 +237,7 @@ export const posts = [
       "All I want to do is play video games",
       "I'm going to play video games",
     ],
+    isEdited: false,
   },
   {
     _id: new mongoose.Types.ObjectId(),
@@ -258,6 +262,7 @@ export const posts = [
       "What should I do?",
       "I'm going to play video games",
     ],
+    isEdited: false,
   },
   {
     _id: new mongoose.Types.ObjectId(),
@@ -281,5 +286,6 @@ export const posts = [
       "Stop it.",
       "Michael, stop it.",
     ],
+    isEdited: true,
   },
 ];
