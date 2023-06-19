@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 
 const FriendListWidget = ({ userId }) => {
@@ -12,7 +12,7 @@ const FriendListWidget = ({ userId }) => {
   const { palette } = useTheme();
   const dark = palette.neutral.dark;
 
-  const getFriends = async () => {
+  const getFriends = useCallback(async () => {
     const response = await fetch(
       `http://localhost:3001/users/${userId}/friends`,
       {
@@ -22,11 +22,11 @@ const FriendListWidget = ({ userId }) => {
     );
     const data = await response.json();
     setFriendsList(await data);
-  };
+  }, [userId, token]);
 
   useEffect(() => {
     getFriends();
-  }, [friends]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [getFriends, friends]);
 
   return (
     <WidgetWrapper>
