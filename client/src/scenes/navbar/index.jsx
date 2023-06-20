@@ -19,11 +19,13 @@ import {
   Help,
   Menu,
   Close,
+  LogoutOutlined,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import UserImage from "components/UserImage";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -75,7 +77,7 @@ const Navbar = () => {
 
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
-        <FlexBetween gap="2rem">
+        <FlexBetween gap="1.25rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -83,9 +85,16 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          <Message sx={{ fontSize: "25px" }} />
-          <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
+          <IconButton>
+            <Message sx={{ fontSize: "25px" }} />
+          </IconButton>
+          <IconButton>
+            <Notifications sx={{ fontSize: "25px" }} />
+          </IconButton>
+          <IconButton>
+            <Help sx={{ fontSize: "25px" }} />
+          </IconButton>
+
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
@@ -105,17 +114,22 @@ const Navbar = () => {
               input={<InputBase />}
             >
               <MenuItem value={fullName}>
-                <Typography>{fullName}</Typography>
+                <Typography ml="0.5rem">{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              <MenuItem onClick={() => dispatch(setLogout())}>
+                <Typography style={{ textAlign: "right" }} ml="0.5rem">
+                  Log Out
+                </Typography>
+              </MenuItem>
             </Select>
           </FormControl>
+          <UserImage image={user.picturePath} size="30px" />
         </FlexBetween>
       ) : (
         <IconButton
           onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
         >
-          <Menu />
+          <Menu sx={{ color: dark }} />
         </IconButton>
       )}
 
@@ -128,15 +142,16 @@ const Navbar = () => {
           height="100%"
           zIndex="10"
           maxWidth="500px"
-          minWidth="300px"
+          minWidth="100px"
           backgroundColor={background}
         >
           {/* CLOSE ICON */}
-          <Box display="flex" justifyContent="flex-end" p="1rem">
+
+          <Box display="flex" justifyContent="center" p="1rem">
             <IconButton
               onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
             >
-              <Close />
+              <Close sx={{ color: dark, fontSize: "25px" }} />
             </IconButton>
           </Box>
 
@@ -146,8 +161,10 @@ const Navbar = () => {
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            gap="3rem"
+            gap="2.5rem"
+            mt="2rem"
           >
+            <UserImage image={user.picturePath} size="40px" />
             <IconButton
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: "25px" }}
@@ -158,35 +175,18 @@ const Navbar = () => {
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
-            <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
-            <Help sx={{ fontSize: "25px" }} />
-            <FormControl variant="standard" value={fullName}>
-              <Select
-                value={fullName}
-                sx={{
-                  backgroundColor: neutralLight,
-                  width: "150px",
-                  borderRadius: "0.25rem",
-                  p: "0.25rem 1rem",
-                  "& .MuiSvgIcon-root": {
-                    pr: "0.25rem",
-                    width: "3rem",
-                  },
-                  "& .MuiSelect-select:focus": {
-                    backgroundColor: neutralLight,
-                  },
-                }}
-                input={<InputBase />}
-              >
-                <MenuItem value={fullName}>
-                  <Typography>{fullName}</Typography>
-                </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
-              </Select>
-            </FormControl>
+            <IconButton>
+              <Message sx={{ fontSize: "25px" }} />
+            </IconButton>
+            <IconButton>
+              <Notifications sx={{ fontSize: "25px" }} />
+            </IconButton>
+            <IconButton>
+              <Help sx={{ fontSize: "25px" }} />
+            </IconButton>
+            <IconButton onClick={() => dispatch(setLogout())}>
+              <LogoutOutlined sx={{ color: dark, fontSize: "25px" }} />
+            </IconButton>
           </FlexBetween>
         </Box>
       )}
