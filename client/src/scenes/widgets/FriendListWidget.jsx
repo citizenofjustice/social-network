@@ -1,8 +1,9 @@
-import { Box, Typography, useTheme } from "@mui/material";
-import Friend from "components/Friend";
-import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
+import { Box, Typography, useTheme } from "@mui/material";
+
+import WidgetWrapper from "components/WidgetWrapper";
+import Slider from "components/Slider";
 
 const FriendListWidget = ({ userId }) => {
   const token = useSelector((state) => state.token);
@@ -30,25 +31,14 @@ const FriendListWidget = ({ userId }) => {
 
   return (
     <WidgetWrapper>
-      <Typography
-        color={dark}
-        variant="h5"
-        fontWeight="500"
-        sx={{ mb: "1.5rem" }}
-      >
-        Friend List
-      </Typography>
-      <Box display="flex" flexDirection="column" gap="1.5rem">
-        {friendsList.length > 0 &&
-          friendsList.map((friend) => (
-            <Friend
-              key={friend._id}
-              friendId={friend._id}
-              name={`${friend.firstName} ${friend.lastName}`}
-              subtitle={friend.occupation}
-              userPicturePath={friend.picturePath}
-            />
-          ))}
+      <Box overflow="hidden">
+        {friendsList.length > 0 && (
+          <Slider list={friendsList} chunkSize={4}>
+            <Typography color={dark} variant="h5" fontWeight="500">
+              Friend List
+            </Typography>
+          </Slider>
+        )}
       </Box>
     </WidgetWrapper>
   );

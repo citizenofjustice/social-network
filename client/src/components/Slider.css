@@ -1,0 +1,37 @@
+.left-to-rigth-enter .friend {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+.left-to-rigth-enter-active .friend {
+  opacity: 1;
+  transform: translateX(0%);
+}
+.left-to-rigth-exit .friend {
+  opacity: 0.5;
+}
+.left-to-rigth-exit-active .friend {
+  opacity: 0;
+}
+.left-to-rigth-enter-active .friend,
+.left-to-rigth-exit-active .friend {
+  transition: opacity 400ms, transform 400ms;
+}
+
+.rigth-to-left-enter .friend {
+  opacity: 0;
+  transform: translateX(100%);
+}
+.rigth-to-left-enter-active .friend {
+  opacity: 1;
+  transform: translateX(0%);
+}
+.rigth-to-left-exit .friend {
+  opacity: 0.5;
+}
+.rigth-to-left-exit-active .friend {
+  opacity: 0;
+}
+.rigth-to-left-enter-active .friend,
+.rigth-to-left-exit-active .friend {
+  transition: opacity 500ms, transform 500ms;
+}
