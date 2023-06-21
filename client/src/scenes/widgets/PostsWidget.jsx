@@ -1,41 +1,34 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
+import { fetchAllPosts, fetchUserPosts } from "API";
 import PostWidget from "./PostWidget";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
+  const [isPostsLoading, setIsPostsLoading] = useState(false);
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
 
-  const getPosts = useCallback(async () => {
-    const response = await fetch("http://localhost:3001/posts", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
+  const getAllPosts = useCallback(async () => {
+    const allPostsData = await fetchAllPosts(token);
+    dispatch(setPosts({ posts: allPostsData }));
   }, [dispatch, token]);
 
   const getUserPosts = useCallback(async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
+    const userPostsData = await fetchUserPosts(userId, token);
+    dispatch(setPosts({ posts: userPostsData }));
   }, [dispatch, userId, token]);
 
   useEffect(() => {
+    setIsPostsLoading(true);
     if (isProfile) {
       getUserPosts();
     } else {
-      getPosts();
+      getAllPosts();
     }
-  }, [isProfile, getUserPosts, getPosts]);
+    setTimeout(() => setIsPostsLoading(false), 2000);
+  }, [isProfile, getUserPosts, getAllPosts]);
 
   return (
     <>
@@ -69,6 +62,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             likes={likes}
             comments={comments}
             isEdited={isEdited}
+            isPostsLoading={isPostsLoading}
           />
         )
       )}

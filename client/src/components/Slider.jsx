@@ -7,7 +7,7 @@ import "./Slider.css";
 import Friend from "./Friend";
 import FlexBetween from "./FlexBetween";
 
-const Slider = ({ children, list, chunkSize }) => {
+const Slider = ({ children, list, chunkSize, isContentLoading }) => {
   const [idx, setIdx] = useState(0);
   const [state, setState] = useState(true);
   const [isLeftToRight, setIsLeftToRight] = useState(true); // direction of animation
@@ -95,6 +95,7 @@ const Slider = ({ children, list, chunkSize }) => {
                   subtitle={friend.occupation}
                   userPicturePath={friend.picturePath}
                   className="friend"
+                  isContentLoading={isContentLoading}
                 />
               </Box>
             ))}

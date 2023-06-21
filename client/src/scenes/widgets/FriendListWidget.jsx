@@ -6,6 +6,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import Slider from "components/Slider";
 
 const FriendListWidget = ({ userId }) => {
+  const [isFriendListLoadnig, setIsFriendListLoading] = useState(false);
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
   const [friendsList, setFriendsList] = useState([]);
@@ -26,14 +27,20 @@ const FriendListWidget = ({ userId }) => {
   }, [userId, token]);
 
   useEffect(() => {
+    setIsFriendListLoading(true);
     getFriends();
+    setTimeout(() => setIsFriendListLoading(false), 2000);
   }, [getFriends, friends]);
 
   return (
     <WidgetWrapper>
       <Box overflow="hidden">
         {friendsList.length > 0 && (
-          <Slider list={friendsList} chunkSize={4}>
+          <Slider
+            list={friendsList}
+            chunkSize={4}
+            isContentLoading={isFriendListLoadnig}
+          >
             <Typography color={dark} variant="h5" fontWeight="500">
               Friend List
             </Typography>

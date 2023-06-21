@@ -24,8 +24,9 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
+import { sendPost } from "API";
 
-const MyPostWidget = ({ picturePath }) => {
+const MyPostWidget = ({ picturePath, isUserLoading }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
@@ -45,13 +46,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
     }
-
-    const response = await fetch("http://localhost:3001/posts", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    });
-    const posts = await response.json();
+    const posts = await sendPost(formData, token);
     dispatch(setPosts({ posts }));
     setImage(null);
     setPosts("");
@@ -60,7 +55,7 @@ const MyPostWidget = ({ picturePath }) => {
   return (
     <WidgetWrapper mb="2rem">
       <FlexBetween gap="1.5rem">
-        <UserImage image={picturePath} />
+        <UserImage image={picturePath} loading={isUserLoading} />
         <InputBase
           placeholder="What's on your mind..."
           onChange={(e) => setPost(e.target.value)}

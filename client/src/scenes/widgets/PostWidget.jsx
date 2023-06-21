@@ -12,6 +12,8 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
+import { patchPostLikes } from "API";
+import SkeletonLoad from "components/SkeletonLoad";
 
 const PostWidget = ({
   postId,
@@ -26,6 +28,7 @@ const PostWidget = ({
   likes,
   comments,
   isEdited,
+  isPostsLoading,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -45,16 +48,8 @@ const PostWidget = ({
   const medium = palette.neutral.medium;
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId }),
-    });
-    const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+    const updatedPostData = await patchPostLikes(postId, token, loggedInUserId);
+    dispatch(setPost({ post: updatedPostData }));
   };
 
   return (
@@ -64,19 +59,23 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
+        isContentLoading={isPostsLoading}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
-        {description}
+        <SkeletonLoad loading={isPostsLoading}>{description}</SkeletonLoad>
       </Typography>
-      {picturePath && (
-        <img
-          width="100%"
-          height="auto"
-          alt="post"
-          style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3001/assets/${picturePath}`}
-        />
-      )}
+      <SkeletonLoad loading={isPostsLoading} height="15rem">
+        {picturePath && (
+          <img
+            width="100%"
+            height="auto"
+            alt="post"
+            style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
+            src={`http://localhost:3001/assets/${picturePath}`}
+          />
+        )}
+      </SkeletonLoad>
+
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
