@@ -1,13 +1,14 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import HomePage from "scenes/homePage";
-import LoginPage from "scenes/loginPage";
-import ProfilePage from "scenes/profilePage";
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "theme";
 import { setDateTimeFormat } from "state";
+
+const HomePage = lazy(() => import("scenes/homePage"));
+const LoginPage = lazy(() => import("scenes/loginPage"));
+const ProfilePage = lazy(() => import("scenes/profilePage"));
 
 function App() {
   const dispatch = useDispatch();
@@ -26,17 +27,19 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route
-              path="/home"
-              element={isAuth ? <HomePage /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/profile/:userId"
-              element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
-            />
-          </Routes>
+          <Suspense fallback={<p>loading</p>}>
+            <Routes>
+              <Route path="/" element={<LoginPage />} />
+              <Route
+                path="/home"
+                element={isAuth ? <HomePage /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/profile/:userId"
+                element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
+              />
+            </Routes>
+          </Suspense>
         </ThemeProvider>
       </BrowserRouter>
     </div>
