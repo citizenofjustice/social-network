@@ -26,12 +26,14 @@ import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
+import SkeletonLoad from "components/SkeletonLoad";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const isUserLoading = useSelector((state) => state.isUserLoading);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px");
 
   const theme = useTheme();
@@ -114,7 +116,11 @@ const Navbar = () => {
               input={<InputBase />}
             >
               <MenuItem value={fullName}>
-                <Typography ml="0.5rem">{fullName}</Typography>
+                <Typography ml="0.5rem">
+                  <SkeletonLoad loading={isUserLoading}>
+                    {fullName}
+                  </SkeletonLoad>
+                </Typography>
               </MenuItem>
               <MenuItem onClick={() => dispatch(setLogout())}>
                 <Typography style={{ textAlign: "right" }} ml="0.5rem">
@@ -123,7 +129,11 @@ const Navbar = () => {
               </MenuItem>
             </Select>
           </FormControl>
-          <UserImage image={user.picturePath} size="30px" />
+          <UserImage
+            loading={isUserLoading}
+            image={user.picturePath}
+            size="30px"
+          />
         </FlexBetween>
       ) : (
         <IconButton
@@ -164,7 +174,11 @@ const Navbar = () => {
             gap="2.5rem"
             mt="2rem"
           >
-            <UserImage image={user.picturePath} size="40px" />
+            <UserImage
+              loading={isUserLoading}
+              image={user.picturePath}
+              size="40px"
+            />
             <IconButton
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: "25px" }}

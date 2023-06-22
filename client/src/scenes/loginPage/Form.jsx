@@ -12,7 +12,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setLogin } from "state";
+import { setIsUserLoading, setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 
@@ -79,6 +79,7 @@ const Form = () => {
   };
 
   const login = async (values, onSubmitProps) => {
+    dispatch(setIsUserLoading());
     const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -95,6 +96,7 @@ const Form = () => {
       );
       navigate("/home");
     }
+    setTimeout(() => dispatch(setIsUserLoading()), 2000);
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {

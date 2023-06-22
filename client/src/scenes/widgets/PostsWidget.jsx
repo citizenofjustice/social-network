@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import { fetchAllPosts, fetchUserPosts } from "API";
@@ -6,7 +6,6 @@ import PostWidget from "./PostWidget";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
-  const [isPostsLoading, setIsPostsLoading] = useState(false);
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
 
@@ -21,13 +20,11 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   }, [dispatch, userId, token]);
 
   useEffect(() => {
-    setIsPostsLoading(true);
     if (isProfile) {
       getUserPosts();
     } else {
       getAllPosts();
     }
-    setTimeout(() => setIsPostsLoading(false), 2000);
   }, [isProfile, getUserPosts, getAllPosts]);
 
   return (
@@ -62,7 +59,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             likes={likes}
             comments={comments}
             isEdited={isEdited}
-            isPostsLoading={isPostsLoading}
           />
         )
       )}

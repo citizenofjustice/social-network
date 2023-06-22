@@ -11,7 +11,6 @@ import { fetchUser } from "API";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
-  const [isUserLoading, setIsUserLoading] = useState(false);
   const { userId } = useParams();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -25,9 +24,7 @@ const ProfilePage = () => {
   }, [userId, token]);
 
   useEffect(() => {
-    setIsUserLoading(true);
     getUserData();
-    setTimeout(() => setIsUserLoading(false), 2000);
   }, [getUserData, userFriends]);
 
   if (!user) return null;
@@ -43,7 +40,7 @@ const ProfilePage = () => {
         justifyContent="center"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget user={user} isUserLoading={isUserLoading} />
+          <UserWidget user={user} />
           <Box m="2rem 0" />
           <FriendListWidget userId={userId} />
         </Box>

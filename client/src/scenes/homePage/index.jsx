@@ -15,7 +15,6 @@ const HomePage = () => {
   const userFriends = useSelector((state) => state.user.friends);
   const token = useSelector((state) => state.token);
   const [user, setUser] = useState(null);
-  const [isUserLoading, setIsUserLoading] = useState(false);
 
   const getUserData = useCallback(async () => {
     const data = await fetchUser(userId, token);
@@ -23,9 +22,7 @@ const HomePage = () => {
   }, [userId, token]);
 
   useEffect(() => {
-    setIsUserLoading(true);
     getUserData();
-    setTimeout(() => setIsUserLoading(false), 2000);
   }, [getUserData, userFriends]);
 
   if (!user) return null;
@@ -41,16 +38,13 @@ const HomePage = () => {
         justifyContent="space-between"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget user={user} isUserLoading={isUserLoading} />
+          <UserWidget user={user} />
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <MyPostWidget
-            picturePath={user.picturePath}
-            isUserLoading={isUserLoading}
-          />
+          <MyPostWidget picturePath={user.picturePath} />
           <PostsWidget userId={user._id} />
         </Box>
         {isNonMobileScreens && (

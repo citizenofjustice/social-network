@@ -10,9 +10,11 @@ import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import SkeletonLoad from "components/SkeletonLoad";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const UserWidget = ({ user, isUserLoading }) => {
+const UserWidget = ({ user }) => {
   const { palette } = useTheme();
+  const isUserLoading = useSelector((state) => state.isUserLoading);
   const navigate = useNavigate();
 
   const dark = palette.neutral.dark;

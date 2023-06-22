@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import { sendPost } from "API";
 
-const MyPostWidget = ({ picturePath, isUserLoading }) => {
+const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
@@ -37,6 +37,7 @@ const MyPostWidget = ({ picturePath, isUserLoading }) => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
+  const isUserLoading = useSelector((state) => state.isUserLoading);
 
   const handlePost = async () => {
     const formData = new FormData();
