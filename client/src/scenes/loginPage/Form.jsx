@@ -96,6 +96,7 @@ const Form = () => {
       );
       navigate("/home");
     }
+    // should be removed later
     setTimeout(() => dispatch(setIsUserLoading()), 2000);
   };
 

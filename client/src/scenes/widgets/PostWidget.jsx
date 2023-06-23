@@ -28,12 +28,12 @@ const PostWidget = ({
   likes,
   comments,
   isEdited,
+  isPostLoading,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
-  const isUserLoading = useSelector((state) => state.isUserLoading);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
 
@@ -59,12 +59,12 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
-        isContentLoading={isUserLoading}
+        isContentLoading={isPostLoading}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
-        <SkeletonLoad loading={isUserLoading}>{description}</SkeletonLoad>
+        <SkeletonLoad loading={isPostLoading}>{description}</SkeletonLoad>
       </Typography>
-      <SkeletonLoad loading={isUserLoading} height="15rem">
+      <SkeletonLoad loading={isPostLoading} height="15rem">
         {picturePath && (
           <img
             width="100%"

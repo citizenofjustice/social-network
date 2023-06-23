@@ -4,9 +4,9 @@ import { fetchAllPosts, fetchUserPosts } from "API";
 import PostWidget from "./PostWidget";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
   const loggedInUserId = useSelector((state) => state.user._id);
   const [posts, setPosts] = useState([]);
   const token = useSelector((state) => state.token);
@@ -17,29 +17,28 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     threshold: 0.5,
   });
   const feedIsNotFull = pageNum < totalPageCount;
-  const limit = 3;
 
   const getAllPosts = useCallback(async () => {
     const { pagesCount, postsPage } = await fetchAllPosts(
       loggedInUserId,
       token,
-      pageNum,
-      limit
+      limit,
+      pageNum
     );
     setTotalPageCount(pagesCount);
     if (postsPage) setPosts((prevPosts) => [...prevPosts, ...postsPage]);
-  }, [loggedInUserId, token, pageNum]);
+  }, [loggedInUserId, token, pageNum, limit]);
 
   const getUserPosts = useCallback(async () => {
     const { pagesCount, postsPage } = await fetchUserPosts(
       userId,
       token,
-      pageNum,
-      limit
+      limit,
+      pageNum
     );
     setTotalPageCount(pagesCount);
     if (postsPage) setPosts((prevPosts) => [...prevPosts, ...postsPage]);
-  }, [userId, token, pageNum]);
+  }, [userId, token, pageNum, limit]);
 
   useEffect(() => {
     if (inView && feedIsNotFull) {
@@ -60,50 +59,45 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   if (posts.length === 0) return null;
 
   return (
-    <Box>
-      {isPostsLoading ? (
-        <h1>Loading...</h1>
-      ) : (
-        <>
-          {posts.map(
-            ({
-              _id,
-              userId,
-              createdAt,
-              updatedAt,
-              firstName,
-              lastName,
-              description,
-              location,
-              picturePath,
-              userPicturePath,
-              likes,
-              comments,
-              isEdited,
-            }) => (
-              <PostWidget
-                key={_id}
-                postId={_id}
-                postUserId={userId}
-                createdAt={createdAt}
-                updatedAt={updatedAt}
-                name={`${firstName} ${lastName}`}
-                description={description}
-                location={location}
-                picturePath={picturePath}
-                userPicturePath={userPicturePath}
-                likes={likes}
-                comments={comments}
-                isEdited={isEdited}
-              />
-            )
-          )}
-          {posts && (
-            <div ref={ref} style={{ height: 20, background: "red" }}></div>
-          )}
-        </>
+    <>
+      {posts.map(
+        ({
+          _id,
+          userId,
+          createdAt,
+          updatedAt,
+          firstName,
+          lastName,
+          description,
+          location,
+          picturePath,
+          userPicturePath,
+          likes,
+          comments,
+          isEdited,
+        }) => (
+          <PostWidget
+            key={_id}
+            postId={_id}
+            postUserId={userId}
+            createdAt={createdAt}
+            updatedAt={updatedAt}
+            name={`${firstName} ${lastName}`}
+            description={description}
+            location={location}
+            picturePath={picturePath}
+            userPicturePath={userPicturePath}
+            likes={likes}
+            comments={comments}
+            isEdited={isEdited}
+          />
+        )
       )}
-    </Box>
+      <Box display="flex" justifyContent="center">
+        {isPostsLoading && <CircularProgress />}
+      </Box>
+      {posts && <div ref={ref}></div>}
+    </>
   );
 };
 

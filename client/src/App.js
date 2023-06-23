@@ -5,6 +5,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "theme";
 import { setDateTimeFormat } from "state";
+import { Box, CircularProgress } from "@mui/material";
 
 const HomePage = lazy(() => import("scenes/homePage"));
 const LoginPage = lazy(() => import("scenes/loginPage"));
@@ -27,7 +28,13 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Suspense fallback={<p>loading</p>}>
+          <Suspense
+            fallback={
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <CircularProgress />
+              </Box>
+            }
+          >
             <Routes>
               <Route path="/" element={<LoginPage />} />
               <Route

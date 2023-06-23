@@ -1,3 +1,4 @@
+import { query } from "express";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
@@ -33,7 +34,7 @@ export const getFeedPosts = async (req, res) => {
   try {
     const { id, limit, pageNum } = req.params;
     const totalPostCount = await Post.find({ userId: { $ne: id } }).count();
-    const pagesCount = Math.ceil(totalPostCount / limit);
+    const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
     const postsPage = await Post.find({ userId: { $ne: id } })
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
@@ -46,10 +47,9 @@ export const getFeedPosts = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
   try {
-    const limit = 3;
-    const { userId, pageNum } = req.params;
-    const totalPostCount = await Post.find({ userId: { $ne: id } }).count();
-    const pagesCount = Math.ceil(totalPostCount / limit);
+    const { userId, limit, pageNum } = req.params;
+    const totalPostCount = await Post.find({ userId }).count();
+    const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
     const postsPage = await Post.find({ userId })
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)

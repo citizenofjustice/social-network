@@ -31,9 +31,9 @@ export const fetchAllPosts = async (loggedInUserId, token, limit, pageNum) => {
   return data;
 };
 
-export const fetchUserPosts = async (userId, token, pageNum) => {
+export const fetchUserPosts = async (userId, token, limit, pageNum) => {
   const response = await fetch(
-    `http://localhost:3001/posts/${userId}/posts/${pageNum}`,
+    `http://localhost:3001/posts/user/${userId}/limit/${limit}/page/${pageNum}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
