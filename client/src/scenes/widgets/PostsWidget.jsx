@@ -1,41 +1,62 @@
 import { useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "state";
+import { useSelector } from "react-redux";
+import { fetchAllPosts, fetchUserPosts } from "API";
 import PostWidget from "./PostWidget";
+import { useState } from "react";
+import { useInView } from "react-intersection-observer";
+import { Box, CircularProgress } from "@mui/material";
 
-const PostsWidget = ({ userId, isProfile = false }) => {
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts);
+const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
+  const loggedInUserId = useSelector((state) => state.user._id);
+  const [posts, setPosts] = useState([]);
   const token = useSelector((state) => state.token);
+  const [pageNum, setPageNum] = useState(1);
+  const [totalPageCount, setTotalPageCount] = useState(0);
+  const [isPostsLoading, setIsPostsLoading] = useState(false);
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+  });
+  const feedIsNotFull = pageNum < totalPageCount;
 
-  const getPosts = useCallback(async () => {
-    const response = await fetch("http://localhost:3001/posts", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  }, [dispatch, token]);
+  const getAllPosts = useCallback(async () => {
+    const { pagesCount, postsPage } = await fetchAllPosts(
+      loggedInUserId,
+      token,
+      limit,
+      pageNum
+    );
+    setTotalPageCount(pagesCount);
+    if (postsPage) setPosts((prevPosts) => [...prevPosts, ...postsPage]);
+  }, [loggedInUserId, token, pageNum, limit]);
 
   const getUserPosts = useCallback(async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
+    const { pagesCount, postsPage } = await fetchUserPosts(
+      userId,
+      token,
+      limit,
+      pageNum
     );
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  }, [dispatch, userId, token]);
+    setTotalPageCount(pagesCount);
+    if (postsPage) setPosts((prevPosts) => [...prevPosts, ...postsPage]);
+  }, [userId, token, pageNum, limit]);
 
   useEffect(() => {
+    if (inView && feedIsNotFull) {
+      setPageNum((prev) => (prev += 1));
+    }
+  }, [inView, feedIsNotFull]);
+
+  useEffect(() => {
+    setIsPostsLoading(true);
     if (isProfile) {
       getUserPosts();
     } else {
-      getPosts();
+      getAllPosts();
     }
-  }, [isProfile, getUserPosts, getPosts]);
+    setIsPostsLoading(false);
+  }, [getAllPosts, getUserPosts, isProfile]);
+
+  if (posts.length === 0) return null;
 
   return (
     <>
@@ -72,6 +93,10 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           />
         )
       )}
+      <Box display="flex" justifyContent="center">
+        {isPostsLoading && <CircularProgress />}
+      </Box>
+      {posts && <div ref={ref}></div>}
     </>
   );
 };

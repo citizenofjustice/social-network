@@ -5,8 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { setFriends } from "state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
+import SkeletonLoad from "components/SkeletonLoad";
 
-const Friend = ({ className, friendId, name, subtitle, userPicturePath }) => {
+const Friend = ({
+  className,
+  friendId,
+  name,
+  subtitle,
+  userPicturePath,
+  isContentLoading,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { _id } = useSelector((state) => state.user);
@@ -47,9 +55,13 @@ const Friend = ({ className, friendId, name, subtitle, userPicturePath }) => {
 
   return (
     <FlexBetween className={className}>
-      <FlexBetween gap="1rem">
-        <UserImage image={userPicturePath} size="55px" />
-        <Box onClick={handleOpenProfile}>
+      <FlexBetween gap="1rem" sx={{ width: "100%" }}>
+        <UserImage
+          image={userPicturePath}
+          size="55px"
+          loading={isContentLoading}
+        />
+        <Box onClick={handleOpenProfile} sx={{ width: "100%", mr: "0.75rem" }}>
           <Typography
             color={main}
             variant="h5"
@@ -61,10 +73,10 @@ const Friend = ({ className, friendId, name, subtitle, userPicturePath }) => {
               },
             }}
           >
-            {name}
+            <SkeletonLoad loading={isContentLoading}>{name}</SkeletonLoad>
           </Typography>
           <Typography color={medium} fontSize="0.75rem">
-            {subtitle}
+            <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
           </Typography>
         </Box>
       </FlexBetween>

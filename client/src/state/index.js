@@ -9,6 +9,7 @@ const initialState = {
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     locale: Intl.DateTimeFormat().resolvedOptions().locale,
   },
+  isUserLoading: false,
 };
 
 export const authSlice = createSlice({
@@ -45,6 +46,9 @@ export const authSlice = createSlice({
       state.dateTimeFormat.timezone = action.payload.timezone;
       state.dateTimeFormat.locale = action.payload.locale;
     },
+    setIsUserLoading: (state) => {
+      state.isUserLoading = state.isUserLoading ? false : true;
+    },
   },
 });
 
@@ -56,5 +60,6 @@ export const {
   setPosts,
   setPost,
   setDateTimeFormat,
+  setIsUserLoading,
 } = authSlice.actions;
 export default authSlice.reducer;

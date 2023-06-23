@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from "react";
 import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import Navbar from "scenes/navbar";
@@ -6,10 +7,25 @@ import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
+import { fetchUser } from "API";
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-  const { _id, picturePath } = useSelector((state) => state.user);
+  const userId = useSelector((state) => state.user._id);
+  const userFriends = useSelector((state) => state.user.friends);
+  const token = useSelector((state) => state.token);
+  const [user, setUser] = useState(null);
+
+  const getUserData = useCallback(async () => {
+    const data = await fetchUser(userId, token);
+    setUser(data);
+  }, [userId, token]);
+
+  useEffect(() => {
+    getUserData();
+  }, [getUserData, userFriends]);
+
+  if (!user) return null;
 
   return (
     <Box>
@@ -22,20 +38,20 @@ const HomePage = () => {
         justifyContent="space-between"
       >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={_id} picturePath={picturePath} />
+          <UserWidget user={user} />
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <MyPostWidget picturePath={picturePath} />
-          <PostsWidget userId={_id} />
+          <MyPostWidget picturePath={user.picturePath} />
+          <PostsWidget userId={user._id} />
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">
             <AdvertWidget />
             <Box m="2rem 0" />
-            <FriendListWidget userId={_id} />
+            <FriendListWidget userId={user._id} />
           </Box>
         )}
       </Box>

@@ -1,3 +1,4 @@
+import { query } from "express";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
@@ -31,9 +32,14 @@ export const createPost = async (req, res) => {
 /* READ */
 export const getFeedPosts = async (req, res) => {
   try {
-    const post = await Post.find();
-    const sortPostByNew = post.sort((a, b) => b.createdAt - a.createdAt);
-    res.status(200).json(sortPostByNew);
+    const { id, limit, pageNum } = req.params;
+    const totalPostCount = await Post.find({ userId: { $ne: id } }).count();
+    const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
+    const postsPage = await Post.find({ userId: { $ne: id } })
+      .sort({ createdAt: -1 })
+      .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
+      .limit(limit);
+    res.status(200).json({ pagesCount, postsPage });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -41,10 +47,14 @@ export const getFeedPosts = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const post = await Post.find({ userId });
-    const sortPostByNew = post.sort((a, b) => b.createdAt - a.createdAt);
-    res.status(200).json(sortPostByNew);
+    const { userId, limit, pageNum } = req.params;
+    const totalPostCount = await Post.find({ userId }).count();
+    const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
+    const postsPage = await Post.find({ userId })
+      .sort({ createdAt: -1 })
+      .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
+      .limit(limit);
+    res.status(200).json({ pagesCount, postsPage });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
