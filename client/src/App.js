@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "theme";
-import { setDateTimeFormat } from "state";
+import { setDateTimeFormat } from "state/uiSlice";
 import { Box, CircularProgress } from "@mui/material";
 
 const HomePage = lazy(() => import("scenes/homePage"));
@@ -13,9 +13,9 @@ const ProfilePage = lazy(() => import("scenes/profilePage"));
 
 function App() {
   const dispatch = useDispatch();
-  const mode = useSelector((state) => state.mode);
+  const mode = useSelector((state) => state.ui.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-  const isAuth = Boolean(useSelector((state) => state.token));
+  const isAuth = Boolean(useSelector((state) => state.auth.token));
 
   useEffect(() => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;

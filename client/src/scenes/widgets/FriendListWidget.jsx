@@ -7,9 +7,9 @@ import Slider from "components/Slider";
 
 const FriendListWidget = ({ userId }) => {
   // const [isFriendListLoadnig, setIsFriendListLoading] = useState(false);
-  const isUserLoading = useSelector((state) => state.isUserLoading);
-  const token = useSelector((state) => state.token);
-  const friends = useSelector((state) => state.user.friends);
+  const isUserLoading = useSelector((state) => state.auth.isUserLoading);
+  const token = useSelector((state) => state.auth.token);
+  const friends = useSelector((state) => state.auth.user.friends);
   const [friendsList, setFriendsList] = useState([]);
 
   const { palette } = useTheme();
@@ -24,7 +24,7 @@ const FriendListWidget = ({ userId }) => {
       }
     );
     const data = await response.json();
-    setFriendsList(await data);
+    setFriendsList(data);
   }, [userId, token]);
 
   useEffect(() => {

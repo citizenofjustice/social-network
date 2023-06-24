@@ -23,7 +23,7 @@ import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "state";
+import { setPosts } from "state/postsSlice";
 import { sendPost } from "API";
 
 const MyPostWidget = ({ picturePath }) => {
@@ -32,12 +32,12 @@ const MyPostWidget = ({ picturePath }) => {
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
   const { palette } = useTheme();
-  const { _id } = useSelector((state) => state.user);
-  const token = useSelector((state) => state.token);
+  const { _id } = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
-  const isUserLoading = useSelector((state) => state.isUserLoading);
+  const isUserLoading = useSelector((state) => state.auth.isUserLoading);
 
   const handlePost = async () => {
     const formData = new FormData();
@@ -50,7 +50,7 @@ const MyPostWidget = ({ picturePath }) => {
     const posts = await sendPost(formData, token);
     dispatch(setPosts({ posts }));
     setImage(null);
-    setPosts("");
+    setPost("");
   };
 
   return (

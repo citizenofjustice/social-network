@@ -2,7 +2,7 @@ import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setFriends } from "state";
+import { setFriends } from "state/authSlice";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import SkeletonLoad from "components/SkeletonLoad";
@@ -17,9 +17,9 @@ const Friend = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { _id } = useSelector((state) => state.user);
-  const token = useSelector((state) => state.token);
-  const friends = useSelector((state) => state.user.friends);
+  const { _id } = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
+  const friends = useSelector((state) => state.auth.user.friends);
   const isOneself = _id === friendId;
 
   const { palette } = useTheme();

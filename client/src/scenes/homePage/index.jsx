@@ -11,9 +11,9 @@ import { fetchUser } from "API";
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-  const userId = useSelector((state) => state.user._id);
-  const userFriends = useSelector((state) => state.user.friends);
-  const token = useSelector((state) => state.token);
+  const userId = useSelector((state) => state.auth.user._id);
+  const userFriends = useSelector((state) => state.auth.user.friends);
+  const token = useSelector((state) => state.auth.token);
   const [user, setUser] = useState(null);
 
   const getUserData = useCallback(async () => {

@@ -7,9 +7,9 @@ import { useInView } from "react-intersection-observer";
 import { Box, CircularProgress } from "@mui/material";
 
 const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
-  const loggedInUserId = useSelector((state) => state.user._id);
+  const loggedInUserId = useSelector((state) => state.auth.user._id);
   const [posts, setPosts] = useState([]);
-  const token = useSelector((state) => state.token);
+  const token = useSelector((state) => state.auth.token);
   const [pageNum, setPageNum] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(0);
   const [isPostsLoading, setIsPostsLoading] = useState(false);

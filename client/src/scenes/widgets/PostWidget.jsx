@@ -11,7 +11,7 @@ import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state";
+import { setPost } from "state/postsSlice";
 import { patchPostLikes } from "API";
 import SkeletonLoad from "components/SkeletonLoad";
 
@@ -32,12 +32,12 @@ const PostWidget = ({
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.token);
-  const loggedInUserId = useSelector((state) => state.user._id);
+  const token = useSelector((state) => state.auth.token);
+  const loggedInUserId = useSelector((state) => state.auth.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
 
-  const { timezone, locale } = useSelector((state) => state.dateTimeFormat);
+  const { timezone, locale } = useSelector((state) => state.ui.dateTimeFormat);
   const postCreateDate = new Date(createdAt).toLocaleString(locale, {
     timezone,
   });
