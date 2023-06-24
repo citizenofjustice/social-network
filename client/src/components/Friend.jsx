@@ -6,6 +6,7 @@ import { setFriends } from "state/authSlice";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import SkeletonLoad from "components/SkeletonLoad";
+import { patchFriend } from "API";
 
 const Friend = ({
   className,
@@ -30,19 +31,9 @@ const Friend = ({
 
   const isFriend = friends.find((friend) => friend._id === friendId);
 
-  const patchFriend = async () => {
-    const response = await fetch(
-      `http://localhost:3001/users/${_id}/${friendId}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    dispatch(setFriends({ friends: data }));
+  const updateFriend = async () => {
+    const friendsData = await patchFriend(_id, friendId, token);
+    dispatch(setFriends({ friends: friendsData }));
   };
 
   const handleOpenProfile = () => {
@@ -82,7 +73,7 @@ const Friend = ({
       </FlexBetween>
       {!isOneself && (
         <IconButton
-          onClick={() => patchFriend()}
+          onClick={() => updateFriend()}
           sx={{
             backgroundColor: primaryLight,
             p: "0.6rem",

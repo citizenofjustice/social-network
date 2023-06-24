@@ -55,3 +55,32 @@ export const patchPostLikes = async (postId, token, loggedInUserId) => {
   const updatedPost = await response.json();
   return updatedPost;
 };
+
+export const patchFriend = async (loggedInUserId, friendId, token) => {
+  const response = await fetch(
+    `http://localhost:3001/users/${loggedInUserId}/${friendId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const friendsData = await response.json();
+  return friendsData;
+};
+
+export const fetchFriends = async (loggedInUserId, token) => {
+  const response = await fetch(
+    `http://localhost:3001/users/${loggedInUserId}/friends`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const friendsData = await response.json();
+  return friendsData;
+};

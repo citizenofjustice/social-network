@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Box, Typography, useTheme } from "@mui/material";
+import { fetchFriends } from "API";
 
 import WidgetWrapper from "components/WidgetWrapper";
 import Slider from "components/Slider";
@@ -16,15 +17,16 @@ const FriendListWidget = ({ userId }) => {
   const dark = palette.neutral.dark;
 
   const getFriends = useCallback(async () => {
-    const response = await fetch(
-      `http://localhost:3001/users/${userId}/friends`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-    setFriendsList(data);
+    const friendsData = await fetchFriends(userId, token);
+    // const response = await fetch(
+    //   `http://localhost:3001/users/${userId}/friends`,
+    //   {
+    //     method: "GET",
+    //     headers: { Authorization: `Bearer ${token}` },
+    //   }
+    // );
+    // const data = await response.json();
+    setFriendsList(friendsData);
   }, [userId, token]);
 
   useEffect(() => {
