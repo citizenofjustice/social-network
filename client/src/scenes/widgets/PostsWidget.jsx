@@ -1,14 +1,15 @@
 import { useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { fetchAllPosts, fetchUserPosts } from "API";
 import PostWidget from "./PostWidget";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Box, CircularProgress } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import { setPosts, clearPosts } from "state/postsSlice";
 
-const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
+const PostsWidget = ({ userId, isProfile = false, limit = 3 }) => {
   const loggedInUserId = useSelector((state) => state.auth.user._id);
-  const [posts, setPosts] = useState([]);
   const token = useSelector((state) => state.auth.token);
   const [pageNum, setPageNum] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(0);
@@ -17,6 +18,9 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
     threshold: 0.5,
   });
   const feedIsNotFull = pageNum < totalPageCount;
+  const location = useLocation();
+  const { posts, isPostsUpdateRequired } = useSelector((state) => state.posts);
+  const dispatch = useDispatch();
 
   const getAllPosts = useCallback(async () => {
     const { pagesCount, postsPage } = await fetchAllPosts(
@@ -26,8 +30,8 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
       pageNum
     );
     setTotalPageCount(pagesCount);
-    if (postsPage) setPosts((prevPosts) => [...prevPosts, ...postsPage]);
-  }, [loggedInUserId, token, pageNum, limit]);
+    if (postsPage) dispatch(setPosts({ posts: postsPage }));
+  }, [loggedInUserId, token, pageNum, limit, dispatch]);
 
   const getUserPosts = useCallback(async () => {
     const { pagesCount, postsPage } = await fetchUserPosts(
@@ -37,14 +41,13 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
       pageNum
     );
     setTotalPageCount(pagesCount);
-    if (postsPage) setPosts((prevPosts) => [...prevPosts, ...postsPage]);
-  }, [userId, token, pageNum, limit]);
+    if (postsPage) dispatch(setPosts({ posts: postsPage }));
+  }, [userId, token, pageNum, limit, dispatch]);
 
   useEffect(() => {
-    if (inView && feedIsNotFull) {
-      setPageNum((prev) => (prev += 1));
-    }
-  }, [inView, feedIsNotFull]);
+    dispatch(clearPosts());
+    setPageNum(1);
+  }, [dispatch, location.pathname]);
 
   useEffect(() => {
     setIsPostsLoading(true);
@@ -55,6 +58,12 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
     }
     setIsPostsLoading(false);
   }, [getAllPosts, getUserPosts, isProfile]);
+
+  useEffect(() => {
+    if (inView && feedIsNotFull) {
+      setPageNum((prev) => (prev += 1));
+    }
+  }, [inView, feedIsNotFull]);
 
   if (posts.length === 0) return null;
 

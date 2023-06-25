@@ -10,8 +10,7 @@ import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state/postsSlice";
+import { useSelector } from "react-redux";
 import { patchPostLikes } from "API";
 import SkeletonLoad from "components/SkeletonLoad";
 
@@ -31,11 +30,11 @@ const PostWidget = ({
   isPostLoading,
 }) => {
   const [isComments, setIsComments] = useState(false);
-  const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const loggedInUserId = useSelector((state) => state.auth.user._id);
-  const isLiked = Boolean(likes[loggedInUserId]);
-  const likeCount = Object.keys(likes).length;
+  const [postLikes, setPostLikes] = useState(likes);
+  const likesCount = Object.keys(postLikes).length;
+  const isLiked = Boolean(postLikes[loggedInUserId]);
 
   const { timezone, locale } = useSelector((state) => state.ui.dateTimeFormat);
   const postCreateDate = new Date(createdAt).toLocaleString(locale, {
@@ -48,8 +47,8 @@ const PostWidget = ({
   const medium = palette.neutral.medium;
 
   const patchLike = async () => {
-    const updatedPostData = await patchPostLikes(postId, token, loggedInUserId);
-    dispatch(setPost({ post: updatedPostData }));
+    const { likes } = await patchPostLikes(postId, token, loggedInUserId);
+    setPostLikes(likes);
   };
 
   return (
@@ -86,7 +85,7 @@ const PostWidget = ({
                 <FavoriteBorderOutlined />
               )}
             </IconButton>
-            <Typography>{likeCount}</Typography>
+            <Typography>{likesCount}</Typography>
           </FlexBetween>
 
           <FlexBetween gap="0.3rem">

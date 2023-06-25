@@ -1,4 +1,3 @@
-import { query } from "express";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
@@ -21,9 +20,12 @@ export const createPost = async (req, res) => {
     });
     await newPost.save();
 
-    const post = await Post.find();
-    const sortPostByNew = post.sort((a, b) => b.createdAt - a.createdAt);
-    res.status(201).json(sortPostByNew);
+    const post = await Post.findOne(
+      { userId },
+      {},
+      { sort: { createdAt: -1 } }
+    );
+    res.status(201).json(post);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }
@@ -33,7 +35,9 @@ export const createPost = async (req, res) => {
 export const getFeedPosts = async (req, res) => {
   try {
     const { id, limit, pageNum } = req.params;
-    const totalPostCount = await Post.find({ userId: { $ne: id } }).count();
+    const totalPostCount = await Post.find({ userId: { $ne: id } })
+      .sort({ createdAt: -1 })
+      .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
     const postsPage = await Post.find({ userId: { $ne: id } })
       .sort({ createdAt: -1 })
@@ -48,7 +52,9 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
   try {
     const { userId, limit, pageNum } = req.params;
-    const totalPostCount = await Post.find({ userId }).count();
+    const totalPostCount = await Post.find({ userId })
+      .sort({ createdAt: -1 })
+      .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
     const postsPage = await Post.find({ userId })
       .sort({ createdAt: -1 })

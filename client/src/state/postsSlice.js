@@ -9,19 +9,15 @@ export const postsSlice = createSlice({
   initialState,
   reducers: {
     setPosts: (state, action) => {
-      state.posts = action.payload.posts;
+      state.posts = [...state.posts, ...action.payload.posts];
     },
-    setPost: (state, action) => {
-      const updatedPosts = state.posts.map((post) => {
-        if (post._id === action.payload.post._id) return action.payload.post;
-        return post;
-      });
-      state.posts = updatedPosts;
+    clearPosts: (state) => {
+      state.posts = [];
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setPosts, setPost } = postsSlice.actions;
+export const { setPosts, clearPosts } = postsSlice.actions;
 
 export default postsSlice.reducer;
