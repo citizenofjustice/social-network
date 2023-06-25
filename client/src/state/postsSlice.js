@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   posts: [],
+  reloadToggle: false,
 };
 
 export const postsSlice = createSlice({
@@ -14,10 +15,13 @@ export const postsSlice = createSlice({
     clearPosts: (state) => {
       state.posts = [];
     },
+    triggerReloadToggle: (state) => {
+      state.reloadToggle = state.reloadToggle ? false : true;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setPosts, clearPosts } = postsSlice.actions;
+export const { setPosts, clearPosts, triggerReloadToggle } = postsSlice.actions;
 
 export default postsSlice.reducer;

@@ -24,6 +24,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendPost } from "API";
+import { triggerReloadToggle } from "state/postsSlice";
 
 const MyPostWidget = ({ picturePath }) => {
   const [isImage, setIsImage] = useState(false);
@@ -36,6 +37,7 @@ const MyPostWidget = ({ picturePath }) => {
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
+  const dispatch = useDispatch();
 
   const handlePost = async () => {
     const formData = new FormData();
@@ -46,6 +48,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
     await sendPost(formData, token);
+    dispatch(triggerReloadToggle());
     setImage(null);
     setPostText("");
   };

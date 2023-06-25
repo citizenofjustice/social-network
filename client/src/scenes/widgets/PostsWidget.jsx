@@ -8,7 +8,7 @@ import { Box, CircularProgress } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { setPosts, clearPosts } from "state/postsSlice";
 
-const PostsWidget = ({ userId, isProfile = false, limit = 3 }) => {
+const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const token = useSelector((state) => state.auth.token);
   const [pageNum, setPageNum] = useState(1);
@@ -19,10 +19,11 @@ const PostsWidget = ({ userId, isProfile = false, limit = 3 }) => {
   });
   const feedIsNotFull = pageNum < totalPageCount;
   const location = useLocation();
-  const { posts, isPostsUpdateRequired } = useSelector((state) => state.posts);
+  const { posts, reloadToggle } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 
   const getAllPosts = useCallback(async () => {
+    setIsPostsLoading(true);
     const { pagesCount, postsPage } = await fetchAllPosts(
       loggedInUserId,
       token,
@@ -31,9 +32,11 @@ const PostsWidget = ({ userId, isProfile = false, limit = 3 }) => {
     );
     setTotalPageCount(pagesCount);
     if (postsPage) dispatch(setPosts({ posts: postsPage }));
+    setIsPostsLoading(false);
   }, [loggedInUserId, token, pageNum, limit, dispatch]);
 
   const getUserPosts = useCallback(async () => {
+    setIsPostsLoading(true);
     const { pagesCount, postsPage } = await fetchUserPosts(
       userId,
       token,
@@ -42,21 +45,20 @@ const PostsWidget = ({ userId, isProfile = false, limit = 3 }) => {
     );
     setTotalPageCount(pagesCount);
     if (postsPage) dispatch(setPosts({ posts: postsPage }));
+    setIsPostsLoading(false);
   }, [userId, token, pageNum, limit, dispatch]);
 
   useEffect(() => {
     dispatch(clearPosts());
     setPageNum(1);
-  }, [dispatch, location.pathname]);
+  }, [dispatch, location.pathname, reloadToggle]);
 
   useEffect(() => {
-    setIsPostsLoading(true);
     if (isProfile) {
       getUserPosts();
     } else {
       getAllPosts();
     }
-    setIsPostsLoading(false);
   }, [getAllPosts, getUserPosts, isProfile]);
 
   useEffect(() => {
