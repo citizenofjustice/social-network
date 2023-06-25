@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 
 const UserWidget = ({ user }) => {
   const { palette } = useTheme();
-  const isUserLoading = useSelector((state) => state.isUserLoading);
+  const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const navigate = useNavigate();
 
   const dark = palette.neutral.dark;

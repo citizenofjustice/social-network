@@ -23,34 +23,34 @@ import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "state";
 import { sendPost } from "API";
+import { triggerReloadToggle } from "state/postsSlice";
 
 const MyPostWidget = ({ picturePath }) => {
-  const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
-  const [post, setPost] = useState("");
+  const [postText, setPostText] = useState("");
   const { palette } = useTheme();
-  const { _id } = useSelector((state) => state.user);
-  const token = useSelector((state) => state.token);
+  const { _id } = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
-  const isUserLoading = useSelector((state) => state.isUserLoading);
+  const isUserLoading = useSelector((state) => state.auth.isUserLoading);
+  const dispatch = useDispatch();
 
   const handlePost = async () => {
     const formData = new FormData();
     formData.append("userId", _id);
-    formData.append("description", post);
+    formData.append("description", postText);
     if (image) {
       formData.append("picture", image);
       formData.append("picturePath", image.name);
     }
-    const posts = await sendPost(formData, token);
-    dispatch(setPosts({ posts }));
+    await sendPost(formData, token);
+    dispatch(triggerReloadToggle());
     setImage(null);
-    setPosts("");
+    setPostText("");
   };
 
   return (
@@ -59,8 +59,8 @@ const MyPostWidget = ({ picturePath }) => {
         <UserImage image={picturePath} loading={isUserLoading} />
         <InputBase
           placeholder="What's on your mind..."
-          onChange={(e) => setPost(e.target.value)}
-          value={post}
+          onChange={(e) => setPostText(e.target.value)}
+          value={postText}
           sx={{
             width: "100%",
             backgroundColor: palette.neutral.light,
@@ -152,7 +152,7 @@ const MyPostWidget = ({ picturePath }) => {
         )}
 
         <Button
-          disabled={!post}
+          disabled={!postText}
           onClick={handlePost}
           sx={{
             color: palette.background.alt,

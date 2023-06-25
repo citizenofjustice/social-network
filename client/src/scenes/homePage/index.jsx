@@ -3,7 +3,6 @@ import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import Navbar from "scenes/navbar";
 import UserWidget from "scenes/widgets/UserWidget";
-import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
@@ -11,9 +10,9 @@ import { fetchUser } from "API";
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-  const userId = useSelector((state) => state.user._id);
-  const userFriends = useSelector((state) => state.user.friends);
-  const token = useSelector((state) => state.token);
+  const userId = useSelector((state) => state.auth.user._id);
+  const userFriends = useSelector((state) => state.auth.user.friends);
+  const token = useSelector((state) => state.auth.token);
   const [user, setUser] = useState(null);
 
   const getUserData = useCallback(async () => {
@@ -44,7 +43,6 @@ const HomePage = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          <MyPostWidget picturePath={user.picturePath} />
           <PostsWidget userId={user._id} />
         </Box>
         {isNonMobileScreens && (

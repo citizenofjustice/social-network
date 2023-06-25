@@ -12,9 +12,10 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setIsUserLoading, setLogin } from "state";
+import { setFriends, setIsUserLoading, setLogin } from "state/authSlice";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
+import { fetchFriends, loginUser, registerUser } from "API";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -63,14 +64,7 @@ const Form = () => {
     }
     formData.append("picturePath", values.picture.name);
 
-    const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-    const savedUser = await savedUserResponse.json();
+    const savedUser = await registerUser(formData);
     onSubmitProps.resetForm();
 
     if (savedUser) {
@@ -80,18 +74,20 @@ const Form = () => {
 
   const login = async (values, onSubmitProps) => {
     dispatch(setIsUserLoading());
-    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const loggedIn = await loggedInResponse.json();
+    const loggedIn = await loginUser(values);
     onSubmitProps.resetForm();
+
     if (loggedIn) {
       dispatch(
         setLogin({
           user: loggedIn.user,
           token: loggedIn.token,
+        })
+      );
+      const friendsData = await fetchFriends(loggedIn.user._id, loggedIn.token);
+      dispatch(
+        setFriends({
+          friends: friendsData,
         })
       );
       navigate("/home");

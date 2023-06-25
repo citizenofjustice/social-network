@@ -22,7 +22,8 @@ import {
   LogoutOutlined,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { setMode, setLogout } from "state";
+import { setLogout } from "state/authSlice";
+import { setMode } from "state/uiSlice";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
@@ -32,8 +33,8 @@ const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
-  const isUserLoading = useSelector((state) => state.isUserLoading);
+  const user = useSelector((state) => state.auth.user);
+  const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px");
 
   const theme = useTheme();

@@ -12,9 +12,9 @@ import { fetchUser } from "API";
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
-  const { _id } = useSelector((state) => state.user);
-  const token = useSelector((state) => state.token);
-  const userFriends = useSelector((state) => state.user.friends);
+  const { _id } = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
+  const userFriends = useSelector((state) => state.auth.user.friends);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px");
   const isOneself = userId === _id;
 

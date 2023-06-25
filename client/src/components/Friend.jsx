@@ -1,11 +1,12 @@
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { setFriends } from "state";
+import { setFriends } from "state/authSlice";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import SkeletonLoad from "components/SkeletonLoad";
+import { patchFriend } from "API";
+import { Link } from "react-router-dom";
 
 const Friend = ({
   className,
@@ -16,10 +17,9 @@ const Friend = ({
   isContentLoading,
 }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { _id } = useSelector((state) => state.user);
-  const token = useSelector((state) => state.token);
-  const friends = useSelector((state) => state.user.friends);
+  const { _id } = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
+  const friends = useSelector((state) => state.auth.user.friends);
   const isOneself = _id === friendId;
 
   const { palette } = useTheme();
@@ -30,27 +30,9 @@ const Friend = ({
 
   const isFriend = friends.find((friend) => friend._id === friendId);
 
-  const patchFriend = async () => {
-    const response = await fetch(
-      `http://localhost:3001/users/${_id}/${friendId}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    dispatch(setFriends({ friends: data }));
-  };
-
-  const handleOpenProfile = () => {
-    if (isOneself) {
-      navigate(`/profile/${_id}`);
-      return;
-    }
-    navigate(`/profile/${friendId}`);
+  const updateFriend = async () => {
+    const friendsData = await patchFriend(_id, friendId, token);
+    dispatch(setFriends({ friends: friendsData }));
   };
 
   return (
@@ -61,28 +43,40 @@ const Friend = ({
           size="55px"
           loading={isContentLoading}
         />
-        <Box onClick={handleOpenProfile} sx={{ width: "100%", mr: "0.75rem" }}>
-          <Typography
-            color={main}
-            variant="h5"
-            fontWeight="500"
-            sx={{
-              "&:hover": {
-                color: palette.primary.light,
-                cursor: "pointer",
-              },
+        <Box
+          sx={{
+            width: "100%",
+            mr: "0.75rem",
+          }}
+        >
+          <Link
+            to={`/profile/${friendId}`}
+            style={{
+              textDecoration: "none",
             }}
           >
-            <SkeletonLoad loading={isContentLoading}>{name}</SkeletonLoad>
-          </Typography>
-          <Typography color={medium} fontSize="0.75rem">
-            <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
-          </Typography>
+            <Typography
+              color={main}
+              variant="h5"
+              fontWeight="500"
+              sx={{
+                "&:hover": {
+                  color: palette.primary.light,
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <SkeletonLoad loading={isContentLoading}>{name}</SkeletonLoad>
+            </Typography>
+            <Typography color={medium} fontSize="0.75rem">
+              <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
+            </Typography>
+          </Link>
         </Box>
       </FlexBetween>
       {!isOneself && (
         <IconButton
-          onClick={() => patchFriend()}
+          onClick={() => updateFriend()}
           sx={{
             backgroundColor: primaryLight,
             p: "0.6rem",
