@@ -7,7 +7,7 @@ import "./Slider.css";
 import Friend from "./Friend";
 import FlexBetween from "./FlexBetween";
 
-const Slider = ({ children, list, chunkSize, isContentLoading }) => {
+const Slider = ({ list, chunkSize, isContentLoading }) => {
   const [idx, setIdx] = useState(0);
   const [state, setState] = useState(true);
   const [isLeftToRight, setIsLeftToRight] = useState(true); // direction of animation
@@ -55,7 +55,6 @@ const Slider = ({ children, list, chunkSize, isContentLoading }) => {
   return (
     <>
       <FlexBetween>
-        {children}
         {slides.length > 1 && (
           <Box>
             <IconButton

@@ -18,14 +18,6 @@ const FriendListWidget = ({ userId }) => {
 
   const getFriends = useCallback(async () => {
     const friendsData = await fetchFriends(userId, token);
-    // const response = await fetch(
-    //   `http://localhost:3001/users/${userId}/friends`,
-    //   {
-    //     method: "GET",
-    //     headers: { Authorization: `Bearer ${token}` },
-    //   }
-    // );
-    // const data = await response.json();
     setFriendsList(friendsData);
   }, [userId, token]);
 
@@ -35,17 +27,16 @@ const FriendListWidget = ({ userId }) => {
 
   return (
     <WidgetWrapper>
+      <Typography color={dark} variant="h5" fontWeight="500">
+        Friend List
+      </Typography>
       <Box overflow="hidden">
         {friendsList.length > 0 && (
           <Slider
             list={friendsList}
             chunkSize={4}
             isContentLoading={isUserLoading}
-          >
-            <Typography color={dark} variant="h5" fontWeight="500">
-              Friend List
-            </Typography>
-          </Slider>
+          />
         )}
       </Box>
     </WidgetWrapper>
