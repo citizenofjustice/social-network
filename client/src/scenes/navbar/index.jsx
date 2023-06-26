@@ -41,19 +41,29 @@ const Navbar = () => {
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
-  const primaryLight = theme.palette.primary.light;
+  const primaryDark = theme.palette.primary.dark;
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <FlexBetween p="1rem 6%" backgroundColor={alt}>
+    <FlexBetween
+      p="1rem 6%"
+      backgroundColor={alt}
+      sx={{
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        boxShadow: `0 0.25rem 0.125rem -0.125rem ${neutralLight}`,
+      }}
+      height="5rem"
+    >
       <FlexBetween gap="1.75rem">
         <Typography
           onClick={() => navigate("/home")}
           sx={{
             "&:hover": {
-              color: primaryLight,
+              color: primaryDark,
               cursor: "pointer",
             },
           }}
