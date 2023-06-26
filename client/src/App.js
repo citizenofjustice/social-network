@@ -6,6 +6,7 @@ import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "theme";
 import { setDateTimeFormat } from "state/uiSlice";
 import { Box, CircularProgress } from "@mui/material";
+import Layout from "components/Layout";
 
 const HomePage = lazy(() => import("scenes/homePage"));
 const LoginPage = lazy(() => import("scenes/loginPage"));
@@ -38,13 +39,12 @@ function App() {
             <Routes>
               <Route path="/" element={<LoginPage />} />
               <Route
-                path="/home"
-                element={isAuth ? <HomePage /> : <Navigate to="/" />}
-              />
-              <Route
-                path="/profile/:userId"
-                element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
-              />
+                path="/"
+                element={isAuth ? <Layout /> : <Navigate to="/" />}
+              >
+                <Route path="/home" element={<HomePage />} />
+                <Route path="/profile/:userId" element={<ProfilePage />} />
+              </Route>
             </Routes>
           </Suspense>
         </ThemeProvider>

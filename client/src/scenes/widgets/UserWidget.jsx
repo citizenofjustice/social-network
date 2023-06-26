@@ -20,6 +20,7 @@ const UserWidget = ({ user }) => {
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
+  const primaryDark = palette.primary.dark;
 
   if (!user) return null;
   const {
@@ -52,7 +53,7 @@ const UserWidget = ({ user }) => {
                 fontWeight="500"
                 sx={{
                   "&:hover": {
-                    color: palette.primary.light,
+                    color: primaryDark,
                     cursor: "pointer",
                   },
                 }}

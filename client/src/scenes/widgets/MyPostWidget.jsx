@@ -25,6 +25,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendPost } from "API";
 import { triggerReloadToggle } from "state/postsSlice";
+import "./MyPostWidget.module.css";
 
 const MyPostWidget = ({ picturePath }) => {
   const [isImage, setIsImage] = useState(false);
@@ -59,15 +60,20 @@ const MyPostWidget = ({ picturePath }) => {
         <UserImage image={picturePath} loading={isUserLoading} />
         <InputBase
           placeholder="What's on your mind..."
+          inputProps={{
+            className: "add-post-input",
+          }}
           onChange={(e) => setPostText(e.target.value)}
           value={postText}
+          multiline={true}
+          maxRows={5}
           sx={{
             width: "100%",
             backgroundColor: palette.neutral.light,
-            borderRadius: "2rem",
-            padding: "1rem 2rem",
+            borderRadius: "1rem",
+            padding: "1rem",
           }}
-        ></InputBase>
+        />
       </FlexBetween>
       {isImage && (
         <Box

@@ -2,7 +2,6 @@ import { Box, useMediaQuery } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Navbar from "scenes/navbar";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
@@ -30,27 +29,24 @@ const ProfilePage = () => {
   if (!user) return null;
 
   return (
-    <Box>
-      <Navbar />
+    <Box
+      width="100%"
+      p="2rem 6%"
+      display={isNonMobileScreens ? "flex" : "block"}
+      gap="2rem"
+      justifyContent="center"
+    >
+      <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+        <UserWidget user={user} />
+        <Box m="2rem 0" />
+        <FriendListWidget userId={userId} />
+      </Box>
       <Box
-        width="100%"
-        p="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"}
-        gap="2rem"
-        justifyContent="center"
+        flexBasis={isNonMobileScreens ? "42%" : undefined}
+        mt={isNonMobileScreens ? undefined : "2rem"}
       >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget user={user} />
-          <Box m="2rem 0" />
-          <FriendListWidget userId={userId} />
-        </Box>
-        <Box
-          flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
-        >
-          {isOneself && <MyPostWidget picturePath={user.picturePath} />}
-          <PostsWidget userId={userId} isProfile />
-        </Box>
+        {isOneself && <MyPostWidget picturePath={user.picturePath} />}
+        <PostsWidget userId={userId} isProfile />
       </Box>
     </Box>
   );

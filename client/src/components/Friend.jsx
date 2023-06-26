@@ -61,7 +61,7 @@ const Friend = ({
               fontWeight="500"
               sx={{
                 "&:hover": {
-                  color: palette.primary.light,
+                  color: primaryDark,
                   cursor: "pointer",
                 },
               }}

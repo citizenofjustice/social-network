@@ -3,7 +3,7 @@ import { SwitchTransition, CSSTransition } from "react-transition-group";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 
-import "./Slider.css";
+import "./Slider.module.css";
 import Friend from "./Friend";
 import FlexBetween from "./FlexBetween";
 
