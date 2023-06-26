@@ -11,7 +11,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import {
-  Search,
   Message,
   DarkMode,
   LightMode,
@@ -28,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import SkeletonLoad from "components/SkeletonLoad";
+import SearchBar from "components/SearchBar";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -73,19 +73,7 @@ const Navbar = () => {
         >
           StayInTouch
         </Typography>
-        {isNonMobileScreens && (
-          <FlexBetween
-            backgroundColor={neutralLight}
-            borderRadius="9px"
-            gap="3rem"
-            p="0.1rem 1.5rem"
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
-        )}
+        {isNonMobileScreens && <SearchBar />}
       </FlexBetween>
 
       {/* DESKTOP NAV */}

@@ -46,7 +46,7 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
     setTotalPageCount(pagesCount);
     if (postsPage) dispatch(setPosts({ posts: postsPage }));
     setIsPostsLoading(false);
-  }, [userId, token, pageNum, limit, dispatch]);
+  }, [userId, token, pageNum, limit, dispatch, reloadToggle]);
 
   useEffect(() => {
     dispatch(clearPosts());
