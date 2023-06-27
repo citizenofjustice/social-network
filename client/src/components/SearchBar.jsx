@@ -14,7 +14,7 @@ import {
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 
-const SearchBar = () => {
+const SearchBar = ({ width }) => {
   const [foundUsers, setFoundUser] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { ref, isComponentVisible, setIsComponentVisible } =
@@ -41,11 +41,15 @@ const SearchBar = () => {
   }, [searchQuery, token, setIsComponentVisible]);
 
   return (
-    <Box display="flex" flexDirection="column" width="20vw" alignItems="center">
+    <Box
+      display="flex"
+      flexDirection="column"
+      width={width}
+      alignItems="center"
+    >
       <FlexBetween
         backgroundColor={neutralLight}
         borderRadius="0.5rem"
-        gap="3rem"
         p="0.1rem 1.5rem"
       >
         <InputBase
