@@ -104,11 +104,14 @@ export const patchPostLikes = async (postId, token, loggedInUserId) => {
   return updatedPost;
 };
 
-export const findUsersLike = async (query, token) => {
-  const response = await fetch(`http://localhost:3001/users/like/${query}`, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const findUsersLike = async (query, loggedInUserId, token) => {
+  const response = await fetch(
+    `http://localhost:3001/users/like/${query}/not/${loggedInUserId}`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
   const foundUsers = await response.json();
   return foundUsers;
 };
