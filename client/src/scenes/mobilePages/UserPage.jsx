@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
+import UserWidget from "scenes/widgets/UserWidget";
 import { fetchUser } from "API";
-import HomePageDesktop from "./HomePageDesktop";
 
-const HomePage = () => {
+const UserPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const userId = useSelector((state) => state.auth.user._id);
   const userFriends = useSelector((state) => state.auth.user.friends);
@@ -26,15 +26,15 @@ const HomePage = () => {
     <Box
       width="100%"
       p="2rem 6%"
-      display="flex"
+      display={isNonMobileScreens ? "flex" : "block"}
       gap="0.5rem"
-      justifyContent={"space-between"}
+      justifyContent="space-between"
     >
-      {isNonMobileScreens && (
-        <HomePageDesktop user={user} isNonMobileScreens={isNonMobileScreens} />
-      )}
+      <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+        <UserWidget user={user} />
+      </Box>
     </Box>
   );
 };
 
-export default HomePage;
+export default UserPage;

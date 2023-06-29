@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 
 const UserWidget = ({ user }) => {
   const { palette } = useTheme();
+  const loggedInUserId = useSelector((state) => state.auth.user._id);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const navigate = useNavigate();
 
@@ -34,6 +35,7 @@ const UserWidget = ({ user }) => {
     impressions,
     friends,
   } = user;
+  const isOneself = loggedInUserId === _id;
 
   return (
     <WidgetWrapper>
@@ -91,31 +93,45 @@ const UserWidget = ({ user }) => {
 
       <Divider />
 
-      {/* THIRD ROW */}
-      <Box p="1rem 0">
-        <FlexBetween mb="0.5rem">
-          <Typography color={medium} flex={7}>
-            Who's viewed your profile
-          </Typography>
-          <Typography color={main} fontWeight="500" flex={3} textAlign="right">
-            <SkeletonLoad loading={isUserLoading} count={1}>
-              {viewedProfile}
-            </SkeletonLoad>
-          </Typography>
-        </FlexBetween>
-        <FlexBetween>
-          <Typography color={medium} flex={7}>
-            Impressions of your post
-          </Typography>
-          <Typography color={main} fontWeight="500" flex={3} textAlign="right">
-            <SkeletonLoad loading={isUserLoading} count={1}>
-              {impressions}
-            </SkeletonLoad>
-          </Typography>
-        </FlexBetween>
-      </Box>
+      {isOneself && (
+        <>
+          {/* THIRD ROW */}
+          <Box p="1rem 0">
+            <FlexBetween mb="0.5rem">
+              <Typography color={medium} flex={7}>
+                Who's viewed your profile
+              </Typography>
+              <Typography
+                color={main}
+                fontWeight="500"
+                flex={3}
+                textAlign="right"
+              >
+                <SkeletonLoad loading={isUserLoading} count={1}>
+                  {viewedProfile}
+                </SkeletonLoad>
+              </Typography>
+            </FlexBetween>
+            <FlexBetween>
+              <Typography color={medium} flex={7}>
+                Impressions of your post
+              </Typography>
+              <Typography
+                color={main}
+                fontWeight="500"
+                flex={3}
+                textAlign="right"
+              >
+                <SkeletonLoad loading={isUserLoading} count={1}>
+                  {impressions}
+                </SkeletonLoad>
+              </Typography>
+            </FlexBetween>
+          </Box>
 
-      <Divider />
+          <Divider />
+        </>
+      )}
 
       {/* FOURTH ROW */}
       <Box p="1rem 0">
@@ -134,7 +150,7 @@ const UserWidget = ({ user }) => {
                 <Typography color={medium}>Social Network</Typography>
               </Box>
             </FlexBetween>
-            <EditOutlined sx={{ color: main }} />
+            {isOneself && <EditOutlined sx={{ color: main }} />}
           </FlexBetween>
         </SkeletonLoad>
 
@@ -149,7 +165,7 @@ const UserWidget = ({ user }) => {
                 <Typography color={medium}>Network Platform</Typography>
               </Box>
             </FlexBetween>
-            <EditOutlined sx={{ color: main }} />
+            {isOneself && <EditOutlined sx={{ color: main }} />}
           </FlexBetween>
         </SkeletonLoad>
       </Box>

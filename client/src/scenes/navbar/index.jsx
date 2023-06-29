@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   Box,
   IconButton,
@@ -11,7 +11,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import {
-  Search,
   Message,
   DarkMode,
   LightMode,
@@ -20,22 +19,29 @@ import {
   Menu,
   Close,
   LogoutOutlined,
+  PersonSearchOutlined,
+  PeopleOutlineOutlined,
+  DynamicFeedOutlined,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "state/authSlice";
 import { setMode } from "state/uiSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import SkeletonLoad from "components/SkeletonLoad";
+import SearchBar from "components/SearchBar";
+import useComponentVisible from "hooks/useComponentVisible";
 
 const Navbar = () => {
-  const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
+  const { ref, isComponentVisible, setIsComponentVisible } =
+    useComponentVisible(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px");
+  const isNonMobileScreen = useMediaQuery("(min-width: 1000px");
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -45,6 +51,11 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
+
+  useEffect(() => {
+    // toggle menu when location.pathname changed
+    setIsComponentVisible(false);
+  }, [location.pathname, setIsComponentVisible]);
 
   return (
     <FlexBetween
@@ -60,7 +71,7 @@ const Navbar = () => {
     >
       <FlexBetween gap="1.75rem">
         <Typography
-          onClick={() => navigate("/home")}
+          onClick={() => navigate(!isNonMobileScreen ? "/feed" : "/home")}
           sx={{
             "&:hover": {
               color: primaryDark,
@@ -73,23 +84,20 @@ const Navbar = () => {
         >
           StayInTouch
         </Typography>
-        {isNonMobileScreens && (
-          <FlexBetween
-            backgroundColor={neutralLight}
-            borderRadius="9px"
-            gap="3rem"
-            p="0.1rem 1.5rem"
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
+        {isNonMobileScreen && (
+          <SearchBar
+            width="20vw"
+            style={{
+              boxShadow: `1px 1px 2px ${dark}`,
+              position: "absolute",
+              top: "5.5rem",
+            }}
+          />
         )}
       </FlexBetween>
 
       {/* DESKTOP NAV */}
-      {isNonMobileScreens ? (
+      {isNonMobileScreen ? (
         <FlexBetween gap="1.25rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
@@ -147,15 +155,20 @@ const Navbar = () => {
           />
         </FlexBetween>
       ) : (
-        <IconButton
-          onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
-        >
-          <Menu sx={{ color: dark }} />
-        </IconButton>
+        <Box display="flex">
+          <IconButton
+            sx={{ marginLeft: "1rem" }}
+            onClick={() => {
+              setIsComponentVisible(!isComponentVisible);
+            }}
+          >
+            <Menu sx={{ color: dark }} />
+          </IconButton>
+        </Box>
       )}
 
       {/* MOBILE NAV */}
-      {!isNonMobileScreens && isMobileMenuToggled && (
+      {!isNonMobileScreen && isComponentVisible && (
         <Box
           position="fixed"
           right="0"
@@ -165,12 +178,15 @@ const Navbar = () => {
           maxWidth="500px"
           minWidth="100px"
           backgroundColor={background}
+          ref={ref}
         >
           {/* CLOSE ICON */}
 
           <Box display="flex" justifyContent="center" p="1rem">
             <IconButton
-              onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
+              onClick={() => {
+                setIsComponentVisible(!isComponentVisible);
+              }}
             >
               <Close sx={{ color: dark, fontSize: "25px" }} />
             </IconButton>
@@ -185,11 +201,31 @@ const Navbar = () => {
             gap="2.5rem"
             mt="2rem"
           >
-            <UserImage
-              loading={isUserLoading}
-              image={user.picturePath}
-              size="40px"
-            />
+            <IconButton onClick={() => navigate("/user")}>
+              <UserImage
+                loading={isUserLoading}
+                image={user.picturePath}
+                size="40px"
+              />
+            </IconButton>
+
+            <IconButton onClick={() => navigate("/feed")}>
+              <DynamicFeedOutlined sx={{ fontSize: "25px" }} />
+            </IconButton>
+            <IconButton onClick={() => navigate("/friends")}>
+              <PeopleOutlineOutlined sx={{ fontSize: "25px" }} />
+            </IconButton>
+            {!isNonMobileScreen && (
+              <IconButton onClick={() => navigate("/search")}>
+                <PersonSearchOutlined sx={{ fontSize: "25px" }} />
+              </IconButton>
+            )}
+            <IconButton>
+              <Message sx={{ fontSize: "25px" }} />
+            </IconButton>
+            <IconButton>
+              <Notifications sx={{ fontSize: "25px" }} />
+            </IconButton>
             <IconButton
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: "25px" }}
@@ -199,15 +235,6 @@ const Navbar = () => {
               ) : (
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
-            </IconButton>
-            <IconButton>
-              <Message sx={{ fontSize: "25px" }} />
-            </IconButton>
-            <IconButton>
-              <Notifications sx={{ fontSize: "25px" }} />
-            </IconButton>
-            <IconButton>
-              <Help sx={{ fontSize: "25px" }} />
             </IconButton>
             <IconButton onClick={() => dispatch(setLogout())}>
               <LogoutOutlined sx={{ color: dark, fontSize: "25px" }} />
