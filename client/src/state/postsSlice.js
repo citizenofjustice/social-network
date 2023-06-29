@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   posts: [],
   reloadToggle: false,
+  editablePost: {},
 };
 
 export const postsSlice = createSlice({
@@ -18,10 +19,14 @@ export const postsSlice = createSlice({
     triggerReloadToggle: (state) => {
       state.reloadToggle = state.reloadToggle ? false : true;
     },
+    setEditablePost: (state, action) => {
+      state.editablePost = action.payload.editablePost;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setPosts, clearPosts, triggerReloadToggle } = postsSlice.actions;
+export const { setPosts, clearPosts, triggerReloadToggle, setEditablePost } =
+  postsSlice.actions;
 
 export default postsSlice.reducer;

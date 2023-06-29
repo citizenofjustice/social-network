@@ -15,6 +15,7 @@ const Friend = ({
   subtitle,
   userPicturePath,
   isContentLoading,
+  style,
 }) => {
   const dispatch = useDispatch();
   const { _id } = useSelector((state) => state.auth.user);
@@ -36,7 +37,7 @@ const Friend = ({
   };
 
   return (
-    <FlexBetween className={className}>
+    <FlexBetween className={className} sx={style}>
       <FlexBetween gap="1rem" sx={{ width: "100%" }}>
         <UserImage
           image={userPicturePath}

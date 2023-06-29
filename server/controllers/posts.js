@@ -70,6 +70,7 @@ export const getUserPosts = async (req, res) => {
 export const likePost = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(req.body);
     const { userId } = req.body;
     const post = await Post.findById(id);
     const isLiked = post.likes.get(userId);
@@ -87,6 +88,62 @@ export const likePost = async (req, res) => {
     );
 
     res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const editPost = async (req, res) => {
+  try {
+    const { postId, userId } = req.params;
+    const { formData } = req.body;
+    const post = await Post.findById(postId);
+    let resStatus = 200;
+    let result;
+    if (post.userId === userId) {
+      console.log("edited post: - ", formData);
+      result = "edit complete";
+    } else {
+      resStatus = 403;
+      result = "Access denied";
+    }
+    res.status(resStatus).json(result);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const removePost = async (req, res) => {
+  try {
+    const { postId, userId } = req.params;
+    const post = await Post.findById(postId);
+    let resStatus = 200;
+    let result = "Delete successful";
+    if (post.userId === userId) {
+      await Post.deleteOne({ _id: post._id });
+    } else {
+      resStatus = 403;
+      result = "Access denied";
+    }
+    res.status(resStatus).json(result);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const getPostEditData = async (req, res) => {
+  try {
+    const { postId, userId } = req.params;
+    const post = await Post.findById(postId);
+    let resStatus = 200;
+    let result;
+    if (post.userId === userId) {
+      result = post;
+    } else {
+      resStatus = 403;
+      result = "Access denied";
+    }
+    res.status(resStatus).json(result);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

@@ -21,10 +21,10 @@ import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { sendPost } from "API";
-import { triggerReloadToggle } from "state/postsSlice";
+import { sendPost, editSelectedPost } from "API";
+import { setEditablePost, triggerReloadToggle } from "state/postsSlice";
 import "./MyPostWidget.module.css";
 
 const MyPostWidget = ({ picturePath }) => {
@@ -38,21 +38,52 @@ const MyPostWidget = ({ picturePath }) => {
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
+  const editablePost = useSelector((state) => state.posts.editablePost);
   const dispatch = useDispatch();
 
   const handlePost = async () => {
-    const formData = new FormData();
-    formData.append("userId", _id);
-    formData.append("description", postText);
-    if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
+    if (editablePost) {
+      const formData = new FormData();
+      console.log(editablePost.picturePath);
+      console.log(image);
+      if (
+        editablePost.description !== postText ||
+        (image !== undefined && image !== null)
+      ) {
+        formData.append("userId", _id);
+        formData.append("description", postText);
+        // if (image) {
+        //   formData.append("picture", image);
+        //   formData.append("picturePath", image.name);
+        // }
+        const response = await editSelectedPost(
+          editablePost.postId,
+          formData,
+          token,
+          _id
+        );
+        console.log(response);
+      }
+    } else {
+      const formData = new FormData();
+      formData.append("userId", _id);
+      formData.append("description", postText);
+      if (image) {
+        formData.append("picture", image);
+        formData.append("picturePath", image.name);
+      }
+      await sendPost(formData, token);
+      dispatch(triggerReloadToggle());
+      setImage(null);
+      setPostText("");
     }
-    await sendPost(formData, token);
-    dispatch(triggerReloadToggle());
-    setImage(null);
-    setPostText("");
   };
+
+  useEffect(() => {
+    setPostText(editablePost.description);
+    if (editablePost.picturePath) setImage(editablePost.picturePath);
+    // dispatch(setEditablePost({editablePost: {}}));
+  }, [editablePost]);
 
   return (
     <WidgetWrapper mb="2rem">

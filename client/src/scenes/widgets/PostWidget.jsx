@@ -4,6 +4,8 @@ import {
   FavoriteOutlined,
   ShareOutlined,
   EditOutlined,
+  BorderColor,
+  Delete,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
@@ -13,6 +15,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { patchPostLikes } from "API";
 import SkeletonLoad from "components/SkeletonLoad";
+import DropdownMenu from "components/DropdownMenu";
 
 const PostWidget = ({
   postId,
@@ -35,6 +38,7 @@ const PostWidget = ({
   const [postLikes, setPostLikes] = useState(likes);
   const likesCount = Object.keys(postLikes).length;
   const isLiked = Boolean(postLikes[loggedInUserId]);
+  const isMyPost = postUserId === loggedInUserId;
 
   const { timezone, locale } = useSelector((state) => state.ui.dateTimeFormat);
   const postCreateDate = new Date(createdAt).toLocaleString(locale, {
@@ -46,6 +50,22 @@ const PostWidget = ({
   const primary = palette.primary.main;
   const medium = palette.neutral.medium;
 
+  const postDropdownMenuItems = [
+    {
+      icon: <BorderColor />,
+      text: "edit post",
+      type: "EDIT",
+      access: isMyPost,
+    },
+    { icon: <Delete />, text: "remove post", type: "REMOVE", access: isMyPost },
+    {
+      icon: <ShareOutlined />,
+      text: "share post",
+      type: "SHARE",
+      access: true,
+    },
+  ];
+
   const patchLike = async () => {
     const { likes } = await patchPostLikes(postId, token, loggedInUserId);
     setPostLikes(likes);
@@ -53,13 +73,31 @@ const PostWidget = ({
 
   return (
     <WidgetWrapper mb="2rem">
-      <Friend
-        friendId={postUserId}
-        name={name}
-        subtitle={location}
-        userPicturePath={userPicturePath}
-        isContentLoading={isPostLoading}
-      />
+      <Box display="flex">
+        <Friend
+          friendId={postUserId}
+          name={name}
+          subtitle={location}
+          userPicturePath={userPicturePath}
+          isContentLoading={isPostLoading}
+          style={{ flexBasis: "100%", marginRight: "1rem" }}
+        />
+        {
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <DropdownMenu
+              isMyPost={isMyPost}
+              postId={postId}
+              menuItems={postDropdownMenuItems}
+            />
+          </Box>
+        }
+      </Box>
       <Typography color={main} sx={{ mt: "1rem" }}>
         <SkeletonLoad loading={isPostLoading}>{description}</SkeletonLoad>
       </Typography>
@@ -93,11 +131,6 @@ const PostWidget = ({
               <ChatBubbleOutlineOutlined />
             </IconButton>
             <Typography>{comments.length}</Typography>
-          </FlexBetween>
-          <FlexBetween gap="0.3rem">
-            <IconButton>
-              <ShareOutlined />
-            </IconButton>
           </FlexBetween>
         </FlexBetween>
 

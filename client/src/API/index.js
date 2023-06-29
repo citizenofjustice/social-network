@@ -104,6 +104,56 @@ export const patchPostLikes = async (postId, token, loggedInUserId) => {
   return updatedPost;
 };
 
+export const getEditablePostData = async (postId, token, loggedInUserId) => {
+  const response = await fetch(
+    `http://localhost:3001/posts/${postId}/get/edit/by/${loggedInUserId}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const editPostData = await response.json();
+  return editPostData;
+};
+
+export const editSelectedPost = async (
+  postId,
+  formData,
+  token,
+  loggedInUserId
+) => {
+  const response = await fetch(
+    `http://localhost:3001/posts/${postId}/edit/by/${loggedInUserId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: formData,
+    }
+  );
+  // const updatedPost = await response.json();
+  const updatedPost = await response.json();
+  return updatedPost;
+};
+
+export const removeSelectedPost = async (postId, token, loggedInUserId) => {
+  const response = await fetch(
+    `http://localhost:3001/posts/${postId}/remove/by/${loggedInUserId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-type": "application/json",
+      },
+    }
+  );
+  return response;
+};
+
 export const findUsersLike = async (query, loggedInUserId, token) => {
   const response = await fetch(
     `http://localhost:3001/users/like/${query}/not/${loggedInUserId}`,
