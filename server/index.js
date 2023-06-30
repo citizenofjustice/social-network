@@ -7,6 +7,7 @@ import multer from "multer";
 import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
@@ -32,7 +33,23 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 /* FILE STORAGE */
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/assets");
+    let path;
+    if (req.params.userId) {
+      const userId = req.params.userId;
+      console.log("userId");
+      path = `public/assets/${userId}`;
+      console.log("path");
+      if (!fs.existsSync(path)) {
+        console.log("!fs");
+        fs.mkdirSync(path);
+      }
+    } else {
+      path = `public/assets/avatars`;
+      if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
+      }
+    }
+    cb(null, path);
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -41,8 +58,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/auth/register", upload.single("avatar"), register);
+app.post("/posts/:userId", verifyToken, upload.single("picture"), createPost);
 
 /* ROUTES */
 app.use("/auth", authRoutes);

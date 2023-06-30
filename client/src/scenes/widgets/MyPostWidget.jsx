@@ -42,7 +42,7 @@ const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
 
   const handlePost = async () => {
-    if (editablePost) {
+    if (editablePost._id) {
       const formData = new FormData();
       console.log(editablePost.picturePath);
       console.log(image);
@@ -72,7 +72,7 @@ const MyPostWidget = ({ picturePath }) => {
         formData.append("picture", image);
         formData.append("picturePath", image.name);
       }
-      await sendPost(formData, token);
+      await sendPost(formData, _id, token);
       dispatch(triggerReloadToggle());
       setImage(null);
       setPostText("");
@@ -81,9 +81,14 @@ const MyPostWidget = ({ picturePath }) => {
 
   useEffect(() => {
     setPostText(editablePost.description);
-    if (editablePost.picturePath) setImage(editablePost.picturePath);
+    if (editablePost.picturePath) {
+      setImage(editablePost.picturePath);
+      setIsImage(true);
+    }
     // dispatch(setEditablePost({editablePost: {}}));
   }, [editablePost]);
+
+  // console.log(image);
 
   return (
     <WidgetWrapper mb="2rem">

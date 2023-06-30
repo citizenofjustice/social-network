@@ -66,8 +66,8 @@ export const fetchUserPosts = async (userId, token, limit, pageNum) => {
   return data;
 };
 
-export const sendPost = async (formData, token) => {
-  const response = await fetch("http://localhost:3001/posts", {
+export const sendPost = async (formData, userId, token) => {
+  const response = await fetch(`http://localhost:3001/posts/${userId}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     body: formData,
