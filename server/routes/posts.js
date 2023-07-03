@@ -22,7 +22,6 @@ router.get("/:postId/get/edit/by/:userId", verifyToken, getPostEditData);
 
 /* UPDATE */
 router.patch("/:id/like", verifyToken, likePost);
-router.patch("/:postId/edit/by/:userId", verifyToken, editPost);
 
 /* DELETE */
 router.delete("/:postId/remove/by/:userId", verifyToken, removePost);

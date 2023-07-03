@@ -130,7 +130,7 @@ export const editSelectedPost = async (
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        // "Content-Type": "multipart/form-data",
       },
       body: formData,
     }

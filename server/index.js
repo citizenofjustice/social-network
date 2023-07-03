@@ -13,7 +13,7 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
-import { createPost } from "./controllers/posts.js";
+import { createPost, editPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
 
 /* CONFIGURATION */
@@ -36,11 +36,8 @@ const storage = multer.diskStorage({
     let path;
     if (req.params.userId) {
       const userId = req.params.userId;
-      console.log("userId");
       path = `public/assets/${userId}`;
-      console.log("path");
       if (!fs.existsSync(path)) {
-        console.log("!fs");
         fs.mkdirSync(path);
       }
     } else {
@@ -55,11 +52,17 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
-const upload = multer({ storage });
+export const upload = multer({ storage });
 
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("avatar"), register);
 app.post("/posts/:userId", verifyToken, upload.single("picture"), createPost);
+app.patch(
+  "/posts/:postId/edit/by/:userId",
+  verifyToken,
+  upload.single("picture"),
+  editPost
+);
 
 /* ROUTES */
 app.use("/auth", authRoutes);

@@ -21,7 +21,7 @@ import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendPost, editSelectedPost } from "API";
 import { setEditablePost, triggerReloadToggle } from "state/postsSlice";
@@ -44,25 +44,25 @@ const MyPostWidget = ({ picturePath }) => {
   const handlePost = async () => {
     if (editablePost._id) {
       const formData = new FormData();
-      console.log(editablePost.picturePath);
-      console.log(image);
       if (
         editablePost.description !== postText ||
         (image !== undefined && image !== null)
       ) {
         formData.append("userId", _id);
         formData.append("description", postText);
-        // if (image) {
-        //   formData.append("picture", image);
-        //   formData.append("picturePath", image.name);
-        // }
+        console.log(formData);
+        if (image) {
+          formData.append("picture", image);
+          formData.append("picturePath", editablePost.picturePath);
+        }
         const response = await editSelectedPost(
-          editablePost.postId,
+          editablePost._id,
           formData,
           token,
           _id
         );
         console.log(response);
+        dispatch(setEditablePost({ editablePost: {} }));
       }
     } else {
       const formData = new FormData();
@@ -70,25 +70,42 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("description", postText);
       if (image) {
         formData.append("picture", image);
-        formData.append("picturePath", image.name);
+        formData.append("picturePath", `${_id}/${image.name}`);
       }
       await sendPost(formData, _id, token);
-      dispatch(triggerReloadToggle());
-      setImage(null);
-      setPostText("");
     }
+    dispatch(triggerReloadToggle());
+    setPostText("");
+    setIsImage(false);
+    setImage(null);
   };
 
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      // setImage(acceptedFiles[0]);
+      setImage(acceptedFiles.map((file) => URL.createObjectURL(file)));
+    },
+    [setImage]
+  );
+
   useEffect(() => {
+    const loadImgIntoThumbnail = async () => {
+      const imgBlob = fetch(
+        `http://localhost:3001/assets/${editablePost.picturePath}`
+      )
+        .then((response) => response.blob())
+        .then((blob) => {
+          return URL.createObjectURL(blob);
+        });
+      setIsImage(true);
+      setImage(await imgBlob);
+    };
+
     setPostText(editablePost.description);
     if (editablePost.picturePath) {
-      setImage(editablePost.picturePath);
-      setIsImage(true);
+      loadImgIntoThumbnail();
     }
-    // dispatch(setEditablePost({editablePost: {}}));
   }, [editablePost]);
-
-  // console.log(image);
 
   return (
     <WidgetWrapper mb="2rem">
@@ -121,7 +138,7 @@ const MyPostWidget = ({ picturePath }) => {
           <Dropzone
             acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}
-            onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
+            onDrop={onDrop}
           >
             {({ getRootProps, getInputProps }) => (
               <FlexBetween>
@@ -137,15 +154,21 @@ const MyPostWidget = ({ picturePath }) => {
                     <p>Add Image Here</p>
                   ) : (
                     <FlexBetween>
-                      <Typography>{image.name}</Typography>
-                      <EditOutlined />
+                      <Box display="block" margin="0 auto">
+                        <img
+                          src={image}
+                          alt=""
+                          style={{ borderRadius: "0.5rem", width: "100%" }}
+                        />
+                      </Box>
+                      <EditOutlined sx={{ ml: "0.5rem" }} />
                     </FlexBetween>
                   )}
                 </Box>
                 {image && (
                   <IconButton
                     onClick={() => setImage(null)}
-                    sx={{ width: "15%" }}
+                    sx={{ ml: "0.5rem" }}
                   >
                     <DeleteOutlined />
                   </IconButton>

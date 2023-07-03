@@ -5,6 +5,7 @@ import User from "../models/User.js";
 export const createPost = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
+    console.log(req.body);
     const user = await User.findById(userId);
     const newPost = new Post({
       userId,
@@ -95,13 +96,24 @@ export const likePost = async (req, res) => {
 
 export const editPost = async (req, res) => {
   try {
-    const { postId, userId } = req.params;
-    const { formData } = req.body;
+    const { postId } = req.params;
+    const { userId, description, picturePath } = req.body;
+    console.log(picturePath);
     const post = await Post.findById(postId);
     let resStatus = 200;
     let result;
     if (post.userId === userId) {
-      console.log("edited post: - ", formData);
+      // this option instructs the method to create a document if no documents match the filter
+      const options = { upsert: true };
+      const updatePost = {
+        $set: {
+          description: description,
+          picturePath: picturePath,
+          isEdited: true,
+        },
+      };
+      await Post.updateOne({ _id: postId }, updatePost, options);
+
       result = "edit complete";
     } else {
       resStatus = 403;
