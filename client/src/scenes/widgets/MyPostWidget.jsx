@@ -15,7 +15,6 @@ import {
   useTheme,
   Button,
   IconButton,
-  useMediaQuery,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
@@ -27,7 +26,7 @@ import { sendPost, editSelectedPost } from "API";
 import { setEditablePost, triggerReloadToggle } from "state/postsSlice";
 import "./MyPostWidget.module.css";
 
-const MyPostWidget = ({ picturePath }) => {
+const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
@@ -35,7 +34,6 @@ const MyPostWidget = ({ picturePath }) => {
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
