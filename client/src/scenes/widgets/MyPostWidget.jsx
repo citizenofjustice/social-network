@@ -30,6 +30,7 @@ import "./MyPostWidget.module.css";
 const MyPostWidget = ({ picturePath }) => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
+  const [thumbnail, setThumbnail] = useState(null);
   const [postText, setPostText] = useState("");
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.auth.user);
@@ -48,13 +49,7 @@ const MyPostWidget = ({ picturePath }) => {
         editablePost.description !== postText ||
         (image !== undefined && image !== null)
       ) {
-        formData.append("userId", _id);
-        formData.append("description", postText);
-        console.log(formData);
-        if (image) {
-          formData.append("picture", image);
-          formData.append("picturePath", editablePost.picturePath);
-        }
+        appendFormInputs(formData);
         const response = await editSelectedPost(
           editablePost._id,
           formData,
@@ -63,30 +58,41 @@ const MyPostWidget = ({ picturePath }) => {
         );
         console.log(response);
         dispatch(setEditablePost({ editablePost: {} }));
+      } else {
+        console.log("post has not changed");
+        return;
       }
     } else {
       const formData = new FormData();
-      formData.append("userId", _id);
-      formData.append("description", postText);
-      if (image) {
-        formData.append("picture", image);
-        formData.append("picturePath", `${_id}/${image.name}`);
-      }
+      appendFormInputs(formData);
       await sendPost(formData, _id, token);
     }
     dispatch(triggerReloadToggle());
-    setPostText("");
-    setIsImage(false);
-    setImage(null);
+  };
+
+  const appendFormInputs = (form) => {
+    form.append("userId", _id);
+    form.append("description", postText);
+    if (image) {
+      form.append("picture", image);
+      form.append("picturePath", `${_id}/${image.name}`);
+    }
   };
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      // setImage(acceptedFiles[0]);
-      setImage(acceptedFiles.map((file) => URL.createObjectURL(file)));
+      setThumbnail(acceptedFiles.map((file) => URL.createObjectURL(file)));
+      setImage(acceptedFiles[0]);
     },
     [setImage]
   );
+
+  const clearForm = () => {
+    setPostText("");
+    setIsImage(false);
+    setImage(null);
+    setThumbnail(null);
+  };
 
   useEffect(() => {
     const loadImgIntoThumbnail = async () => {
@@ -98,12 +104,16 @@ const MyPostWidget = ({ picturePath }) => {
           return URL.createObjectURL(blob);
         });
       setIsImage(true);
-      setImage(await imgBlob);
+      setThumbnail(await imgBlob);
     };
 
-    setPostText(editablePost.description);
-    if (editablePost.picturePath) {
-      loadImgIntoThumbnail();
+    if (editablePost._id) {
+      setPostText(editablePost.description);
+      if (editablePost.picturePath) {
+        loadImgIntoThumbnail();
+      }
+    } else {
+      clearForm();
     }
   }, [editablePost]);
 
@@ -150,13 +160,13 @@ const MyPostWidget = ({ picturePath }) => {
                   sx={{ "&:hover": { cursor: "pointer" } }}
                 >
                   <input {...getInputProps()} />
-                  {!image ? (
+                  {!thumbnail ? (
                     <p>Add Image Here</p>
                   ) : (
                     <FlexBetween>
                       <Box display="block" margin="0 auto">
                         <img
-                          src={image}
+                          src={thumbnail}
                           alt=""
                           style={{ borderRadius: "0.5rem", width: "100%" }}
                         />
@@ -165,9 +175,12 @@ const MyPostWidget = ({ picturePath }) => {
                     </FlexBetween>
                   )}
                 </Box>
-                {image && (
+                {thumbnail && (
                   <IconButton
-                    onClick={() => setImage(null)}
+                    onClick={() => {
+                      setImage(null);
+                      setThumbnail(null);
+                    }}
                     sx={{ ml: "0.5rem" }}
                   >
                     <DeleteOutlined />

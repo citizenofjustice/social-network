@@ -10,6 +10,7 @@ import SearchPage from "scenes/mobilePages/SearchPage";
 import FriendListPage from "scenes/mobilePages/FriendListPage";
 import FeedPage from "scenes/mobilePages/FeedPage";
 import UserPage from "scenes/mobilePages/UserPage";
+import MyPostPage from "scenes/mobilePages/MyPostPage";
 import Layout from "components/Layout";
 
 const HomePage = lazy(() => import("scenes/homePage"));
@@ -66,6 +67,10 @@ function App() {
                 <Route
                   path="/user"
                   element={!isNonMobileScreen ? <UserPage /> : <HomePage />}
+                />
+                <Route
+                  path="/myposts"
+                  element={!isNonMobileScreen ? <MyPostPage /> : <HomePage />}
                 />
               </Route>
             </Routes>
