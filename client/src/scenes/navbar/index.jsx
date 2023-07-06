@@ -220,9 +220,12 @@ const Navbar = () => {
                 <PersonSearchOutlined sx={{ fontSize: "25px" }} />
               </IconButton>
             )}
-            <IconButton>
-              <Message sx={{ fontSize: "25px" }} />
-            </IconButton>
+            {!isNonMobileScreen && (
+              <IconButton onClick={() => navigate("/myposts")}>
+                <Message sx={{ fontSize: "25px" }} />
+              </IconButton>
+            )}
+
             <IconButton>
               <Notifications sx={{ fontSize: "25px" }} />
             </IconButton>

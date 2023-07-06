@@ -4,7 +4,10 @@ import User from "../models/User.js";
 /* CREATE */
 export const createPost = async (req, res) => {
   try {
-    const { userId, description, picturePath } = req.body;
+    const { userId, description } = req.body;
+    const filedata = req.file;
+    let picturePath = null;
+    if (filedata) picturePath = `${userId}/${filedata.filename}`;
     const user = await User.findById(userId);
     const newPost = new Post({
       userId,
@@ -87,6 +90,75 @@ export const likePost = async (req, res) => {
     );
 
     res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const editPost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId, description } = req.body;
+    const filedata = req.file;
+    const post = await Post.findById(postId);
+    let resStatus = 200;
+    let result;
+    if (post.userId === userId) {
+      let picturePath = null;
+      if (filedata) picturePath = `${userId}/${filedata.filename}`;
+      // this option instructs the method to create a document if no documents match the filter
+      const options = { upsert: true };
+      const updatePost = {
+        $set: {
+          description: description,
+          picturePath: picturePath,
+          isEdited: true,
+        },
+      };
+      await Post.updateOne({ _id: postId }, updatePost, options);
+
+      result = "edit complete";
+    } else {
+      resStatus = 403;
+      result = "Access denied";
+    }
+    res.status(resStatus).json(result);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const removePost = async (req, res) => {
+  try {
+    const { postId, userId } = req.params;
+    const post = await Post.findById(postId);
+    let resStatus = 200;
+    let result = "Delete successful";
+    if (post.userId === userId) {
+      await Post.deleteOne({ _id: post._id });
+    } else {
+      resStatus = 403;
+      result = "Access denied";
+    }
+    res.status(resStatus).json(result);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const getPostEditData = async (req, res) => {
+  try {
+    const { postId, userId } = req.params;
+    const post = await Post.findById(postId);
+    let resStatus = 200;
+    let result;
+    if (post.userId === userId) {
+      result = post;
+    } else {
+      resStatus = 403;
+      result = "Access denied";
+    }
+    res.status(resStatus).json(result);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

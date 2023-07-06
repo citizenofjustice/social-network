@@ -24,7 +24,7 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  avatar: yup.string().required("required"),
 });
 
 const loginSchema = yup.object().shape({
@@ -39,7 +39,7 @@ const initialValuesRegister = {
   password: "",
   location: "",
   occupation: "",
-  picture: "",
+  avatar: "",
 };
 
 const initialValuesLogin = {
@@ -62,8 +62,6 @@ const Form = () => {
     for (let value in values) {
       formData.append(value, values[value]);
     }
-    formData.append("picturePath", values.picture.name);
-
     const savedUser = await registerUser(formData);
     onSubmitProps.resetForm();
 
@@ -182,7 +180,7 @@ const Form = () => {
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
                     onDrop={(acceptedFiles) =>
-                      setFieldValue("picture", acceptedFiles[0])
+                      setFieldValue("avatar", acceptedFiles[0])
                     }
                   >
                     {({ getRootProps, getInputProps }) => (
@@ -197,11 +195,11 @@ const Form = () => {
                         }}
                       >
                         <input {...getInputProps()} />
-                        {!values.picture ? (
+                        {!values.avatar ? (
                           <p>Add Picture Here</p>
                         ) : (
                           <FlexBetween>
-                            <Typography>{values.picture.name}</Typography>
+                            <Typography>{values.avatar.name}</Typography>
                             <EditOutlinedIcon />
                           </FlexBetween>
                         )}

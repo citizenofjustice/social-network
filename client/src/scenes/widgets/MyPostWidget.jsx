@@ -15,44 +15,106 @@ import {
   useTheme,
   Button,
   IconButton,
-  useMediaQuery,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { sendPost } from "API";
-import { triggerReloadToggle } from "state/postsSlice";
+import { sendPost, editSelectedPost } from "API";
+import { setEditablePost, triggerReloadToggle } from "state/postsSlice";
 import "./MyPostWidget.module.css";
 
-const MyPostWidget = ({ picturePath }) => {
+const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
+  const [thumbnail, setThumbnail] = useState(null);
   const [postText, setPostText] = useState("");
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
+  const editablePost = useSelector((state) => state.posts.editablePost);
   const dispatch = useDispatch();
 
   const handlePost = async () => {
-    const formData = new FormData();
-    formData.append("userId", _id);
-    formData.append("description", postText);
-    if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
+    if (editablePost._id) {
+      const formData = new FormData();
+      if (
+        editablePost.description !== postText ||
+        (image !== undefined && image !== null)
+      ) {
+        appendFormInputs(formData);
+        const response = await editSelectedPost(
+          editablePost._id,
+          formData,
+          token,
+          _id
+        );
+        console.log(response);
+        dispatch(setEditablePost({ editablePost: {} }));
+      } else {
+        console.log("post has not changed");
+        return;
+      }
+    } else {
+      const formData = new FormData();
+      appendFormInputs(formData);
+      await sendPost(formData, _id, token);
     }
-    await sendPost(formData, token);
+    clearForm();
     dispatch(triggerReloadToggle());
-    setImage(null);
-    setPostText("");
   };
+
+  const appendFormInputs = (form) => {
+    form.append("userId", _id);
+    form.append("description", postText);
+    if (image) {
+      form.append("picture", image);
+    }
+  };
+
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      setThumbnail(acceptedFiles.map((file) => URL.createObjectURL(file)));
+      setImage(acceptedFiles[0]);
+    },
+    [setImage]
+  );
+
+  const clearForm = () => {
+    setPostText("");
+    setIsImage(false);
+    setImage(null);
+    setThumbnail(null);
+  };
+
+  useEffect(() => {
+    const loadImgIntoThumbnail = async () => {
+      const imgBlob = fetch(
+        `http://localhost:3001/assets/${editablePost.picturePath}`
+      )
+        .then((response) => response.blob())
+        .then((blob) => {
+          return URL.createObjectURL(blob);
+        });
+      setIsImage(true);
+      setThumbnail(await imgBlob);
+    };
+
+    if (editablePost._id) {
+      setPostText(editablePost.description);
+      if (editablePost.picturePath) {
+        loadImgIntoThumbnail();
+      }
+    }
+    // else {
+    //   clearForm();
+    // }
+  }, [editablePost]);
 
   return (
     <WidgetWrapper mb="2rem">
@@ -85,7 +147,7 @@ const MyPostWidget = ({ picturePath }) => {
           <Dropzone
             acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}
-            onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
+            onDrop={onDrop}
           >
             {({ getRootProps, getInputProps }) => (
               <FlexBetween>
@@ -97,19 +159,28 @@ const MyPostWidget = ({ picturePath }) => {
                   sx={{ "&:hover": { cursor: "pointer" } }}
                 >
                   <input {...getInputProps()} />
-                  {!image ? (
+                  {!thumbnail ? (
                     <p>Add Image Here</p>
                   ) : (
                     <FlexBetween>
-                      <Typography>{image.name}</Typography>
-                      <EditOutlined />
+                      <Box display="block" margin="0 auto">
+                        <img
+                          src={thumbnail}
+                          alt=""
+                          style={{ borderRadius: "0.5rem", width: "100%" }}
+                        />
+                      </Box>
+                      <EditOutlined sx={{ ml: "0.5rem" }} />
                     </FlexBetween>
                   )}
                 </Box>
-                {image && (
+                {thumbnail && (
                   <IconButton
-                    onClick={() => setImage(null)}
-                    sx={{ width: "15%" }}
+                    onClick={() => {
+                      setImage(null);
+                      setThumbnail(null);
+                    }}
+                    sx={{ ml: "0.5rem" }}
                   >
                     <DeleteOutlined />
                   </IconButton>

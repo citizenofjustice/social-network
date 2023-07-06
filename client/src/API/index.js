@@ -66,8 +66,8 @@ export const fetchUserPosts = async (userId, token, limit, pageNum) => {
   return data;
 };
 
-export const sendPost = async (formData, token) => {
-  const response = await fetch("http://localhost:3001/posts", {
+export const sendPost = async (formData, userId, token) => {
+  const response = await fetch(`http://localhost:3001/posts/${userId}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     body: formData,
@@ -102,6 +102,56 @@ export const patchPostLikes = async (postId, token, loggedInUserId) => {
   });
   const updatedPost = await response.json();
   return updatedPost;
+};
+
+export const getEditablePostData = async (postId, token, loggedInUserId) => {
+  const response = await fetch(
+    `http://localhost:3001/posts/${postId}/get/edit/by/${loggedInUserId}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const editPostData = await response.json();
+  return editPostData;
+};
+
+export const editSelectedPost = async (
+  postId,
+  formData,
+  token,
+  loggedInUserId
+) => {
+  const response = await fetch(
+    `http://localhost:3001/posts/${postId}/edit/by/${loggedInUserId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        // "Content-Type": "multipart/form-data",
+      },
+      body: formData,
+    }
+  );
+  // const updatedPost = await response.json();
+  const updatedPost = await response.json();
+  return updatedPost;
+};
+
+export const removeSelectedPost = async (postId, token, loggedInUserId) => {
+  const response = await fetch(
+    `http://localhost:3001/posts/${postId}/remove/by/${loggedInUserId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-type": "application/json",
+      },
+    }
+  );
+  return response;
 };
 
 export const findUsersLike = async (query, loggedInUserId, token) => {
