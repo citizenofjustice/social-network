@@ -48,29 +48,66 @@ function App() {
                 path="/"
                 element={isAuth ? <Layout /> : <Navigate to="/" />}
               >
-                <Route path="/home" element={<HomePage />} />
+                <Route
+                  path="/home"
+                  element={
+                    isNonMobileScreen ? (
+                      <HomePage />
+                    ) : (
+                      <Navigate to="/feed" replace />
+                    )
+                  }
+                />
                 <Route path="/profile/:userId" element={<ProfilePage />} />
                 <Route
                   path="/feed"
-                  element={!isNonMobileScreen ? <FeedPage /> : <HomePage />}
+                  element={
+                    !isNonMobileScreen ? (
+                      <FeedPage />
+                    ) : (
+                      <Navigate to="/home" replace />
+                    )
+                  }
                 />
                 <Route
                   path="/friends"
                   element={
-                    !isNonMobileScreen ? <FriendListPage /> : <HomePage />
+                    !isNonMobileScreen ? (
+                      <FriendListPage />
+                    ) : (
+                      <Navigate to="/home" replace />
+                    )
                   }
                 />
                 <Route
                   path="/search"
-                  element={!isNonMobileScreen ? <SearchPage /> : <HomePage />}
+                  element={
+                    !isNonMobileScreen ? (
+                      <SearchPage />
+                    ) : (
+                      <Navigate to="/home" replace />
+                    )
+                  }
                 />
                 <Route
                   path="/user"
-                  element={!isNonMobileScreen ? <UserPage /> : <HomePage />}
+                  element={
+                    !isNonMobileScreen ? (
+                      <UserPage />
+                    ) : (
+                      <Navigate to="/home" replace />
+                    )
+                  }
                 />
                 <Route
                   path="/myposts"
-                  element={!isNonMobileScreen ? <MyPostPage /> : <HomePage />}
+                  element={
+                    !isNonMobileScreen ? (
+                      <MyPostPage />
+                    ) : (
+                      <Navigate to="/home" replace />
+                    )
+                  }
                 />
               </Route>
             </Routes>

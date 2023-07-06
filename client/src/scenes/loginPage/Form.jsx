@@ -62,8 +62,6 @@ const Form = () => {
     for (let value in values) {
       formData.append(value, values[value]);
     }
-    formData.append("picturePath", `/avatars/${values.avatar.name}`);
-
     const savedUser = await registerUser(formData);
     onSubmitProps.resetForm();
 

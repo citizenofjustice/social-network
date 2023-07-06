@@ -65,6 +65,7 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
       appendFormInputs(formData);
       await sendPost(formData, _id, token);
     }
+    clearForm();
     dispatch(triggerReloadToggle());
   };
 
@@ -73,7 +74,6 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
     form.append("description", postText);
     if (image) {
       form.append("picture", image);
-      form.append("picturePath", `${_id}/${image.name}`);
     }
   };
 
@@ -110,9 +110,10 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
       if (editablePost.picturePath) {
         loadImgIntoThumbnail();
       }
-    } else {
-      clearForm();
     }
+    // else {
+    //   clearForm();
+    // }
   }, [editablePost]);
 
   return (

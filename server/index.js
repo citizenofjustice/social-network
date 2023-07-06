@@ -49,10 +49,23 @@ const storage = multer.diskStorage({
     cb(null, path);
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    const now = Date.now();
+    cb(null, `${now}_${file.originalname}`);
   },
 });
-export const upload = multer({ storage });
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+export const upload = multer({ storage, fileFilter });
 
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("avatar"), register);

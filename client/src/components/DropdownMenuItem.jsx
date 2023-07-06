@@ -8,7 +8,6 @@ import { triggerReloadToggle, setEditablePost } from "state/postsSlice";
 const DropdownMenuItem = ({ menuItem, postId }) => {
   const token = useSelector((state) => state.auth.token);
   const loggedInUserId = useSelector((state) => state.auth.user._id);
-  const editablePost = useSelector((state) => state.posts.editablePost);
   const dispatch = useDispatch();
 
   const handleMenuItemClick = async () => {
@@ -19,9 +18,6 @@ const DropdownMenuItem = ({ menuItem, postId }) => {
         loggedInUserId
       );
       dispatch(setEditablePost({ editablePost }));
-      // const res = await editSelectedPost(postId, "asd", token, loggedInUserId);
-      // if (res.ok) dispatch(setEditablePost({ editablePost: {} }));
-      console.log(editablePost);
     }
     if (menuItem.type === "REMOVE") {
       const response = await removeSelectedPost(postId, token, loggedInUserId);

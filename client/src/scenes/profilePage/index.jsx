@@ -36,11 +36,13 @@ const ProfilePage = () => {
       gap="2rem"
       justifyContent="center"
     >
-      <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-        <UserWidget user={user} />
-        <Box m="2rem 0" />
-        <FriendListWidget userId={userId} />
-      </Box>
+      {(isNonMobileScreens || !isOneself) && (
+        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+          <UserWidget user={user} />
+          <Box m="2rem 0" />
+          <FriendListWidget userId={userId} />
+        </Box>
+      )}
       <Box
         flexBasis={isNonMobileScreens ? "42%" : undefined}
         mt={isNonMobileScreens ? undefined : "2rem"}
