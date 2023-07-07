@@ -163,3 +163,28 @@ export const getPostEditData = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const addNewComment = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId, commentText } = req.body;
+    const post = await Post.findById(postId);
+    const options = { upsert: false };
+    const updatePost = {
+      $set: {
+        comments: [
+          ...post.comments,
+          {
+            userId,
+            commentText,
+            createdAt: Date.now(),
+          },
+        ],
+      },
+    };
+    const result = await Post.updateOne({ _id: postId }, updatePost, options);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(409).json({ message: err.message });
+  }
+};

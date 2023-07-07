@@ -6,14 +6,22 @@ import {
   EditOutlined,
   BorderColor,
   Delete,
+  SendRounded,
 } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Typography,
+  InputBase,
+  useTheme,
+} from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { patchPostLikes } from "API";
+import { patchPostLikes, addCommentToPost } from "API";
 import SkeletonLoad from "components/SkeletonLoad";
 import DropdownMenu from "components/DropdownMenu";
 
@@ -33,6 +41,7 @@ const PostWidget = ({
   isPostLoading,
 }) => {
   const [isComments, setIsComments] = useState(false);
+  const [commentText, setCommentText] = useState("");
   const token = useSelector((state) => state.auth.token);
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const [postLikes, setPostLikes] = useState(likes);
@@ -69,6 +78,15 @@ const PostWidget = ({
   const patchLike = async () => {
     const { likes } = await patchPostLikes(postId, token, loggedInUserId);
     setPostLikes(likes);
+  };
+
+  const handleComment = async () => {
+    const formData = new FormData();
+    formData.append("userId", loggedInUserId);
+    formData.append("commentText", commentText);
+    const post = await addCommentToPost(postId, formData, token);
+    setCommentText("");
+    console.log(post);
   };
 
   return (
@@ -153,11 +171,37 @@ const PostWidget = ({
             <Box key={`${name}-${index}`}>
               <Divider />
               <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment}
+                {comment.commentText}
               </Typography>
             </Box>
           ))}
-          <Divider />
+          <Divider sx={{ margin: "1rem 0" }} />
+          <Box>
+            <InputBase
+              placeholder="What's on your mind..."
+              inputProps={{
+                className: "add-post-input",
+              }}
+              onChange={(e) => setCommentText(e.target.value)}
+              value={commentText}
+              multiline={true}
+              maxRows={3}
+              sx={{
+                width: "100%",
+                backgroundColor: palette.neutral.light,
+                borderRadius: "0.5rem",
+                padding: "0.75rem",
+              }}
+            />
+            <Box sx={{ display: "inline-block", marginLeft: "-2.5rem" }}>
+              <IconButton
+                onClick={handleComment}
+                style={{ backgroundColor: "transparent" }}
+              >
+                <SendRounded />
+              </IconButton>
+            </Box>
+          </Box>
         </Box>
       )}
     </WidgetWrapper>

@@ -104,6 +104,21 @@ export const patchPostLikes = async (postId, token, loggedInUserId) => {
   return updatedPost;
 };
 
+export const addCommentToPost = async (postId, formData, token) => {
+  const response = await fetch(
+    `http://localhost:3001/posts/${postId}/comment/add`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    }
+  );
+  const updatedPost = await response.json();
+  return updatedPost;
+};
+
 export const getEditablePostData = async (postId, token, loggedInUserId) => {
   const response = await fetch(
     `http://localhost:3001/posts/${postId}/get/edit/by/${loggedInUserId}`,

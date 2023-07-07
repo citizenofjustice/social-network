@@ -111,9 +111,6 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
         loadImgIntoThumbnail();
       }
     }
-    // else {
-    //   clearForm();
-    // }
   }, [editablePost]);
 
   return (
