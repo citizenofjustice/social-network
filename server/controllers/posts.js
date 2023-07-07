@@ -169,6 +169,7 @@ export const addNewComment = async (req, res) => {
     const { postId } = req.params;
     const { userId, commentText } = req.body;
     const post = await Post.findById(postId);
+    const user = await User.findById(userId);
     const options = { upsert: false };
     const updatePost = {
       $set: {
@@ -176,6 +177,8 @@ export const addNewComment = async (req, res) => {
           ...post.comments,
           {
             userId,
+            userName: `${user.firstName} ${user.lastName}`,
+            userPicturePath: user.picturePath,
             commentText,
             createdAt: Date.now(),
           },
