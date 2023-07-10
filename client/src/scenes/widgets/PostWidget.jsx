@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import { patchPostLikes, addCommentToPost } from "API";
 import SkeletonLoad from "components/SkeletonLoad";
 import DropdownMenu from "components/DropdownMenu";
+import UserImage from "components/UserImage";
 
 const PostWidget = ({
   postId,
@@ -58,6 +59,7 @@ const PostWidget = ({
   const main = palette.neutral.main;
   const primary = palette.primary.main;
   const medium = palette.neutral.medium;
+  const light = palette.neutral.light;
 
   const postDropdownMenuItems = [
     {
@@ -167,15 +169,42 @@ const PostWidget = ({
 
       {isComments && (
         <Box mt="0.5rem">
-          {comments.map((comment, index) => (
-            <Box key={`${name}-${index}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
+          {comments.map((comment) => (
+            <Box key={comment._id}>
+              <Divider sx={{ margin: "1rem 0" }} />
+              <Box display="flex" justifyContent="flex-start">
+                <Box
+                  display="flex"
+                  backgroundColor={light}
+                  padding="0.5rem 1rem 0.5rem 0.75rem"
+                  borderRadius="35px"
+                >
+                  <UserImage image={comment.userPicturePath} size="35px" />
+                  <Box ml="0.5rem">
+                    <Typography fontSize="0.8rem">
+                      {comment.userName}
+                    </Typography>
+                    <Typography sx={{ fontSize: "0.65rem", color: medium }}>
+                      {new Date(comment.createdAt).toLocaleString(locale, {
+                        timezone,
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+              <Typography
+                sx={{ color: main, m: "0.5rem 0", p: "0.25rem 0.25rem 0 " }}
+              >
                 {comment.commentText}
               </Typography>
             </Box>
           ))}
-          <Divider sx={{ margin: "1rem 0" }} />
+          <Divider sx={{ margin: "0.75rem 0" }} />
           <Box>
             <InputBase
               placeholder="What's on your mind..."

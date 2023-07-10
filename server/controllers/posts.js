@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
@@ -176,6 +177,7 @@ export const addNewComment = async (req, res) => {
         comments: [
           ...post.comments,
           {
+            _id: new mongoose.Types.ObjectId(),
             userId,
             userName: `${user.firstName} ${user.lastName}`,
             userPicturePath: user.picturePath,
