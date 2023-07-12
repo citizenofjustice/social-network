@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
@@ -157,6 +158,81 @@ export const getPostEditData = async (req, res) => {
     } else {
       resStatus = 403;
       result = "Access denied";
+    }
+    res.status(resStatus).json(result);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const addNewComment = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId, commentText } = req.body;
+    const post = await Post.findById(postId);
+    const user = await User.findById(userId);
+    const options = {
+      upsert: false,
+      returnDocument: "after",
+      returnNewDocument: true,
+    };
+    const updatePost = {
+      $set: {
+        comments: [
+          ...post.comments,
+          {
+            _id: new mongoose.Types.ObjectId(),
+            userId,
+            userName: `${user.firstName} ${user.lastName}`,
+            userPicturePath: user.picturePath,
+            commentText,
+            createdAt: Date.now(),
+          },
+        ],
+      },
+    };
+    const result = await Post.findOneAndUpdate(
+      { _id: postId },
+      updatePost,
+      options
+    );
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(409).json({ message: err.message });
+  }
+};
+
+export const removePostComment = async (req, res) => {
+  try {
+    const { postId, commentId, userId } = req.params;
+    const post = await Post.findById(postId);
+    let resStatus = 200;
+    let result = {};
+    const comment = post.comments.find(
+      (comment) => comment._id.toString() === commentId
+    );
+    if (comment && comment.userId === userId) {
+      const options = {
+        upsert: false,
+        returnDocument: "after",
+        returnNewDocument: true,
+      };
+      const updatedComments = post.comments.filter(
+        (comment) => comment._id.toString() !== commentId
+      );
+      const updatePost = {
+        $set: {
+          comments: updatedComments,
+        },
+      };
+      result = await Post.findOneAndUpdate(
+        { _id: postId },
+        updatePost,
+        options
+      );
+    } else {
+      resStatus = 403;
+      result = null;
     }
     res.status(resStatus).json(result);
   } catch (err) {

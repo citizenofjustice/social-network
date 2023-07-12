@@ -4,12 +4,15 @@ import {
   getUserPosts,
   likePost,
   getPostEditData,
-  editPost,
   removePost,
+  addNewComment,
+  removePostComment,
 } from "../controllers/posts.js";
 import { verifyToken } from "../middleware/auth.js";
+import multer from "multer";
 
 const router = express.Router();
+const upload = multer();
 
 /* READ */
 router.get("/:id/feed/:limit/:pageNum", verifyToken, getFeedPosts);
@@ -22,6 +25,12 @@ router.get("/:postId/get/edit/by/:userId", verifyToken, getPostEditData);
 
 /* UPDATE */
 router.patch("/:id/like", verifyToken, likePost);
+router.patch("/:postId/comment/add", upload.none(), verifyToken, addNewComment);
+router.patch(
+  "/:postId/comment/:commentId/remove/by/:userId",
+  verifyToken,
+  removePostComment
+);
 
 /* DELETE */
 router.delete("/:postId/remove/by/:userId", verifyToken, removePost);
