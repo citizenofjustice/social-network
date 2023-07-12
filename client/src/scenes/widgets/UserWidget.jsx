@@ -3,23 +3,38 @@ import {
   EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
+  SaveOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Divider,
+  useTheme,
+  IconButton,
+  InputBase,
+} from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import SkeletonLoad from "components/SkeletonLoad";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const UserWidget = ({ user }) => {
   const { palette } = useTheme();
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
+
+  const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
+  const [locationChange, setLocationChange] = useState(user.location);
+  const [occupationChange, setOccupationChange] = useState(user.occupation);
+
   const navigate = useNavigate();
 
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
+  const light = palette.neutral.light;
   const main = palette.neutral.main;
   const primaryDark = palette.primary.dark;
 
@@ -37,15 +52,19 @@ const UserWidget = ({ user }) => {
   } = user;
   const isOneself = loggedInUserId === _id;
 
+  const handleProfileChange = () => {
+    setIsProfileBeingEdited((prevState) => !prevState);
+  };
+
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
-      <FlexBetween
-        onClick={() => navigate(`/profile/${_id}`)}
-        gap="0.5rem"
-        pb="1.1rem"
-      >
-        <FlexBetween gap="1rem" sx={{ width: "100%" }}>
+      <FlexBetween gap="0.5rem" pb="1.1rem">
+        <FlexBetween
+          onClick={() => navigate(`/profile/${_id}`)}
+          gap="1rem"
+          sx={{ width: "100%" }}
+        >
           <UserImage image={picturePath} loading={isUserLoading} />
           <Box sx={{ width: "100%", padding: "0.5rem" }}>
             <SkeletonLoad loading={isUserLoading} count={2}>
@@ -66,7 +85,9 @@ const UserWidget = ({ user }) => {
             </SkeletonLoad>
           </Box>
         </FlexBetween>
-        <ManageAccountsOutlined />
+        <IconButton onClick={handleProfileChange}>
+          {isProfileBeingEdited ? <SaveOutlined /> : <ManageAccountsOutlined />}
+        </IconButton>
       </FlexBetween>
 
       <Divider />
@@ -75,19 +96,47 @@ const UserWidget = ({ user }) => {
       <Box p="1rem 0" sx={{ width: "100%" }}>
         <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
           <LocationOnOutlined fontSize="large" sx={{ color: main }} />
-          <Typography color={medium} sx={{ width: "100%" }}>
-            <SkeletonLoad loading={isUserLoading} count={1}>
-              {location}
-            </SkeletonLoad>
-          </Typography>
+          {isProfileBeingEdited ? (
+            <InputBase
+              sx={{
+                width: "100%",
+                backgroundColor: light,
+                padding: "0.25rem 0.5rem",
+                borderRadius: "0.5rem",
+              }}
+              placeholder="Set location"
+              value={locationChange}
+              onChange={(e) => setLocationChange(e.target.value)}
+            />
+          ) : (
+            <Typography color={medium} sx={{ width: "100%" }}>
+              <SkeletonLoad loading={isUserLoading} count={1}>
+                {location}
+              </SkeletonLoad>
+            </Typography>
+          )}
         </Box>
         <Box display="flex" alignItems="center" gap="1rem">
           <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
-          <Typography color={medium} sx={{ width: "100%" }}>
-            <SkeletonLoad loading={isUserLoading} count={1}>
-              {occupation}
-            </SkeletonLoad>
-          </Typography>
+          {isProfileBeingEdited ? (
+            <InputBase
+              sx={{
+                width: "100%",
+                backgroundColor: light,
+                padding: "0.25rem 0.5rem",
+                borderRadius: "0.5rem",
+              }}
+              placeholder="Set occupation"
+              value={occupationChange}
+              onChange={(e) => setOccupationChange(e.target.value)}
+            />
+          ) : (
+            <Typography color={medium} sx={{ width: "100%" }}>
+              <SkeletonLoad loading={isUserLoading} count={1}>
+                {occupation}
+              </SkeletonLoad>
+            </Typography>
+          )}
         </Box>
       </Box>
 
