@@ -20,11 +20,13 @@ import SkeletonLoad from "components/SkeletonLoad";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { updateProfileInfo } from "API";
 
 const UserWidget = ({ user }) => {
   const { palette } = useTheme();
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
+  const token = useSelector((state) => state.auth.token);
 
   const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
   const [locationChange, setLocationChange] = useState(user.location);
@@ -52,8 +54,19 @@ const UserWidget = ({ user }) => {
   } = user;
   const isOneself = loggedInUserId === _id;
 
-  const handleProfileChange = () => {
-    setIsProfileBeingEdited((prevState) => !prevState);
+  const handleProfileChange = async () => {
+    // setIsProfileBeingEdited((prevState) => !prevState);
+    if (isProfileBeingEdited) {
+      const formData = new FormData();
+      formData.append("userId", loggedInUserId);
+      formData.append("location", locationChange);
+      formData.append("occupation", occupationChange);
+      const result = await updateProfileInfo(formData, loggedInUserId, token);
+      console.log(result);
+      setIsProfileBeingEdited(false);
+    } else {
+      setIsProfileBeingEdited(true);
+    }
   };
 
   return (
