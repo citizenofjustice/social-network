@@ -1,9 +1,9 @@
 import {
   ManageAccountsOutlined,
-  EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
   SaveOutlined,
+  BackspaceOutlined,
 } from "@mui/icons-material";
 import {
   Box,
@@ -17,6 +17,7 @@ import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import SkeletonLoad from "components/SkeletonLoad";
+import SocialNetworks from "components/SocialNetworks";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
@@ -55,7 +56,6 @@ const UserWidget = ({ user }) => {
   const isOneself = loggedInUserId === _id;
 
   const handleProfileChange = async () => {
-    // setIsProfileBeingEdited((prevState) => !prevState);
     if (isProfileBeingEdited) {
       const formData = new FormData();
       formData.append("userId", loggedInUserId);
@@ -67,6 +67,12 @@ const UserWidget = ({ user }) => {
     } else {
       setIsProfileBeingEdited(true);
     }
+  };
+
+  const handleProfileEditCancelation = () => {
+    setLocationChange(user.location);
+    setOccupationChange(user.occupation);
+    setIsProfileBeingEdited(false);
   };
 
   return (
@@ -98,9 +104,22 @@ const UserWidget = ({ user }) => {
             </SkeletonLoad>
           </Box>
         </FlexBetween>
-        <IconButton onClick={handleProfileChange}>
-          {isProfileBeingEdited ? <SaveOutlined /> : <ManageAccountsOutlined />}
-        </IconButton>
+        {isOneself && (
+          <>
+            {isProfileBeingEdited && (
+              <IconButton onClick={handleProfileEditCancelation}>
+                <BackspaceOutlined />
+              </IconButton>
+            )}
+            <IconButton onClick={handleProfileChange}>
+              {isProfileBeingEdited ? (
+                <SaveOutlined />
+              ) : (
+                <ManageAccountsOutlined />
+              )}
+            </IconButton>
+          </>
+        )}
       </FlexBetween>
 
       <Divider />
@@ -196,41 +215,11 @@ const UserWidget = ({ user }) => {
       )}
 
       {/* FOURTH ROW */}
-      <Box p="1rem 0">
-        <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
-          Social Profiles
-        </Typography>
-
-        <SkeletonLoad loading={isUserLoading} height="2rem">
-          <FlexBetween gap="1rem" mb="0.5rem">
-            <FlexBetween gap="1rem">
-              <img src="../assets/twitter.png" alt="twitter" />
-              <Box>
-                <Typography color={main} fontWeight="500">
-                  Twitter
-                </Typography>
-                <Typography color={medium}>Social Network</Typography>
-              </Box>
-            </FlexBetween>
-            {isOneself && <EditOutlined sx={{ color: main }} />}
-          </FlexBetween>
-        </SkeletonLoad>
-
-        <SkeletonLoad loading={isUserLoading} height="2rem">
-          <FlexBetween gap="1rem">
-            <FlexBetween gap="1rem">
-              <img src="../assets/linkedin.png" alt="linkedin" />
-              <Box>
-                <Typography color={main} fontWeight="500">
-                  Twitter
-                </Typography>
-                <Typography color={medium}>Network Platform</Typography>
-              </Box>
-            </FlexBetween>
-            {isOneself && <EditOutlined sx={{ color: main }} />}
-          </FlexBetween>
-        </SkeletonLoad>
-      </Box>
+      <SocialNetworks
+        isOneself={isOneself}
+        isUserLoading={isUserLoading}
+        isProfileBeingEdited={isProfileBeingEdited}
+      />
     </WidgetWrapper>
   );
 };
