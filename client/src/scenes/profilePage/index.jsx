@@ -38,7 +38,7 @@ const ProfilePage = () => {
     >
       {(isNonMobileScreens || !isOneself) && (
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget user={user} />
+          <UserWidget viewedUserData={user} />
           <Box m="2rem 0" />
           <FriendListWidget userId={userId} />
         </Box>

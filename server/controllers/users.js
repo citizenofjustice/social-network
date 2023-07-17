@@ -118,27 +118,30 @@ const findUsersByNameOrEmail = async (query, id) => {
 
 export const updateUserProfile = async (req, res) => {
   try {
-    const { userId, location, occupation } = req.body;
-    console.log(req.body);
+    const { userData } = req.body;
+    // console.log(req.body);
+    console.log(userData.friends);
     // const user = await User.findById(userId);
-    const options = {
-      upsert: false,
-      // returnDocument: "after",
-      // returnNewDocument: true,
-    };
-    const updateUser = {
-      $set: {
-        location: location,
-        occupation: occupation,
-      },
-    };
-    // const result = await User.findOneAndUpdate(
-    //   { _id: userId.toString() },
-    //   updateUser,
-    //   options
-    // );
-    await User.updateOne({ _id: userId }, updateUser, options);
-    const result = await User.findById(userId);
+
+    // const options = {
+    //   upsert: false,
+    //   // returnDocument: "after",
+    //   // returnNewDocument: true,
+    // };
+    // const updateUser = {
+    //   $set: {
+    //     location: location,
+    //     occupation: occupation,
+    //   },
+    // };
+    // // const result = await User.findOneAndUpdate(
+    // //   { _id: userId.toString() },
+    // //   updateUser,
+    // //   options
+    // // );
+    // await User.updateOne({ _id: userId }, updateUser, options);
+    // const result = await User.findById(userId);
+
     res.status(200).json(result);
   } catch (err) {
     res.status(404).json({ message: err.message });

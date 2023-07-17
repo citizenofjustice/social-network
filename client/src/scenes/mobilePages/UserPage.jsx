@@ -31,7 +31,7 @@ const UserPage = () => {
       justifyContent="space-between"
     >
       <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-        <UserWidget user={user} />
+        <UserWidget viewedUserData={user} />
       </Box>
     </Box>
   );

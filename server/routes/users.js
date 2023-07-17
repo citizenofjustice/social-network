@@ -19,7 +19,13 @@ router.get("/like/:query/not/:id", verifyToken, getUsersByQuery);
 
 /* UPDATE */
 router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
-router.patch(
+// router.patch(
+//   "/:id/profile/change",
+//   upload.none(),
+//   verifyToken,
+//   updateUserProfile
+// );
+router.put(
   "/:id/profile/change",
   upload.none(),
   verifyToken,

@@ -23,15 +23,17 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import { updateProfileInfo } from "API";
 
-const UserWidget = ({ user }) => {
+const UserWidget = ({ viewedUserData }) => {
   const { palette } = useTheme();
-  const loggedInUserId = useSelector((state) => state.auth.user._id);
+  const authUser = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const token = useSelector((state) => state.auth.token);
 
   const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
-  const [locationChange, setLocationChange] = useState(user.location);
-  const [occupationChange, setOccupationChange] = useState(user.occupation);
+  const [locationChange, setLocationChange] = useState(viewedUserData.location);
+  const [occupationChange, setOccupationChange] = useState(
+    viewedUserData.occupation
+  );
 
   const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ const UserWidget = ({ user }) => {
   const main = palette.neutral.main;
   const primaryDark = palette.primary.dark;
 
-  if (!user) return null;
+  if (!viewedUserData) return null;
   const {
     _id,
     firstName,
@@ -52,26 +54,29 @@ const UserWidget = ({ user }) => {
     viewedProfile,
     impressions,
     friends,
-  } = user;
-  const isOneself = loggedInUserId === _id;
+  } = viewedUserData;
+  const isOneself = authUser._id === _id;
 
   const handleProfileChange = async () => {
     if (isProfileBeingEdited) {
       const formData = new FormData();
-      formData.append("userId", loggedInUserId);
-      formData.append("location", locationChange);
-      formData.append("occupation", occupationChange);
-      const result = await updateProfileInfo(formData, loggedInUserId, token);
+      for (const key in authUser) {
+        formData.append(`${key}`, authUser[key]);
+      }
+      // formData.append("location", locationChange);
+      // formData.append("occupation", occupationChange);
+      const result = await updateProfileInfo(formData, authUser._id, token);
       console.log(result);
       setIsProfileBeingEdited(false);
     } else {
+      // console.log(authUser);
       setIsProfileBeingEdited(true);
     }
   };
 
   const handleProfileEditCancelation = () => {
-    setLocationChange(user.location);
-    setOccupationChange(user.occupation);
+    setLocationChange(authUser.location);
+    setOccupationChange(authUser.occupation);
     setIsProfileBeingEdited(false);
   };
 
