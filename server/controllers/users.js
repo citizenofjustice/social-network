@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import util from "node:util";
 
 /* READ */
 export const getUser = async (req, res) => {
@@ -119,28 +120,21 @@ const findUsersByNameOrEmail = async (query, id) => {
 export const updateUserProfile = async (req, res) => {
   try {
     const { userData } = req.body;
-    // console.log(req.body);
-    console.log(userData.friends);
+    const updatedUserData = JSON.parse(userData);
+
     // const user = await User.findById(userId);
 
-    // const options = {
-    //   upsert: false,
-    //   // returnDocument: "after",
-    //   // returnNewDocument: true,
-    // };
-    // const updateUser = {
-    //   $set: {
-    //     location: location,
-    //     occupation: occupation,
-    //   },
-    // };
-    // // const result = await User.findOneAndUpdate(
-    // //   { _id: userId.toString() },
-    // //   updateUser,
-    // //   options
-    // // );
-    // await User.updateOne({ _id: userId }, updateUser, options);
-    // const result = await User.findById(userId);
+    const options = {
+      upsert: false,
+      // returnDocument: "after",
+      // returnNewDocument: true,
+    };
+    await User.updateOne(
+      { _id: updatedUserData._id },
+      updatedUserData,
+      options
+    );
+    const result = await User.findById(updatedUserData._id);
 
     res.status(200).json(result);
   } catch (err) {

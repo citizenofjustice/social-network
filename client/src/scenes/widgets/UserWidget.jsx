@@ -60,10 +60,11 @@ const UserWidget = ({ viewedUserData }) => {
   const handleProfileChange = async () => {
     if (isProfileBeingEdited) {
       const formData = new FormData();
-      for (const key in authUser) {
-        formData.append(`${key}`, authUser[key]);
-      }
-      // formData.append("location", locationChange);
+      // for (const key in authUser) {
+      //   formData.append(`${key}`, authUser[key]);
+      //   console.log(authUser[key]);
+      // }
+      formData.append("userData", JSON.stringify(authUser, null, 2));
       // formData.append("occupation", occupationChange);
       const result = await updateProfileInfo(formData, authUser._id, token);
       console.log(result);
