@@ -19,12 +19,14 @@ import WidgetWrapper from "components/WidgetWrapper";
 import SkeletonLoad from "components/SkeletonLoad";
 import SocialNetworks from "components/SocialNetworks";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { updateProfileInfo } from "API";
+import { updateUser } from "state/authSlice";
 
 const UserWidget = ({ viewedUserData }) => {
   const { palette } = useTheme();
+  const dispatch = useDispatch();
   const authUser = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const token = useSelector((state) => state.auth.token);
@@ -34,6 +36,7 @@ const UserWidget = ({ viewedUserData }) => {
   const [occupationChange, setOccupationChange] = useState(
     viewedUserData.occupation
   );
+  const [currentUserData, setCurrentUserData] = useState(authUser);
 
   const navigate = useNavigate();
 
@@ -54,23 +57,29 @@ const UserWidget = ({ viewedUserData }) => {
     viewedProfile,
     impressions,
     friends,
+    socials,
   } = viewedUserData;
   const isOneself = authUser._id === _id;
 
-  const handleProfileChange = async () => {
+  const handleProfileUpdate = async () => {
     if (isProfileBeingEdited) {
+      let changedState = currentUserData;
+      changedState.location = locationChange;
+      changedState.occupation = occupationChange;
+      setCurrentUserData(changedState);
+
       const formData = new FormData();
-      // for (const key in authUser) {
-      //   formData.append(`${key}`, authUser[key]);
-      //   console.log(authUser[key]);
-      // }
-      formData.append("userData", JSON.stringify(authUser, null, 2));
-      // formData.append("occupation", occupationChange);
+      formData.append("userData", JSON.stringify(currentUserData, null, 2));
+
       const result = await updateProfileInfo(formData, authUser._id, token);
-      console.log(result);
+      if (result)
+        dispatch(
+          updateUser({
+            user: result,
+          })
+        );
       setIsProfileBeingEdited(false);
     } else {
-      // console.log(authUser);
       setIsProfileBeingEdited(true);
     }
   };
@@ -79,6 +88,12 @@ const UserWidget = ({ viewedUserData }) => {
     setLocationChange(authUser.location);
     setOccupationChange(authUser.occupation);
     setIsProfileBeingEdited(false);
+  };
+
+  const handleProfilesChange = (profiles) => {
+    let changedState = currentUserData;
+    changedState.socials = profiles;
+    setCurrentUserData(changedState);
   };
 
   return (
@@ -117,7 +132,7 @@ const UserWidget = ({ viewedUserData }) => {
                 <BackspaceOutlined />
               </IconButton>
             )}
-            <IconButton onClick={handleProfileChange}>
+            <IconButton onClick={handleProfileUpdate}>
               {isProfileBeingEdited ? (
                 <SaveOutlined />
               ) : (
@@ -225,6 +240,8 @@ const UserWidget = ({ viewedUserData }) => {
         isOneself={isOneself}
         isUserLoading={isUserLoading}
         isProfileBeingEdited={isProfileBeingEdited}
+        socials={socials}
+        onProfilesChange={handleProfilesChange}
       />
     </WidgetWrapper>
   );

@@ -41,12 +41,18 @@ const allowedNetworks = [
   { title: "Discord", description: "contact", icon: faDiscord },
 ];
 
-const SocialNetworks = ({ isOneself, isUserLoading, isProfileBeingEdited }) => {
+const SocialNetworks = ({
+  isOneself,
+  isUserLoading,
+  isProfileBeingEdited,
+  socials,
+  onProfilesChange,
+}) => {
   const { palette } = useTheme();
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [profileLink, setProfileLink] = useState("");
   const [isProfileInputsActive, setIsProfileInputsActive] = useState(false);
-  const [userProfiles, setUserProfiles] = useState([]);
+  const [userProfiles, setUserProfiles] = useState(socials || []);
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
 
@@ -79,15 +85,15 @@ const SocialNetworks = ({ isOneself, isUserLoading, isProfileBeingEdited }) => {
     const newProfile = allowedNetworks.find(
       (item) => item.title === selectedNetwork
     );
-    setUserProfiles((prevState) => [
-      ...prevState,
-      {
-        title: newProfile.title,
-        description: newProfile.description,
-        icon: newProfile.icon,
-        link: profileLink,
-      },
-    ]);
+    const profiles = userProfiles;
+    profiles.push({
+      title: newProfile.title,
+      description: newProfile.description,
+      icon: newProfile.icon,
+      link: profileLink,
+    });
+    setUserProfiles(profiles);
+    onProfilesChange(userProfiles);
     clearProfileInputs();
   };
 
@@ -96,6 +102,7 @@ const SocialNetworks = ({ isOneself, isUserLoading, isProfileBeingEdited }) => {
       (profile) => profile.title !== removeableProfile
     );
     setUserProfiles(updatedUserProfiles);
+    onProfilesChange(updatedUserProfiles);
   };
 
   useEffect(() => {

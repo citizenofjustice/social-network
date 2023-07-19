@@ -1,5 +1,4 @@
 import User from "../models/User.js";
-import util from "node:util";
 
 /* READ */
 export const getUser = async (req, res) => {
@@ -122,20 +121,16 @@ export const updateUserProfile = async (req, res) => {
     const { userData } = req.body;
     const updatedUserData = JSON.parse(userData);
 
-    // const user = await User.findById(userId);
-
     const options = {
       upsert: false,
-      // returnDocument: "after",
-      // returnNewDocument: true,
+      returnDocument: "after",
+      returnNewDocument: true,
     };
-    await User.updateOne(
+    const result = await User.findOneAndUpdate(
       { _id: updatedUserData._id },
       updatedUserData,
       options
     );
-    const result = await User.findById(updatedUserData._id);
-
     res.status(200).json(result);
   } catch (err) {
     res.status(404).json({ message: err.message });
