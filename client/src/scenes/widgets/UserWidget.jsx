@@ -63,7 +63,7 @@ const UserWidget = ({ viewedUserData }) => {
 
   const handleProfileUpdate = async () => {
     if (isProfileBeingEdited) {
-      let changedState = currentUserData;
+      let changedState = { ...currentUserData };
       changedState.location = locationChange;
       changedState.occupation = occupationChange;
       setCurrentUserData(changedState);
@@ -91,7 +91,7 @@ const UserWidget = ({ viewedUserData }) => {
   };
 
   const handleProfilesChange = (profiles) => {
-    let changedState = currentUserData;
+    let changedState = { ...currentUserData };
     changedState.socials = profiles;
     setCurrentUserData(changedState);
   };
