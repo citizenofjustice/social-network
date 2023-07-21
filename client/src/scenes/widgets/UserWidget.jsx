@@ -32,9 +32,11 @@ const UserWidget = ({ viewedUserData }) => {
   const token = useSelector((state) => state.auth.token);
 
   const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
-  const [locationChange, setLocationChange] = useState(viewedUserData.location);
+  const [locationChange, setLocationChange] = useState(
+    viewedUserData.location || null
+  );
   const [occupationChange, setOccupationChange] = useState(
-    viewedUserData.occupation
+    viewedUserData.occupation || null
   );
   const [currentUserData, setCurrentUserData] = useState(authUser);
 
@@ -63,13 +65,14 @@ const UserWidget = ({ viewedUserData }) => {
 
   const handleProfileUpdate = async () => {
     if (isProfileBeingEdited) {
-      let changedState = { ...currentUserData };
-      changedState.location = locationChange;
-      changedState.occupation = occupationChange;
-      setCurrentUserData(changedState);
+      const changedUserState = {
+        ...currentUserData,
+        location: locationChange,
+        occupation: occupationChange,
+      };
 
       const formData = new FormData();
-      formData.append("userData", JSON.stringify(currentUserData, null, 2));
+      formData.append("userData", JSON.stringify(changedUserState, null, 2));
 
       const result = await updateProfileInfo(formData, authUser._id, token);
       if (result)
@@ -91,9 +94,8 @@ const UserWidget = ({ viewedUserData }) => {
   };
 
   const handleProfilesChange = (profiles) => {
-    let changedState = { ...currentUserData };
-    changedState.socials = profiles;
-    setCurrentUserData(changedState);
+    let changedUserState = { ...currentUserData, socials: profiles };
+    setCurrentUserData(changedUserState);
   };
 
   return (
