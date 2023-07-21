@@ -16,7 +16,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import {
   faYoutube,
@@ -52,7 +52,7 @@ const SocialNetworks = ({
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [profileLink, setProfileLink] = useState("");
   const [isProfileInputsActive, setIsProfileInputsActive] = useState(false);
-  const [userProfiles, setUserProfiles] = useState(socials || []);
+  const [userProfiles, setUserProfiles] = useState([]);
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
 
@@ -104,6 +104,10 @@ const SocialNetworks = ({
     setUserProfiles(updatedUserProfiles);
     onProfilesChange(updatedUserProfiles);
   };
+
+  useMemo(() => {
+    setUserProfiles(socials);
+  }, [socials]);
 
   useEffect(() => {
     clearProfileInputs();
