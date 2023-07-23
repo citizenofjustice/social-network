@@ -2,11 +2,7 @@ import { useEffect } from "react";
 import {
   Box,
   IconButton,
-  InputBase,
   Typography,
-  Select,
-  MenuItem,
-  FormControl,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
@@ -29,9 +25,10 @@ import { setMode } from "state/uiSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
-import SkeletonLoad from "components/SkeletonLoad";
+
 import SearchBar from "components/SearchBar";
 import useComponentVisible from "hooks/useComponentVisible";
+import NavbarDropdown from "components/NavbarDropdown";
 
 const Navbar = () => {
   const { ref, isComponentVisible, setIsComponentVisible } =
@@ -116,38 +113,12 @@ const Navbar = () => {
             <Help sx={{ fontSize: "25px" }} />
           </IconButton>
 
-          <FormControl variant="standard" value={fullName}>
-            <Select
-              value={fullName}
-              sx={{
-                backgroundColor: neutralLight,
-                width: "150px",
-                borderRadius: "0.25rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": {
-                  pr: "0.25rem",
-                  width: "3rem",
-                },
-                "& .MuiSelect-select:focus": {
-                  backgroundColor: neutralLight,
-                },
-              }}
-              input={<InputBase />}
-            >
-              <MenuItem value={fullName}>
-                <Typography ml="0.5rem">
-                  <SkeletonLoad loading={isUserLoading}>
-                    {fullName}
-                  </SkeletonLoad>
-                </Typography>
-              </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>
-                <Typography style={{ textAlign: "right" }} ml="0.5rem">
-                  Log Out
-                </Typography>
-              </MenuItem>
-            </Select>
-          </FormControl>
+          <NavbarDropdown
+            name={fullName}
+            color={neutralLight}
+            loadingState={isUserLoading}
+          />
+
           <UserImage
             loading={isUserLoading}
             image={user.picturePath}
