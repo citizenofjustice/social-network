@@ -53,9 +53,24 @@ const NavbarDropdown = ({ name, color, loadingState }) => {
           </MenuItem>
         </Select>
       </FormControl>
-      <Box sx={{ position: "relative", backgroundColor: "gray", top: "50%" }}>
-        {isComponentVisible && <AuthDataChangeForm />}
-      </Box>
+      {isComponentVisible && (
+        <Box
+          sx={{
+            position: "fixed",
+            zIndex: "100",
+            backgroundColor: "#7f979ebf",
+            width: "100%",
+            height: "100%",
+            top: 0,
+            left: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <AuthDataChangeForm refProp={ref} />
+        </Box>
+      )}
     </>
   );
 };
