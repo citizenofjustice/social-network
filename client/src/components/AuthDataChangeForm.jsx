@@ -9,9 +9,12 @@ import {
   useTheme,
 } from "@mui/material";
 import { Formik } from "formik";
+import * as yup from "yup";
 import { useState } from "react";
+import { changeAuthData } from "API";
+import { useSelector } from "react-redux";
 
-const initialValuesLogin = {
+const initialValues = {
   email: "",
   password: "",
 };
@@ -20,8 +23,22 @@ const AuthDataChangeForm = ({ refProp }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isPasswordChecked, setIsPasswordChecked] = useState(false);
   const { palette } = useTheme();
+  const emailYup = yup.string().email("invalid email").required("required");
+  const passwordYup = yup.string().required("required");
+  const loggedInUserId = useSelector((state) => state.auth.user._id);
+  const token = useSelector((state) => state.auth.token);
 
-  const handleAuthDataChange = () => {};
+  const valSchema = yup.object().shape({
+    ...(isEmailChecked && { email: emailYup }),
+    ...(isPasswordChecked && { password: passwordYup }),
+  });
+
+  const handleAuthDataChange = async (values, onSubmitProps) => {
+    const formData = new FormData();
+    if (values.email) formData.append("email", values.email);
+    if (values.password) formData.append("password", values.password);
+    await changeAuthData(formData, loggedInUserId, token);
+  };
 
   const handleEmailToggle = (event) => {
     setIsEmailChecked(event.target.checked);
@@ -34,7 +51,8 @@ const AuthDataChangeForm = ({ refProp }) => {
     <Box ref={refProp}>
       <Formik
         onSubmit={handleAuthDataChange}
-        initialValues={initialValuesLogin}
+        initialValues={initialValues}
+        validationSchema={valSchema}
       >
         {({
           values,
@@ -43,18 +61,15 @@ const AuthDataChangeForm = ({ refProp }) => {
           handleBlur,
           handleChange,
           handleSubmit,
-          setFieldValue,
-          resetForm,
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
               sx={{
-                backgroundColor: "white",
+                backgroundColor: palette.background.alt,
                 padding: "1rem",
                 borderRadius: "0.5rem",
                 display: "grid",
                 gap: "1rem",
-                width: "500px",
               }}
             >
               <Typography
@@ -62,6 +77,7 @@ const AuthDataChangeForm = ({ refProp }) => {
                   textAlign: "center",
                   gridColumn: "span 4",
                   fontSize: "1rem",
+                  padding: "0 1rem",
                 }}
               >
                 Choose what you want to change
@@ -120,6 +136,7 @@ const AuthDataChangeForm = ({ refProp }) => {
               {(isEmailChecked || isPasswordChecked) && (
                 <Box sx={{ gridColumn: "span 4" }}>
                   <Button
+                    type="submit"
                     sx={{
                       display: "block",
                       margin: "0 auto",

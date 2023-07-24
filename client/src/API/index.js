@@ -212,3 +212,16 @@ export const updateProfileInfo = async (formData, userId, token) => {
   const updatedPost = await response.json();
   return updatedPost;
 };
+
+export const changeAuthData = async (formData, userId, token) => {
+  const response = await fetch(
+    `http://localhost:3001/users/${userId}/profile/changeAuthData`,
+    {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    }
+  );
+  const updatedData = await response.json();
+  return updatedData;
+};

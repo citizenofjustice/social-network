@@ -133,6 +133,17 @@ export const updateUserProfile = async (req, res) => {
     );
     res.status(200).json(result);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(403).json({ message: err.message });
+  }
+};
+
+export const updateAuthData = async (req, res) => {
+  try {
+    console.log(req.body);
+    // const { email, password } = req.body;
+    // console.log(password);
+    res.status(200).json("success");
+  } catch (err) {
+    res.status(403).json({ message: err.message });
   }
 };

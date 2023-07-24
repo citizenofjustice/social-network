@@ -32,6 +32,12 @@ const UserWidget = ({ viewedUserData }) => {
   const token = useSelector((state) => state.auth.token);
 
   const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
+  const [firstNameChange, setFirstNameChange] = useState(
+    viewedUserData.firstName || null
+  );
+  const [lastNameChange, setLastNameChange] = useState(
+    viewedUserData.lastName || null
+  );
   const [locationChange, setLocationChange] = useState(
     viewedUserData.location || null
   );
@@ -67,6 +73,8 @@ const UserWidget = ({ viewedUserData }) => {
     if (isProfileBeingEdited) {
       const changedUserState = {
         ...currentUserData,
+        firstName: firstNameChange,
+        lastName: lastNameChange,
         location: locationChange,
         occupation: occupationChange,
       };
@@ -88,6 +96,8 @@ const UserWidget = ({ viewedUserData }) => {
   };
 
   const handleProfileEditCancelation = () => {
+    setFirstNameChange(authUser.firstName);
+    setLastNameChange(authUser.lastName);
     setLocationChange(authUser.location);
     setOccupationChange(authUser.occupation);
     setIsProfileBeingEdited(false);
@@ -102,31 +112,58 @@ const UserWidget = ({ viewedUserData }) => {
     <WidgetWrapper>
       {/* FIRST ROW */}
       <FlexBetween gap="0.5rem" pb="1.1rem">
-        <FlexBetween
-          onClick={() => navigate(`/profile/${_id}`)}
-          gap="1rem"
-          sx={{ width: "100%" }}
-        >
-          <UserImage image={picturePath} loading={isUserLoading} />
-          <Box sx={{ width: "100%", padding: "0.5rem" }}>
-            <SkeletonLoad loading={isUserLoading} count={2}>
-              <Typography
-                variant="h4"
-                color={dark}
-                fontWeight="500"
-                sx={{
-                  "&:hover": {
-                    color: primaryDark,
-                    cursor: "pointer",
-                  },
-                }}
-              >
-                {firstName} {lastName}
-              </Typography>
-              <Typography color={medium}>{friends.length} friends</Typography>
-            </SkeletonLoad>
-          </Box>
-        </FlexBetween>
+        {isProfileBeingEdited ? (
+          <>
+            <InputBase
+              sx={{
+                width: "100%",
+                backgroundColor: light,
+                padding: "0.25rem 0.5rem",
+                borderRadius: "0.5rem",
+              }}
+              placeholder="Set first name"
+              value={firstNameChange}
+              onChange={(e) => setFirstNameChange(e.target.value)}
+            />
+            <InputBase
+              sx={{
+                width: "100%",
+                backgroundColor: light,
+                padding: "0.25rem 0.5rem",
+                borderRadius: "0.5rem",
+              }}
+              placeholder="Set last name"
+              value={lastNameChange}
+              onChange={(e) => setLastNameChange(e.target.value)}
+            />
+          </>
+        ) : (
+          <FlexBetween
+            onClick={() => navigate(`/profile/${_id}`)}
+            gap="1rem"
+            sx={{ width: "100%" }}
+          >
+            <UserImage image={picturePath} loading={isUserLoading} />
+            <Box sx={{ width: "100%", padding: "0.5rem" }}>
+              <SkeletonLoad loading={isUserLoading} count={2}>
+                <Typography
+                  variant="h4"
+                  color={dark}
+                  fontWeight="500"
+                  sx={{
+                    "&:hover": {
+                      color: primaryDark,
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  {firstName} {lastName}
+                </Typography>
+                <Typography color={medium}>{friends.length} friends</Typography>
+              </SkeletonLoad>
+            </Box>
+          </FlexBetween>
+        )}
         {isOneself && (
           <>
             {isProfileBeingEdited && (
