@@ -7,9 +7,7 @@ import {
   TextField,
   Typography,
   useTheme,
-  IconButton,
 } from "@mui/material";
-import { Visibility } from "@mui/icons-material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useState } from "react";
@@ -26,7 +24,6 @@ const AuthDataChangeForm = ({ refProp }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isPasswordChecked, setIsPasswordChecked] = useState(false);
   const { palette } = useTheme();
-  let isPasswordShown = false;
 
   const getCharacterValidationError = (str) => {
     return `Your password must have at least 1 ${str} character`;
@@ -143,35 +140,6 @@ const AuthDataChangeForm = ({ refProp }) => {
               )}
               {isPasswordChecked && (
                 <>
-                  {/* <TextField
-                    label="Old password"
-                    type="password"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.oldPassword}
-                    name="oldPassword"
-                    error={
-                      Boolean(touched.oldPassword) &&
-                      Boolean(errors.oldPassword)
-                    }
-                    helperText={touched.oldPassword && errors.oldPassword}
-                  /> */}
-                  {/* <TextField
-                    label="Password"
-                    type="password"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.password}
-                    name="password"
-                    error={
-                      Boolean(touched.password) && Boolean(errors.password)
-                    }
-                    helperText={touched.password && errors.password}
-                    
-                  />
-                  <IconButton style={{ backgroundColor: "transparent" }}>
-                    <Visibility />
-                  </IconButton> */}
                   <PasswordTextField
                     label="Old password"
                     handleBlur={handleBlur}
@@ -209,21 +177,6 @@ const AuthDataChangeForm = ({ refProp }) => {
                       touched.confirmPassword && errors.confirmPassword
                     }
                   />
-                  {/* <TextField
-                    label="Confirm password"
-                    type="password"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.confirmPassword}
-                    name="confirmPassword"
-                    error={
-                      Boolean(touched.confirmPassword) &&
-                      Boolean(errors.confirmPassword)
-                    }
-                    helperText={
-                      touched.confirmPassword && errors.confirmPassword
-                    }
-                  /> */}
                 </>
               )}
               {(isEmailChecked || isPasswordChecked) && (

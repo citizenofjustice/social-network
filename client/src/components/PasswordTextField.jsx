@@ -1,8 +1,6 @@
 import {
-  TextField,
   OutlinedInput,
   IconButton,
-  Box,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -28,7 +26,6 @@ const PasswordTextField = ({
 
   return (
     <FormControl variant="outlined">
-      <FormHelperText />
       <InputLabel htmlFor={`outlined-adornment-${label}`}>{label}</InputLabel>
       <OutlinedInput
         id={`outlined-adornment-${label}`}
@@ -38,8 +35,6 @@ const PasswordTextField = ({
         onChange={handleChange}
         value={value}
         name={name}
-        error={error}
-        helperText={helperText}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
@@ -53,6 +48,7 @@ const PasswordTextField = ({
           </InputAdornment>
         }
       />
+      <FormHelperText error={error}>{helperText}</FormHelperText>
     </FormControl>
   );
 };
