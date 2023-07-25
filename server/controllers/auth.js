@@ -59,9 +59,19 @@ export const login = async (req, res) => {
   }
 };
 
-// export const passwordChange = (req, res) => {
-//   try {
-//     const { userId, newPassword } = req.body;
-//
-//   }
-// }
+export const updateAuthData = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const { id } = req.params;
+
+    if (email) console.log(email);
+
+    if (password) console.log(password);
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(password, salt);
+    // res.status(200).json("success");
+    res.status(418).json({ message: "no coffe for you" });
+  } catch (err) {
+    res.status(403).json({ message: err.message });
+  }
+};

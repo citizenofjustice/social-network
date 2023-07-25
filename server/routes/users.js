@@ -19,12 +19,6 @@ router.get("/like/:query/not/:id", verifyToken, getUsersByQuery);
 
 /* UPDATE */
 router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
-router.patch(
-  "/:id/profile/changeAuthData",
-  upload.none(),
-  verifyToken,
-  updateUserProfile
-);
 router.put(
   "/:id/profile/change",
   upload.none(),

@@ -215,7 +215,7 @@ export const updateProfileInfo = async (formData, userId, token) => {
 
 export const changeAuthData = async (formData, userId, token) => {
   const response = await fetch(
-    `http://localhost:3001/users/${userId}/profile/changeAuthData`,
+    `http://localhost:3001/auth/${userId}/profile/changeAuthData`,
     {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },

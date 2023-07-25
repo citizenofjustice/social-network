@@ -172,7 +172,10 @@ const Navbar = () => {
             gap="2.5rem"
             mt="2rem"
           >
-            <IconButton onClick={() => navigate("/user")}>
+            <IconButton
+              onClick={() => navigate("/user")}
+              style={{ backgroundColor: "transparent" }}
+            >
               <UserImage
                 loading={isUserLoading}
                 image={user.picturePath}
