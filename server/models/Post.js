@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const postSchema = mongoose.Schema(
   {
+    /*** should replace with reference to user (properties below) ***/
     userId: {
       type: String,
       required: true,
@@ -15,9 +16,11 @@ const postSchema = mongoose.Schema(
       required: true,
     },
     location: String,
+    userPicturePath: String,
+    /*** ---------------- ****/
+
     description: String,
     picturePath: String,
-    userPicturePath: String,
     likes: {
       type: Map,
       of: Boolean,
