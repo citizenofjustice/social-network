@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const postSchema = mongoose.Schema(
   {
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -17,7 +17,7 @@ const postSchema = mongoose.Schema(
     },
     comments: {
       type: Array,
-      default: [],
+      default: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     },
     isEdited: {
       type: Boolean,

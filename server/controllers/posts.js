@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import Comment from "../models/Comment.js";
 
 const postPopulateQuery = {
-  path: "userId",
+  path: "user",
   select: "firstName lastName location picturePath",
 };
 
@@ -15,7 +16,7 @@ export const createPost = async (req, res) => {
     let picturePath = null;
     if (filedata) picturePath = `${userId}/${filedata.filename}`;
     const newPost = new Post({
-      userId,
+      user: userId,
       description,
       picturePath,
       likes: {},
@@ -25,7 +26,7 @@ export const createPost = async (req, res) => {
     await newPost.save();
 
     const post = await Post.findOne(
-      { userId },
+      { user: userId },
       {},
       { sort: { createdAt: -1 } }
     );
@@ -39,11 +40,11 @@ export const createPost = async (req, res) => {
 export const getFeedPosts = async (req, res) => {
   try {
     const { id, limit, pageNum } = req.params;
-    const totalPostCount = await Post.find({ userId: { $ne: id } })
+    const totalPostCount = await Post.find({ user: { $ne: id } })
       .sort({ createdAt: -1 })
       .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
-    const postsPage = await Post.find({ userId: { $ne: id } })
+    const postsPage = await Post.find({ user: { $ne: id } })
       .populate(postPopulateQuery)
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
@@ -57,11 +58,11 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
   try {
     const { userId, limit, pageNum } = req.params;
-    const totalPostCount = await Post.find({ userId })
+    const totalPostCount = await Post.find({ user: userId })
       .sort({ createdAt: -1 })
       .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
-    const postsPage = await Post.find({ userId })
+    const postsPage = await Post.find({ user: userId })
       .populate(postPopulateQuery)
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
@@ -106,7 +107,7 @@ export const editPost = async (req, res) => {
     const post = await Post.findById(postId);
     let resStatus = 200;
     let result;
-    if (post.userId === userId) {
+    if (post.user.toString() === userId) {
       let picturePath = null;
       if (filedata) picturePath = `${userId}/${filedata.filename}`;
       // this option instructs the method to create a document if no documents match the filter
@@ -137,7 +138,7 @@ export const removePost = async (req, res) => {
     const post = await Post.findById(postId);
     let resStatus = 200;
     let result = "Delete successful";
-    if (post.userId === userId) {
+    if (post.user.toString() === userId) {
       await Post.deleteOne({ _id: post._id });
     } else {
       resStatus = 403;
@@ -155,7 +156,7 @@ export const getPostEditData = async (req, res) => {
     const post = await Post.findById(postId);
     let resStatus = 200;
     let result;
-    if (post.userId === userId) {
+    if (post.user.toString() === userId) {
       result = post;
     } else {
       resStatus = 403;
