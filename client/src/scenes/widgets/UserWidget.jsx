@@ -18,11 +18,12 @@ import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import SkeletonLoad from "components/SkeletonLoad";
 import SocialNetworks from "components/SocialNetworks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { updateProfileInfo } from "API";
 import { updateUser } from "state/authSlice";
+import { triggerReloadToggle } from "state/postsSlice";
 
 const UserWidget = ({ viewedUserData }) => {
   const { palette } = useTheme();
@@ -47,6 +48,10 @@ const UserWidget = ({ viewedUserData }) => {
   const [currentUserData, setCurrentUserData] = useState(authUser);
 
   const navigate = useNavigate();
+  const routerLocation = useLocation();
+  const isProfilePage =
+    /^\/profile\/.*$/.test(routerLocation.pathname) ||
+    /^\/user/.test(routerLocation.pathname);
 
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
@@ -89,6 +94,7 @@ const UserWidget = ({ viewedUserData }) => {
             user: result,
           })
         );
+      dispatch(triggerReloadToggle());
       setIsProfileBeingEdited(false);
     } else {
       setIsProfileBeingEdited(true);
@@ -164,7 +170,7 @@ const UserWidget = ({ viewedUserData }) => {
             </Box>
           </FlexBetween>
         )}
-        {isOneself && (
+        {isOneself && isProfilePage && (
           <>
             {isProfileBeingEdited && (
               <IconButton onClick={handleProfileEditCancelation}>

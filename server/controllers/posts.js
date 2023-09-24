@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
+const postPopulateQuery = {
+  path: "userId",
+  select: "firstName lastName location picturePath",
+};
+
 /* CREATE */
 export const createPost = async (req, res) => {
   try {
@@ -9,14 +14,9 @@ export const createPost = async (req, res) => {
     const filedata = req.file;
     let picturePath = null;
     if (filedata) picturePath = `${userId}/${filedata.filename}`;
-    const user = await User.findById(userId);
     const newPost = new Post({
       userId,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      location: user.location,
       description,
-      userPicturePath: user.picturePath,
       picturePath,
       likes: {},
       comments: [],
@@ -44,6 +44,7 @@ export const getFeedPosts = async (req, res) => {
       .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
     const postsPage = await Post.find({ userId: { $ne: id } })
+      .populate(postPopulateQuery)
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
       .limit(limit);
@@ -61,6 +62,7 @@ export const getUserPosts = async (req, res) => {
       .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
     const postsPage = await Post.find({ userId })
+      .populate(postPopulateQuery)
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
       .limit(limit);

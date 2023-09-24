@@ -1,23 +1,13 @@
+const { Schema } = mongoose;
 import mongoose from "mongoose";
 
 const postSchema = mongoose.Schema(
   {
-    /*** should replace with reference to user (properties below) ***/
     userId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
-    location: String,
-    userPicturePath: String,
-    /*** ---------------- ****/
 
     description: String,
     picturePath: String,
