@@ -1,12 +1,14 @@
-import mongoose from "mongoose";
 import Post from "../models/Post.js";
-import User from "../models/User.js";
 import Comment from "../models/Comment.js";
 
-const postPopulateQuery = {
-  path: "user",
-  select: "firstName lastName location picturePath",
-};
+const postPopulateQuery = [
+  { path: "user", select: "firstName lastName location picturePath" },
+  {
+    path: "comments",
+    select: "author content createdAt",
+    populate: { path: "author", select: "firstName lastName picturePath" },
+  },
+];
 
 /* CREATE */
 export const createPost = async (req, res) => {
@@ -172,34 +174,20 @@ export const addNewComment = async (req, res) => {
   try {
     const { postId } = req.params;
     const { userId, commentText } = req.body;
+    const newComment = new Comment({
+      post: postId,
+      author: userId,
+      content: commentText,
+    });
+
+    const addedComment = await newComment.save();
     const post = await Post.findById(postId);
-    const user = await User.findById(userId);
-    const options = {
-      upsert: false,
-      returnDocument: "after",
-      returnNewDocument: true,
-    };
-    const updatePost = {
-      $set: {
-        comments: [
-          ...post.comments,
-          {
-            _id: new mongoose.Types.ObjectId(),
-            userId,
-            userName: `${user.firstName} ${user.lastName}`,
-            userPicturePath: user.picturePath,
-            commentText,
-            createdAt: Date.now(),
-          },
-        ],
-      },
-    };
-    const result = await Post.findOneAndUpdate(
-      { _id: postId },
-      updatePost,
-      options
-    );
-    res.status(200).json(result);
+    post.comments.push(addedComment);
+    await post.save();
+
+    const updatedPost = await post.populate(postPopulateQuery);
+
+    res.status(200).json(updatedPost);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }
@@ -208,36 +196,36 @@ export const addNewComment = async (req, res) => {
 export const removePostComment = async (req, res) => {
   try {
     const { postId, commentId, userId } = req.params;
-    const post = await Post.findById(postId);
-    let resStatus = 200;
-    let result = {};
-    const comment = post.comments.find(
-      (comment) => comment._id.toString() === commentId
-    );
-    if (comment && comment.userId === userId) {
-      const options = {
-        upsert: false,
-        returnDocument: "after",
-        returnNewDocument: true,
-      };
-      const updatedComments = post.comments.filter(
-        (comment) => comment._id.toString() !== commentId
-      );
-      const updatePost = {
-        $set: {
-          comments: updatedComments,
-        },
-      };
-      result = await Post.findOneAndUpdate(
-        { _id: postId },
-        updatePost,
-        options
-      );
-    } else {
-      resStatus = 403;
-      result = null;
-    }
-    res.status(resStatus).json(result);
+
+    await Comment.findByIdAndDelete({ _id: commentId });
+
+    // const comment = post.comments.find(
+    //   (comment) => comment._id.toString() === commentId
+    // );
+    // if (comment && comment.userId === userId) {
+    //   const options = {
+    //     upsert: false,
+    //     returnDocument: "after",
+    //     returnNewDocument: true,
+    //   };
+    //   const updatedComments = post.comments.filter(
+    //     (comment) => comment._id.toString() !== commentId
+    //   );
+    //   const updatePost = {
+    //     $set: {
+    //       comments: updatedComments,
+    //     },
+    //   };
+    //   result = await Post.findOneAndUpdate(
+    //     { _id: postId },
+    //     updatePost,
+    //     options
+    //   );
+    // } else {
+    //   resStatus = 403;
+    //   result = null;
+    // }
+    res.status(resStatus).json([]);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
