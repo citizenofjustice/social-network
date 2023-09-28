@@ -13,7 +13,7 @@ import UserImage from "components/UserImage";
 import { Link } from "react-router-dom";
 import { addCommentToPost, removeCommentFromPost } from "API";
 
-const CommentsList = ({ postId, comments, isShown }) => {
+const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
   const [commentText, setCommentText] = useState("");
   const [commentList, setCommentList] = useState(comments);
   const token = useSelector((state) => state.auth.token);
@@ -31,14 +31,21 @@ const CommentsList = ({ postId, comments, isShown }) => {
     const formData = new FormData();
     formData.append("userId", loggedInUserId);
     formData.append("commentText", commentText);
-    const post = await addCommentToPost(postId, formData, token);
-    setCommentList(post.comments);
+    const updatedPost = await addCommentToPost(postId, formData, token);
+    setCommentList(updatedPost.comments);
+    onCounterChange(updatedPost.comments.length);
     setCommentText("");
   };
 
   const handleRemoveComment = async (id) => {
-    const post = await removeCommentFromPost(postId, id, loggedInUserId, token);
-    if (post) setCommentList(post.comments);
+    const updatedPost = await removeCommentFromPost(
+      postId,
+      id,
+      loggedInUserId,
+      token
+    );
+    if (updatedPost) setCommentList(updatedPost.comments);
+    onCounterChange(updatedPost.comments.length);
   };
 
   return (

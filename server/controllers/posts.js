@@ -197,35 +197,19 @@ export const removePostComment = async (req, res) => {
   try {
     const { postId, commentId, userId } = req.params;
 
-    await Comment.findByIdAndDelete({ _id: commentId });
-
-    // const comment = post.comments.find(
-    //   (comment) => comment._id.toString() === commentId
-    // );
-    // if (comment && comment.userId === userId) {
-    //   const options = {
-    //     upsert: false,
-    //     returnDocument: "after",
-    //     returnNewDocument: true,
-    //   };
-    //   const updatedComments = post.comments.filter(
-    //     (comment) => comment._id.toString() !== commentId
-    //   );
-    //   const updatePost = {
-    //     $set: {
-    //       comments: updatedComments,
-    //     },
-    //   };
-    //   result = await Post.findOneAndUpdate(
-    //     { _id: postId },
-    //     updatePost,
-    //     options
-    //   );
-    // } else {
-    //   resStatus = 403;
-    //   result = null;
-    // }
-    res.status(resStatus).json([]);
+    const removableComment = await Comment.findOneAndDelete({
+      _id: commentId,
+    });
+    if (!removableComment) {
+      return res.status(400).send("Comment not found");
+    }
+    const updatedPost = await Post.findOneAndUpdate(
+      { _id: postId },
+      { $pull: { comments: commentId } },
+      { returnDocument: "after" }
+    );
+    const result = await updatedPost.populate(postPopulateQuery);
+    res.status(200).json(result);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

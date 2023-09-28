@@ -25,5 +25,17 @@ const postSchema = mongoose.Schema(
   }
 );
 
+postSchema.pre("deleteOne", { query: true }, async function (next) {
+  try {
+    const postId = this._conditions._id;
+    const commentSchema = mongoose.model("Comment").schema;
+    const Comment = mongoose.model("Comment", commentSchema);
+    await Comment.deleteMany({ post: postId }).exec();
+  } catch (err) {
+    console.log(err);
+  }
+  next();
+});
+
 const Post = mongoose.model("Post", postSchema);
 export default Post;

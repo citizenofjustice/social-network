@@ -37,6 +37,7 @@ const PostWidget = ({
   const token = useSelector((state) => state.auth.token);
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const [postLikes, setPostLikes] = useState(likes);
+  const [commentsCounter, setCommentCounter] = useState(comments.length);
   const likesCount = Object.keys(postLikes).length;
   const isLiked = Boolean(postLikes[loggedInUserId]);
   const isMyPost = postUserId === loggedInUserId;
@@ -70,6 +71,10 @@ const PostWidget = ({
   const patchLike = async () => {
     const { likes } = await patchPostLikes(postId, token, loggedInUserId);
     setPostLikes(likes);
+  };
+
+  const handleCommentsCounterChange = (counter) => {
+    setCommentCounter(counter);
   };
 
   return (
@@ -131,7 +136,7 @@ const PostWidget = ({
             <IconButton onClick={() => setIsCommentsShown(!isCommentsShown)}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
-            <Typography>{comments.length}</Typography>
+            <Typography>{commentsCounter}</Typography>
           </FlexBetween>
         </FlexBetween>
 
@@ -152,6 +157,7 @@ const PostWidget = ({
         postId={postId}
         comments={comments}
         isShown={isCommentsShown}
+        onCounterChange={handleCommentsCounterChange}
       />
     </WidgetWrapper>
   );
