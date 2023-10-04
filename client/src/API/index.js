@@ -199,3 +199,29 @@ export const findUsersLike = async (query, loggedInUserId, token) => {
   const foundUsers = await response.json();
   return foundUsers;
 };
+
+export const updateProfileInfo = async (formData, userId, token) => {
+  const response = await fetch(
+    `http://localhost:3001/users/${userId}/profile/change`,
+    {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    }
+  );
+  const updatedPost = await response.json();
+  return updatedPost;
+};
+
+export const changeAuthData = async (formData, userId, token) => {
+  const response = await fetch(
+    `http://localhost:3001/auth/${userId}/profile/changeAuthData`,
+    {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    }
+  );
+  const updatedData = await response.json();
+  return updatedData;
+};

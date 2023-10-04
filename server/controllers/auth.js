@@ -58,3 +58,43 @@ export const login = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const updateAuthData = async (req, res) => {
+  try {
+    const { email, oldPassword, password } = req.body;
+    const { id } = req.params;
+
+    const result = {
+      errors: [],
+    };
+    const user = await User.findOne({ _id: id });
+    if (email) {
+      const isEmailTaken = await User.findOne({ email: email });
+      if (isEmailTaken) {
+        result.errors.push("The selected email address is already taken.");
+      } else {
+        user.email = email;
+        result.email = true;
+      }
+    }
+
+    if (oldPassword && password) {
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        result.errors.push(
+          "Current password is not correct. Check old password input for typos."
+        );
+      } else {
+        const salt = await bcrypt.genSalt();
+        const passwordHash = await bcrypt.hash(password, salt);
+        user.password = passwordHash;
+        result.password = true;
+      }
+    }
+    if (result.errors.length > 0) res.status(422).json(result);
+    await user.save();
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(403).json({ message: err.message });
+  }
+};

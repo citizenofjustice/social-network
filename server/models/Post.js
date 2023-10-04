@@ -1,31 +1,20 @@
+const { Schema } = mongoose;
 import mongoose from "mongoose";
 
 const postSchema = mongoose.Schema(
   {
-    userId: {
-      type: String,
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
-    location: String,
     description: String,
     picturePath: String,
-    userPicturePath: String,
     likes: {
       type: Map,
       of: Boolean,
     },
-    comments: {
-      type: Array,
-      default: [],
-    },
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     isEdited: {
       type: Boolean,
       default: false,
@@ -35,6 +24,18 @@ const postSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+postSchema.pre("deleteOne", { query: true }, async function (next) {
+  try {
+    const postId = this._conditions._id;
+    const commentSchema = mongoose.model("Comment").schema;
+    const Comment = mongoose.model("Comment", commentSchema);
+    await Comment.deleteMany({ post: postId }).exec();
+  } catch (err) {
+    console.log(err);
+  }
+  next();
+});
 
 const Post = mongoose.model("Post", postSchema);
 export default Post;

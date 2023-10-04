@@ -8,7 +8,7 @@ const HomePageDesktop = ({ user, isNonMobileScreens }) => {
   return (
     <>
       <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-        <UserWidget user={user} />
+        <UserWidget viewedUserData={user} />
       </Box>
       <Box
         flexBasis={isNonMobileScreens ? "42%" : undefined}

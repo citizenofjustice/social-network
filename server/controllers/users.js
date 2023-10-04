@@ -115,3 +115,24 @@ const findUsersByNameOrEmail = async (query, id) => {
   ]);
   return users;
 };
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { userData } = req.body;
+    const updatedUserData = JSON.parse(userData);
+
+    const options = {
+      upsert: false,
+      returnDocument: "after",
+      returnNewDocument: true,
+    };
+    const result = await User.findOneAndUpdate(
+      { _id: updatedUserData._id },
+      updatedUserData,
+      options
+    );
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(403).json({ message: err.message });
+  }
+};

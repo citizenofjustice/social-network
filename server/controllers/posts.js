@@ -1,6 +1,14 @@
-import mongoose from "mongoose";
 import Post from "../models/Post.js";
-import User from "../models/User.js";
+import Comment from "../models/Comment.js";
+
+const postPopulateQuery = [
+  { path: "user", select: "firstName lastName location picturePath" },
+  {
+    path: "comments",
+    select: "author content createdAt",
+    populate: { path: "author", select: "firstName lastName picturePath" },
+  },
+];
 
 /* CREATE */
 export const createPost = async (req, res) => {
@@ -9,14 +17,9 @@ export const createPost = async (req, res) => {
     const filedata = req.file;
     let picturePath = null;
     if (filedata) picturePath = `${userId}/${filedata.filename}`;
-    const user = await User.findById(userId);
     const newPost = new Post({
-      userId,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      location: user.location,
+      user: userId,
       description,
-      userPicturePath: user.picturePath,
       picturePath,
       likes: {},
       comments: [],
@@ -25,7 +28,7 @@ export const createPost = async (req, res) => {
     await newPost.save();
 
     const post = await Post.findOne(
-      { userId },
+      { user: userId },
       {},
       { sort: { createdAt: -1 } }
     );
@@ -39,11 +42,12 @@ export const createPost = async (req, res) => {
 export const getFeedPosts = async (req, res) => {
   try {
     const { id, limit, pageNum } = req.params;
-    const totalPostCount = await Post.find({ userId: { $ne: id } })
+    const totalPostCount = await Post.find({ user: { $ne: id } })
       .sort({ createdAt: -1 })
       .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
-    const postsPage = await Post.find({ userId: { $ne: id } })
+    const postsPage = await Post.find({ user: { $ne: id } })
+      .populate(postPopulateQuery)
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
       .limit(limit);
@@ -56,11 +60,12 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
   try {
     const { userId, limit, pageNum } = req.params;
-    const totalPostCount = await Post.find({ userId })
+    const totalPostCount = await Post.find({ user: userId })
       .sort({ createdAt: -1 })
       .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
-    const postsPage = await Post.find({ userId })
+    const postsPage = await Post.find({ user: userId })
+      .populate(postPopulateQuery)
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
       .limit(limit);
@@ -104,7 +109,7 @@ export const editPost = async (req, res) => {
     const post = await Post.findById(postId);
     let resStatus = 200;
     let result;
-    if (post.userId === userId) {
+    if (post.user.toString() === userId) {
       let picturePath = null;
       if (filedata) picturePath = `${userId}/${filedata.filename}`;
       // this option instructs the method to create a document if no documents match the filter
@@ -135,7 +140,7 @@ export const removePost = async (req, res) => {
     const post = await Post.findById(postId);
     let resStatus = 200;
     let result = "Delete successful";
-    if (post.userId === userId) {
+    if (post.user.toString() === userId) {
       await Post.deleteOne({ _id: post._id });
     } else {
       resStatus = 403;
@@ -153,7 +158,7 @@ export const getPostEditData = async (req, res) => {
     const post = await Post.findById(postId);
     let resStatus = 200;
     let result;
-    if (post.userId === userId) {
+    if (post.user.toString() === userId) {
       result = post;
     } else {
       resStatus = 403;
@@ -169,34 +174,20 @@ export const addNewComment = async (req, res) => {
   try {
     const { postId } = req.params;
     const { userId, commentText } = req.body;
+    const newComment = new Comment({
+      post: postId,
+      author: userId,
+      content: commentText,
+    });
+
+    const addedComment = await newComment.save();
     const post = await Post.findById(postId);
-    const user = await User.findById(userId);
-    const options = {
-      upsert: false,
-      returnDocument: "after",
-      returnNewDocument: true,
-    };
-    const updatePost = {
-      $set: {
-        comments: [
-          ...post.comments,
-          {
-            _id: new mongoose.Types.ObjectId(),
-            userId,
-            userName: `${user.firstName} ${user.lastName}`,
-            userPicturePath: user.picturePath,
-            commentText,
-            createdAt: Date.now(),
-          },
-        ],
-      },
-    };
-    const result = await Post.findOneAndUpdate(
-      { _id: postId },
-      updatePost,
-      options
-    );
-    res.status(200).json(result);
+    post.comments.push(addedComment);
+    await post.save();
+
+    const updatedPost = await post.populate(postPopulateQuery);
+
+    res.status(200).json(updatedPost);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }
@@ -205,36 +196,20 @@ export const addNewComment = async (req, res) => {
 export const removePostComment = async (req, res) => {
   try {
     const { postId, commentId, userId } = req.params;
-    const post = await Post.findById(postId);
-    let resStatus = 200;
-    let result = {};
-    const comment = post.comments.find(
-      (comment) => comment._id.toString() === commentId
-    );
-    if (comment && comment.userId === userId) {
-      const options = {
-        upsert: false,
-        returnDocument: "after",
-        returnNewDocument: true,
-      };
-      const updatedComments = post.comments.filter(
-        (comment) => comment._id.toString() !== commentId
-      );
-      const updatePost = {
-        $set: {
-          comments: updatedComments,
-        },
-      };
-      result = await Post.findOneAndUpdate(
-        { _id: postId },
-        updatePost,
-        options
-      );
-    } else {
-      resStatus = 403;
-      result = null;
+
+    const removableComment = await Comment.findOneAndDelete({
+      _id: commentId,
+    });
+    if (!removableComment) {
+      return res.status(400).send("Comment not found");
     }
-    res.status(resStatus).json(result);
+    const updatedPost = await Post.findOneAndUpdate(
+      { _id: postId },
+      { $pull: { comments: commentId } },
+      { returnDocument: "after" }
+    );
+    const result = await updatedPost.populate(postPopulateQuery);
+    res.status(200).json(result);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

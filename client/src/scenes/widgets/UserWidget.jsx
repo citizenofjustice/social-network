@@ -1,29 +1,65 @@
 import {
   ManageAccountsOutlined,
-  EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
+  SaveOutlined,
+  BackspaceOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Divider,
+  useTheme,
+  IconButton,
+  InputBase,
+} from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import SkeletonLoad from "components/SkeletonLoad";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import SocialNetworks from "components/SocialNetworks";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { updateProfileInfo } from "API";
+import { updateUser } from "state/authSlice";
+import { triggerReloadToggle } from "state/postsSlice";
 
-const UserWidget = ({ user }) => {
+const UserWidget = ({ viewedUserData }) => {
   const { palette } = useTheme();
-  const loggedInUserId = useSelector((state) => state.auth.user._id);
+  const dispatch = useDispatch();
+  const authUser = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
+  const token = useSelector((state) => state.auth.token);
+
+  const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
+  const [firstNameChange, setFirstNameChange] = useState(
+    viewedUserData.firstName || null
+  );
+  const [lastNameChange, setLastNameChange] = useState(
+    viewedUserData.lastName || null
+  );
+  const [locationChange, setLocationChange] = useState(
+    viewedUserData.location || null
+  );
+  const [occupationChange, setOccupationChange] = useState(
+    viewedUserData.occupation || null
+  );
+  const [currentUserData, setCurrentUserData] = useState(authUser);
+
   const navigate = useNavigate();
+  const routerLocation = useLocation();
+  const isProfilePage =
+    /^\/profile\/.*$/.test(routerLocation.pathname) ||
+    /^\/user/.test(routerLocation.pathname);
 
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
+  const light = palette.neutral.light;
   const main = palette.neutral.main;
   const primaryDark = palette.primary.dark;
 
-  if (!user) return null;
+  if (!viewedUserData) return null;
   const {
     _id,
     firstName,
@@ -34,39 +70,122 @@ const UserWidget = ({ user }) => {
     viewedProfile,
     impressions,
     friends,
-  } = user;
-  const isOneself = loggedInUserId === _id;
+    socials,
+  } = viewedUserData;
+  const isOneself = authUser._id === _id;
+
+  const handleProfileUpdate = async () => {
+    if (isProfileBeingEdited) {
+      const changedUserState = {
+        ...currentUserData,
+        firstName: firstNameChange,
+        lastName: lastNameChange,
+        location: locationChange,
+        occupation: occupationChange,
+      };
+
+      const formData = new FormData();
+      formData.append("userData", JSON.stringify(changedUserState, null, 2));
+
+      const result = await updateProfileInfo(formData, authUser._id, token);
+      if (result)
+        dispatch(
+          updateUser({
+            user: result,
+          })
+        );
+      dispatch(triggerReloadToggle());
+      setIsProfileBeingEdited(false);
+    } else {
+      setIsProfileBeingEdited(true);
+    }
+  };
+
+  const handleProfileEditCancelation = () => {
+    setFirstNameChange(authUser.firstName);
+    setLastNameChange(authUser.lastName);
+    setLocationChange(authUser.location);
+    setOccupationChange(authUser.occupation);
+    setIsProfileBeingEdited(false);
+  };
+
+  const handleProfilesChange = (profiles) => {
+    let changedUserState = { ...currentUserData, socials: profiles };
+    setCurrentUserData(changedUserState);
+  };
 
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
-      <FlexBetween
-        onClick={() => navigate(`/profile/${_id}`)}
-        gap="0.5rem"
-        pb="1.1rem"
-      >
-        <FlexBetween gap="1rem" sx={{ width: "100%" }}>
-          <UserImage image={picturePath} loading={isUserLoading} />
-          <Box sx={{ width: "100%", padding: "0.5rem" }}>
-            <SkeletonLoad loading={isUserLoading} count={2}>
-              <Typography
-                variant="h4"
-                color={dark}
-                fontWeight="500"
-                sx={{
-                  "&:hover": {
-                    color: primaryDark,
-                    cursor: "pointer",
-                  },
-                }}
-              >
-                {firstName} {lastName}
-              </Typography>
-              <Typography color={medium}>{friends.length} friends</Typography>
-            </SkeletonLoad>
-          </Box>
-        </FlexBetween>
-        <ManageAccountsOutlined />
+      <FlexBetween gap="0.5rem" pb="1.1rem">
+        {isProfileBeingEdited ? (
+          <>
+            <InputBase
+              sx={{
+                width: "100%",
+                backgroundColor: light,
+                padding: "0.25rem 0.5rem",
+                borderRadius: "0.5rem",
+              }}
+              placeholder="Set first name"
+              value={firstNameChange}
+              onChange={(e) => setFirstNameChange(e.target.value)}
+            />
+            <InputBase
+              sx={{
+                width: "100%",
+                backgroundColor: light,
+                padding: "0.25rem 0.5rem",
+                borderRadius: "0.5rem",
+              }}
+              placeholder="Set last name"
+              value={lastNameChange}
+              onChange={(e) => setLastNameChange(e.target.value)}
+            />
+          </>
+        ) : (
+          <FlexBetween
+            onClick={() => navigate(`/profile/${_id}`)}
+            gap="1rem"
+            sx={{ width: "100%" }}
+          >
+            <UserImage image={picturePath} loading={isUserLoading} />
+            <Box sx={{ width: "100%", padding: "0.5rem" }}>
+              <SkeletonLoad loading={isUserLoading} count={2}>
+                <Typography
+                  variant="h4"
+                  color={dark}
+                  fontWeight="500"
+                  sx={{
+                    "&:hover": {
+                      color: primaryDark,
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  {firstName} {lastName}
+                </Typography>
+                <Typography color={medium}>{friends.length} friends</Typography>
+              </SkeletonLoad>
+            </Box>
+          </FlexBetween>
+        )}
+        {isOneself && isProfilePage && (
+          <>
+            {isProfileBeingEdited && (
+              <IconButton onClick={handleProfileEditCancelation}>
+                <BackspaceOutlined />
+              </IconButton>
+            )}
+            <IconButton onClick={handleProfileUpdate}>
+              {isProfileBeingEdited ? (
+                <SaveOutlined />
+              ) : (
+                <ManageAccountsOutlined />
+              )}
+            </IconButton>
+          </>
+        )}
       </FlexBetween>
 
       <Divider />
@@ -75,19 +194,47 @@ const UserWidget = ({ user }) => {
       <Box p="1rem 0" sx={{ width: "100%" }}>
         <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
           <LocationOnOutlined fontSize="large" sx={{ color: main }} />
-          <Typography color={medium} sx={{ width: "100%" }}>
-            <SkeletonLoad loading={isUserLoading} count={1}>
-              {location}
-            </SkeletonLoad>
-          </Typography>
+          {isProfileBeingEdited ? (
+            <InputBase
+              sx={{
+                width: "100%",
+                backgroundColor: light,
+                padding: "0.25rem 0.5rem",
+                borderRadius: "0.5rem",
+              }}
+              placeholder="Set location"
+              value={locationChange}
+              onChange={(e) => setLocationChange(e.target.value)}
+            />
+          ) : (
+            <Typography color={medium} sx={{ width: "100%" }}>
+              <SkeletonLoad loading={isUserLoading} count={1}>
+                {location}
+              </SkeletonLoad>
+            </Typography>
+          )}
         </Box>
         <Box display="flex" alignItems="center" gap="1rem">
           <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
-          <Typography color={medium} sx={{ width: "100%" }}>
-            <SkeletonLoad loading={isUserLoading} count={1}>
-              {occupation}
-            </SkeletonLoad>
-          </Typography>
+          {isProfileBeingEdited ? (
+            <InputBase
+              sx={{
+                width: "100%",
+                backgroundColor: light,
+                padding: "0.25rem 0.5rem",
+                borderRadius: "0.5rem",
+              }}
+              placeholder="Set occupation"
+              value={occupationChange}
+              onChange={(e) => setOccupationChange(e.target.value)}
+            />
+          ) : (
+            <Typography color={medium} sx={{ width: "100%" }}>
+              <SkeletonLoad loading={isUserLoading} count={1}>
+                {occupation}
+              </SkeletonLoad>
+            </Typography>
+          )}
         </Box>
       </Box>
 
@@ -134,41 +281,13 @@ const UserWidget = ({ user }) => {
       )}
 
       {/* FOURTH ROW */}
-      <Box p="1rem 0">
-        <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
-          Social Profiles
-        </Typography>
-
-        <SkeletonLoad loading={isUserLoading} height="2rem">
-          <FlexBetween gap="1rem" mb="0.5rem">
-            <FlexBetween gap="1rem">
-              <img src="../assets/twitter.png" alt="twitter" />
-              <Box>
-                <Typography color={main} fontWeight="500">
-                  Twitter
-                </Typography>
-                <Typography color={medium}>Social Network</Typography>
-              </Box>
-            </FlexBetween>
-            {isOneself && <EditOutlined sx={{ color: main }} />}
-          </FlexBetween>
-        </SkeletonLoad>
-
-        <SkeletonLoad loading={isUserLoading} height="2rem">
-          <FlexBetween gap="1rem">
-            <FlexBetween gap="1rem">
-              <img src="../assets/linkedin.png" alt="linkedin" />
-              <Box>
-                <Typography color={main} fontWeight="500">
-                  Twitter
-                </Typography>
-                <Typography color={medium}>Network Platform</Typography>
-              </Box>
-            </FlexBetween>
-            {isOneself && <EditOutlined sx={{ color: main }} />}
-          </FlexBetween>
-        </SkeletonLoad>
-      </Box>
+      <SocialNetworks
+        isOneself={isOneself}
+        isUserLoading={isUserLoading}
+        isProfileBeingEdited={isProfileBeingEdited}
+        socials={socials}
+        onProfilesChange={handleProfilesChange}
+      />
     </WidgetWrapper>
   );
 };

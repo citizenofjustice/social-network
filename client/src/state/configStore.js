@@ -26,6 +26,10 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
+      immutableCheck: {
+        // Ignore state paths, e.g. state for 'auth':
+        ignoredPaths: ["auth.user"],
+      },
     }),
 });
 

@@ -4,10 +4,13 @@ import {
   getUserFriends,
   getUsersByQuery,
   addRemoveFriend,
+  updateUserProfile,
 } from "../controllers/users.js";
 import { verifyToken } from "../middleware/auth.js";
+import multer from "multer";
 
 const router = express.Router();
+const upload = multer();
 
 /* READ */
 router.get("/:id", verifyToken, getUser);
@@ -16,5 +19,11 @@ router.get("/like/:query/not/:id", verifyToken, getUsersByQuery);
 
 /* UPDATE */
 router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
+router.put(
+  "/:id/profile/change",
+  upload.none(),
+  verifyToken,
+  updateUserProfile
+);
 
 export default router;

@@ -1,3 +1,4 @@
+const { Schema } = mongoose;
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
@@ -37,6 +38,14 @@ const UserSchema = new mongoose.Schema(
     occupation: String,
     viewedProfile: Number,
     impressions: Number,
+    posts: {
+      type: Array,
+      default: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+    },
+    socials: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );
