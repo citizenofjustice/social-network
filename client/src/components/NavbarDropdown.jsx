@@ -14,7 +14,7 @@ import AuthDataChangeForm from "./AuthDataChangeForm";
 
 const NavbarDropdown = ({ name, color, loadingState }) => {
   const { ref, isComponentVisible, setIsComponentVisible } =
-    useComponentVisible(false);
+    useComponentVisible(false, true);
   const dispatch = useDispatch();
   return (
     <>

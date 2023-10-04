@@ -35,6 +35,7 @@ const PasswordTextField = ({
         onChange={handleChange}
         value={value}
         name={name}
+        autoComplete="off"
         endAdornment={
           <InputAdornment position="end">
             <IconButton

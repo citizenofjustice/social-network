@@ -17,7 +17,9 @@ import PasswordTextField from "./PasswordTextField";
 
 const initialValues = {
   email: "",
+  oldPassword: "",
   password: "",
+  confirmPassword: "",
 };
 
 const AuthDataChangeForm = ({ refProp }) => {
@@ -56,11 +58,26 @@ const AuthDataChangeForm = ({ refProp }) => {
   const handleAuthDataChange = async (values, onSubmitProps) => {
     const formData = new FormData();
     if (values.email) formData.append("email", values.email);
-    if (values.password) {
+    if (values.oldPassword && values.password) {
+      formData.append("oldPassword", values.oldPassword);
       formData.append("password", values.password);
     }
-    console.log("client: ", values.email, " ", values.password);
-    await changeAuthData(formData, loggedInUserId, token);
+    const result = await changeAuthData(formData, loggedInUserId, token);
+    if (result.errors.length > 0) {
+      const errorsText = result.errors
+        .map((e) => {
+          const error = `- ${e}`;
+          return error;
+        })
+        .join("\n");
+      alert(errorsText.trim());
+    } else {
+      const changed = `You succesfuly changed:\n ${
+        result.email ? "- email" : ""
+      }\n ${result.password ? "- password" : ""}`;
+      alert(changed.trim());
+    }
+    onSubmitProps.resetForm();
   };
 
   const handleEmailToggle = (event) => {
@@ -89,7 +106,7 @@ const AuthDataChangeForm = ({ refProp }) => {
             <Box
               sx={{
                 backgroundColor: palette.background.alt,
-                padding: "1rem",
+                padding: "1rem 2rem",
                 borderRadius: "0.5rem",
                 display: "flex",
                 flexDirection: "column",
@@ -134,6 +151,7 @@ const AuthDataChangeForm = ({ refProp }) => {
                   onChange={handleChange}
                   value={values.email}
                   name="email"
+                  autoComplete="on"
                   error={Boolean(touched.email) && Boolean(errors.email)}
                   helperText={touched.email && errors.email}
                 />
@@ -153,7 +171,7 @@ const AuthDataChangeForm = ({ refProp }) => {
                     helperText={touched.oldPassword && errors.oldPassword}
                   />
                   <PasswordTextField
-                    label="Password"
+                    label="New password"
                     handleBlur={handleBlur}
                     handleChange={handleChange}
                     value={values.password}
@@ -164,7 +182,7 @@ const AuthDataChangeForm = ({ refProp }) => {
                     helperText={touched.password && errors.password}
                   />
                   <PasswordTextField
-                    label="Confirm password"
+                    label="Confirm new password"
                     handleBlur={handleBlur}
                     handleChange={handleChange}
                     value={values.confirmPassword}

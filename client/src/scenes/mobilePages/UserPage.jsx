@@ -13,7 +13,7 @@ const UserPage = () => {
   const token = useSelector((state) => state.auth.token);
   const [user, setUser] = useState(null);
   const { ref, isComponentVisible, setIsComponentVisible } =
-    useComponentVisible(false);
+    useComponentVisible(false, true);
   const { palette } = useTheme();
 
   const getUserData = useCallback(async () => {
