@@ -21,6 +21,10 @@ const UserPage = () => {
     setUser(data);
   }, [userId, token]);
 
+  const handleModalClosing = (changeSuccess) => {
+    if (changeSuccess) setIsComponentVisible(false);
+  };
+
   useEffect(() => {
     getUserData();
   }, [getUserData, userFriends]);
@@ -55,7 +59,10 @@ const UserPage = () => {
             alignItems: "center",
           }}
         >
-          <AuthDataChangeForm refProp={ref} />
+          <AuthDataChangeForm
+            refProp={ref}
+            onChangeSuccess={handleModalClosing}
+          />
         </Box>
       ) : (
         <Box sx={{ display: "flex", justifyContent: "center" }}>

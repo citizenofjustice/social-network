@@ -16,6 +16,11 @@ const NavbarDropdown = ({ name, color, loadingState }) => {
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false, true);
   const dispatch = useDispatch();
+
+  const handleModalClosing = (changeSuccess) => {
+    if (changeSuccess) setIsComponentVisible(false);
+  };
+
   return (
     <>
       <FormControl variant="standard" value={name}>
@@ -68,7 +73,10 @@ const NavbarDropdown = ({ name, color, loadingState }) => {
             alignItems: "center",
           }}
         >
-          <AuthDataChangeForm refProp={ref} />
+          <AuthDataChangeForm
+            refProp={ref}
+            onChangeSuccess={handleModalClosing}
+          />
         </Box>
       )}
     </>

@@ -103,27 +103,31 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          <IconButton>
-            <Message sx={{ fontSize: "25px" }} />
-          </IconButton>
-          <IconButton>
+          {/* <IconButton>
+            <Message sx={{ color: dark, fontSize: "25px" }} />
+          </IconButton> */}
+          {/* <IconButton>
             <Notifications sx={{ fontSize: "25px" }} />
           </IconButton>
           <IconButton>
             <Help sx={{ fontSize: "25px" }} />
-          </IconButton>
+          </IconButton> */}
 
           <NavbarDropdown
             name={fullName}
             color={neutralLight}
             loadingState={isUserLoading}
           />
-
-          <UserImage
-            loading={isUserLoading}
-            image={user.picturePath}
-            size="30px"
-          />
+          <IconButton
+            onClick={() => navigate("/user")}
+            style={{ backgroundColor: "transparent" }}
+          >
+            <UserImage
+              loading={isUserLoading}
+              image={user.picturePath}
+              size="30px"
+            />
+          </IconButton>
         </FlexBetween>
       ) : (
         <Box display="flex">
@@ -184,25 +188,24 @@ const Navbar = () => {
             </IconButton>
 
             <IconButton onClick={() => navigate("/feed")}>
-              <DynamicFeedOutlined sx={{ fontSize: "25px" }} />
+              <DynamicFeedOutlined sx={{ color: dark, fontSize: "25px" }} />
             </IconButton>
             <IconButton onClick={() => navigate("/friends")}>
-              <PeopleOutlineOutlined sx={{ fontSize: "25px" }} />
+              <PeopleOutlineOutlined sx={{ color: dark, fontSize: "25px" }} />
             </IconButton>
             {!isNonMobileScreen && (
               <IconButton onClick={() => navigate("/search")}>
-                <PersonSearchOutlined sx={{ fontSize: "25px" }} />
+                <PersonSearchOutlined sx={{ color: dark, fontSize: "25px" }} />
               </IconButton>
             )}
             {!isNonMobileScreen && (
               <IconButton onClick={() => navigate("/myposts")}>
-                <Message sx={{ fontSize: "25px" }} />
+                <Message sx={{ color: dark, fontSize: "25px" }} />
               </IconButton>
             )}
-
-            <IconButton>
+            {/* <IconButton>
               <Notifications sx={{ fontSize: "25px" }} />
-            </IconButton>
+            </IconButton> */}
             <IconButton
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: "25px" }}

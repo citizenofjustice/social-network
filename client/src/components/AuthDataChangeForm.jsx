@@ -22,7 +22,7 @@ const initialValues = {
   confirmPassword: "",
 };
 
-const AuthDataChangeForm = ({ refProp }) => {
+const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isPasswordChecked, setIsPasswordChecked] = useState(false);
   const { palette } = useTheme();
@@ -72,6 +72,7 @@ const AuthDataChangeForm = ({ refProp }) => {
         .join("\n");
       alert(errorsText.trim());
     } else {
+      onChangeSuccess(true);
       const changed = `You succesfuly changed:\n ${
         result.email ? "- email" : ""
       }\n ${result.password ? "- password" : ""}`;

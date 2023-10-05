@@ -4,9 +4,10 @@ import { fetchAllPosts, fetchUserPosts } from "API";
 import PostWidget from "./PostWidget";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { setPosts, clearPosts } from "state/postsSlice";
+import WidgetWrapper from "components/WidgetWrapper";
 
 const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
   const loggedInUserId = useSelector((state) => state.auth.user._id);
@@ -67,7 +68,18 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
     }
   }, [inView, feedIsNotFull]);
 
-  if (posts.length === 0) return null;
+  if (posts.length === 0)
+    return (
+      <WidgetWrapper>
+        <Box display="flex" justifyContent="center" pb="0.75rem">
+          <Typography fontSize="1rem">
+            {isProfile
+              ? "You have not made post yet, try adding one..."
+              : "Your feed is empty. Try adding some friends to see thier posts..."}
+          </Typography>
+        </Box>
+      </WidgetWrapper>
+    );
 
   return (
     <>

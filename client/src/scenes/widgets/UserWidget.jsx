@@ -191,8 +191,21 @@ const UserWidget = ({ viewedUserData }) => {
       <Divider />
 
       {/* SECOND ROW */}
-      <Box p="1rem 0" sx={{ width: "100%" }}>
-        <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
+      <Box
+        display="flex"
+        flexWrap="wrap"
+        justifyContent="space-evenly"
+        p="0.25rem 0"
+        mb="0.5rem"
+        sx={{ width: "100%" }}
+      >
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="1rem"
+          paddingRight="1rem"
+          marginTop="0.5rem"
+        >
           <LocationOnOutlined fontSize="large" sx={{ color: main }} />
           {isProfileBeingEdited ? (
             <InputBase
@@ -207,14 +220,18 @@ const UserWidget = ({ viewedUserData }) => {
               onChange={(e) => setLocationChange(e.target.value)}
             />
           ) : (
-            <Typography color={medium} sx={{ width: "100%" }}>
+            <Typography
+              color={medium}
+              textAlign="center"
+              sx={{ width: "100%" }}
+            >
               <SkeletonLoad loading={isUserLoading} count={1}>
                 {location}
               </SkeletonLoad>
             </Typography>
           )}
         </Box>
-        <Box display="flex" alignItems="center" gap="1rem">
+        <Box display="flex" alignItems="center" gap="1rem" marginTop="0.5rem">
           <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
           {isProfileBeingEdited ? (
             <InputBase
@@ -229,7 +246,11 @@ const UserWidget = ({ viewedUserData }) => {
               onChange={(e) => setOccupationChange(e.target.value)}
             />
           ) : (
-            <Typography color={medium} sx={{ width: "100%" }}>
+            <Typography
+              color={medium}
+              textAlign="center"
+              sx={{ width: "100%" }}
+            >
               <SkeletonLoad loading={isUserLoading} count={1}>
                 {occupation}
               </SkeletonLoad>
@@ -243,32 +264,27 @@ const UserWidget = ({ viewedUserData }) => {
       {isOneself && (
         <>
           {/* THIRD ROW */}
-          <Box p="1rem 0">
-            <FlexBetween mb="0.5rem">
-              <Typography color={medium} flex={7}>
+          <Box
+            display="flex"
+            flexWrap="wrap"
+            justifyContent="space-evenly"
+            p="0.5rem 0"
+          >
+            <FlexBetween padding="0.5rem">
+              <Typography color={medium} mr="0.5rem">
                 Who's viewed your profile
               </Typography>
-              <Typography
-                color={main}
-                fontWeight="500"
-                flex={3}
-                textAlign="right"
-              >
+              <Typography color={main} fontWeight="500" textAlign="right">
                 <SkeletonLoad loading={isUserLoading} count={1}>
                   {viewedProfile}
                 </SkeletonLoad>
               </Typography>
             </FlexBetween>
-            <FlexBetween>
-              <Typography color={medium} flex={7}>
+            <FlexBetween padding="0.5rem">
+              <Typography color={medium} mr="0.5rem">
                 Impressions of your post
               </Typography>
-              <Typography
-                color={main}
-                fontWeight="500"
-                flex={3}
-                textAlign="right"
-              >
+              <Typography color={main} fontWeight="500" textAlign="right">
                 <SkeletonLoad loading={isUserLoading} count={1}>
                   {impressions}
                 </SkeletonLoad>
