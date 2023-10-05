@@ -38,6 +38,13 @@ const FriendListWidget = ({ userId }) => {
             isContentLoading={isUserLoading}
           />
         )}
+        {friendsList.length === 0 && (
+          <Box>
+            You haven't added any friends.
+            <br />
+            Try to find your friends using search.
+          </Box>
+        )}
       </Box>
     </WidgetWrapper>
   );
