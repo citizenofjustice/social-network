@@ -15,6 +15,7 @@ const persistConfig = {
   key: "root",
   storage,
   whitelist: ["auth", "ui"],
+  blacklist: ["auth.isUserLoading"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -28,7 +29,7 @@ export const store = configureStore({
       },
       immutableCheck: {
         // Ignore state paths, e.g. state for 'auth':
-        ignoredPaths: ["auth.user"],
+        // ignoredPaths: ["auth.user"],
       },
     }),
 });

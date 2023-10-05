@@ -43,11 +43,17 @@ function App() {
             }
           >
             <Routes>
-              <Route path="/" element={<LoginPage />} />
-              <Route
-                path="/"
-                element={isAuth ? <Layout /> : <Navigate to="/" />}
-              >
+              <Route path="/" element={isAuth ? <Layout /> : <LoginPage />}>
+                <Route
+                  path="/"
+                  element={
+                    isNonMobileScreen ? (
+                      <HomePage />
+                    ) : (
+                      <Navigate to="/feed" replace />
+                    )
+                  }
+                />
                 <Route
                   path="/home"
                   element={
