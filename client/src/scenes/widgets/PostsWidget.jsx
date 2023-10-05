@@ -74,8 +74,12 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
         <Box display="flex" justifyContent="center" pb="0.75rem">
           <Typography fontSize="1rem">
             {isProfile
-              ? "You have not made post yet, try adding one..."
-              : "Your feed is empty. Try adding some friends to see thier posts..."}
+              ? `${
+                  loggedInUserId === userId
+                    ? "You have not made post yet, try adding one..."
+                    : "User have not made post yet..."
+                } `
+              : "Feed currently empty..."}
           </Typography>
         </Box>
       </WidgetWrapper>
