@@ -82,6 +82,9 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 
+/* TEST FOR DEPLOYMENT */
+app.get("/", (req, res) => res.json("Hello world!"));
+
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
 mongoose
