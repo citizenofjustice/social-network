@@ -114,7 +114,7 @@ const PostWidget = ({
             height="auto"
             alt="post"
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={`${process.env.API_URL}assets/${picturePath}`}
+            src={`${process.env.REACT_APP_API_URL}assets/${picturePath}`}
           />
         )}
       </SkeletonLoad>

@@ -15,7 +15,7 @@ const UserImage = ({ image, size = "60px", loading }) => {
         width={size}
         height={size}
         alt="user"
-        src={`${process.env.API_URL}assets/${image}`}
+        src={`${process.env.REACT_APP_API_URL}assets/${image}`}
       />
     </Box>
   );

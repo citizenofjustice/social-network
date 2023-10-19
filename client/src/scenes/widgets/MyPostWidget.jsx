@@ -95,7 +95,7 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
   useEffect(() => {
     const loadImgIntoThumbnail = async () => {
       const imgBlob = fetch(
-        `${process.env.API_URL}assets/${editablePost.picturePath}`
+        `${process.env.REACT_APP_API_URL}assets/${editablePost.picturePath}`
       )
         .then((response) => response.blob())
         .then((blob) => {
