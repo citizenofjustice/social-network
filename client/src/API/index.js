@@ -1,5 +1,7 @@
+const URL = process.env.API_URL;
+
 export const registerUser = async (formData) => {
-  const response = await fetch("http://localhost:3001/auth/register", {
+  const response = await fetch(URL + "auth/register", {
     method: "POST",
     body: formData,
   });
@@ -8,7 +10,7 @@ export const registerUser = async (formData) => {
 };
 
 export const loginUser = async (values) => {
-  const response = await fetch("http://localhost:3001/auth/login", {
+  const response = await fetch(URL + "auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(values),
@@ -18,7 +20,7 @@ export const loginUser = async (values) => {
 };
 
 export const fetchUser = async (userId, token) => {
-  const response = await fetch(`http://localhost:3001/users/${userId}`, {
+  const response = await fetch(URL + `users/${userId}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -29,22 +31,19 @@ export const fetchUser = async (userId, token) => {
 };
 
 export const fetchFriends = async (loggedInUserId, token) => {
-  const response = await fetch(
-    `http://localhost:3001/users/${loggedInUserId}/friends`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await fetch(URL + `users/${loggedInUserId}/friends`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   const friendsData = await response.json();
   return friendsData;
 };
 
 export const fetchAllPosts = async (loggedInUserId, token, limit, pageNum) => {
   const response = await fetch(
-    `http://localhost:3001/posts/${loggedInUserId}/feed/${limit}/${pageNum}`,
+    URL + `posts/${loggedInUserId}/feed/${limit}/${pageNum}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
@@ -56,7 +55,7 @@ export const fetchAllPosts = async (loggedInUserId, token, limit, pageNum) => {
 
 export const fetchUserPosts = async (userId, token, limit, pageNum) => {
   const response = await fetch(
-    `http://localhost:3001/posts/user/${userId}/limit/${limit}/page/${pageNum}`,
+    URL + `posts/user/${userId}/limit/${limit}/page/${pageNum}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
@@ -67,7 +66,7 @@ export const fetchUserPosts = async (userId, token, limit, pageNum) => {
 };
 
 export const sendPost = async (formData, userId, token) => {
-  const response = await fetch(`http://localhost:3001/posts/${userId}`, {
+  const response = await fetch(URL + `posts/${userId}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     body: formData,
@@ -77,22 +76,19 @@ export const sendPost = async (formData, userId, token) => {
 };
 
 export const patchFriend = async (loggedInUserId, friendId, token) => {
-  const response = await fetch(
-    `http://localhost:3001/users/${loggedInUserId}/${friendId}`,
-    {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch(URL + `users/${loggedInUserId}/${friendId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
   const friendsData = await response.json();
   return friendsData;
 };
 
 export const patchPostLikes = async (postId, token, loggedInUserId) => {
-  const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+  const response = await fetch(URL + `posts/${postId}/like`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -105,16 +101,13 @@ export const patchPostLikes = async (postId, token, loggedInUserId) => {
 };
 
 export const addCommentToPost = async (postId, formData, token) => {
-  const response = await fetch(
-    `http://localhost:3001/posts/${postId}/comment/add`,
-    {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    }
-  );
+  const response = await fetch(URL + `posts/${postId}/comment/add`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
   const updatedPost = await response.json();
   return updatedPost;
 };
@@ -126,7 +119,7 @@ export const removeCommentFromPost = async (
   token
 ) => {
   const response = await fetch(
-    `http://localhost:3001/posts/${postId}/comment/${commentId}/remove/by/${loggedInUserId}`,
+    URL + `posts/${postId}/comment/${commentId}/remove/by/${loggedInUserId}`,
     {
       method: "PATCH",
       headers: {
@@ -140,7 +133,7 @@ export const removeCommentFromPost = async (
 
 export const getEditablePostData = async (postId, token, loggedInUserId) => {
   const response = await fetch(
-    `http://localhost:3001/posts/${postId}/get/edit/by/${loggedInUserId}`,
+    URL + `posts/${postId}/get/edit/by/${loggedInUserId}`,
     {
       method: "GET",
       headers: {
@@ -159,7 +152,7 @@ export const editSelectedPost = async (
   loggedInUserId
 ) => {
   const response = await fetch(
-    `http://localhost:3001/posts/${postId}/edit/by/${loggedInUserId}`,
+    URL + `posts/${postId}/edit/by/${loggedInUserId}`,
     {
       method: "PATCH",
       headers: {
@@ -176,7 +169,7 @@ export const editSelectedPost = async (
 
 export const removeSelectedPost = async (postId, token, loggedInUserId) => {
   const response = await fetch(
-    `http://localhost:3001/posts/${postId}/remove/by/${loggedInUserId}`,
+    URL + `posts/${postId}/remove/by/${loggedInUserId}`,
     {
       method: "DELETE",
       headers: {
@@ -190,7 +183,7 @@ export const removeSelectedPost = async (postId, token, loggedInUserId) => {
 
 export const findUsersLike = async (query, loggedInUserId, token) => {
   const response = await fetch(
-    `http://localhost:3001/users/like/${query}/not/${loggedInUserId}`,
+    URL + `users/like/${query}/not/${loggedInUserId}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
@@ -201,27 +194,21 @@ export const findUsersLike = async (query, loggedInUserId, token) => {
 };
 
 export const updateProfileInfo = async (formData, userId, token) => {
-  const response = await fetch(
-    `http://localhost:3001/users/${userId}/profile/change`,
-    {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    }
-  );
+  const response = await fetch(URL + `users/${userId}/profile/change`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
   const updatedPost = await response.json();
   return updatedPost;
 };
 
 export const changeAuthData = async (formData, userId, token) => {
-  const response = await fetch(
-    `http://localhost:3001/auth/${userId}/profile/changeAuthData`,
-    {
-      method: "PATCH",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    }
-  );
+  const response = await fetch(URL + `auth/${userId}/profile/changeAuthData`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
   const updatedData = await response.json();
   return updatedData;
 };
