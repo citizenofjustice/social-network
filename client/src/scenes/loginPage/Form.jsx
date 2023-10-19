@@ -74,7 +74,7 @@ const Form = () => {
     dispatch(setIsUserLoading());
     const loggedIn = await loginUser(values);
     onSubmitProps.resetForm();
-
+    dispatch(setIsUserLoading());
     if (loggedIn) {
       dispatch(
         setLogin({
@@ -91,7 +91,7 @@ const Form = () => {
       navigate("/home");
     }
     // should be removed later
-    setTimeout(() => dispatch(setIsUserLoading()), 2000);
+    // setTimeout(() => dispatch(setIsUserLoading()), 2000);
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {

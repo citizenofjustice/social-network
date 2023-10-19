@@ -1,5 +1,7 @@
 import {
   ManageAccountsOutlined,
+  PersonAddOutlined,
+  PersonRemoveOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
   SaveOutlined,
@@ -24,6 +26,8 @@ import { useState } from "react";
 import { updateProfileInfo } from "API";
 import { updateUser } from "state/authSlice";
 import { triggerReloadToggle } from "state/postsSlice";
+import { patchFriend } from "API";
+import { setFriends } from "state/authSlice";
 
 const UserWidget = ({ viewedUserData }) => {
   const { palette } = useTheme();
@@ -31,6 +35,14 @@ const UserWidget = ({ viewedUserData }) => {
   const authUser = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const token = useSelector((state) => state.auth.token);
+  console.log(viewedUserData);
+  const [isFriend, setIsFriend] = useState(
+    viewedUserData.friends.find((friend) => {
+      if (friend === authUser._id) {
+        return friend;
+      } else return false;
+    })
+  );
 
   const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
   const [firstNameChange, setFirstNameChange] = useState(
@@ -58,6 +70,7 @@ const UserWidget = ({ viewedUserData }) => {
   const light = palette.neutral.light;
   const main = palette.neutral.main;
   const primaryDark = palette.primary.dark;
+  const primaryLight = palette.primary.light;
 
   if (!viewedUserData) return null;
   const {
@@ -112,6 +125,17 @@ const UserWidget = ({ viewedUserData }) => {
   const handleProfilesChange = (profiles) => {
     let changedUserState = { ...currentUserData, socials: profiles };
     setCurrentUserData(changedUserState);
+  };
+
+  const updateFriend = async () => {
+    if (isOneself) return;
+    const friendsData = await patchFriend(
+      currentUserData._id,
+      viewedUserData._id,
+      token
+    );
+    dispatch(setFriends({ friends: friendsData }));
+    setIsFriend((prevState) => !prevState);
   };
 
   return (
@@ -170,20 +194,38 @@ const UserWidget = ({ viewedUserData }) => {
             </Box>
           </FlexBetween>
         )}
-        {isOneself && isProfilePage && (
+        {isProfilePage && (
           <>
-            {isProfileBeingEdited && (
-              <IconButton onClick={handleProfileEditCancelation}>
-                <BackspaceOutlined />
+            {isOneself ? (
+              <>
+                {isProfileBeingEdited && (
+                  <IconButton onClick={handleProfileEditCancelation}>
+                    <BackspaceOutlined />
+                  </IconButton>
+                )}
+                <IconButton onClick={handleProfileUpdate}>
+                  {isProfileBeingEdited ? (
+                    <SaveOutlined />
+                  ) : (
+                    <ManageAccountsOutlined />
+                  )}
+                </IconButton>
+              </>
+            ) : (
+              <IconButton
+                onClick={() => updateFriend()}
+                sx={{
+                  backgroundColor: primaryLight,
+                  p: "0.6rem",
+                }}
+              >
+                {isFriend ? (
+                  <PersonRemoveOutlined sx={{ color: primaryDark }} />
+                ) : (
+                  <PersonAddOutlined sx={{ color: primaryDark }} />
+                )}
               </IconButton>
             )}
-            <IconButton onClick={handleProfileUpdate}>
-              {isProfileBeingEdited ? (
-                <SaveOutlined />
-              ) : (
-                <ManageAccountsOutlined />
-              )}
-            </IconButton>
           </>
         )}
       </FlexBetween>
