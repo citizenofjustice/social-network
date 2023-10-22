@@ -1,10 +1,19 @@
 import User from "../models/User.js";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../config/firebase.config.js";
 
 /* READ */
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
+    let user = await User.findById(id);
+
+    if (user.picturePath !== null) {
+      const storageRef = ref(storage, user.picturePath);
+      const avatarUrl = await getDownloadURL(storageRef);
+      user = { ...user, picturePath: avatarUrl };
+    }
+
     res.status(200).json(user);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -19,8 +28,26 @@ export const getUserFriends = async (req, res) => {
       user.friends.map((id) => User.findById(id))
     );
     const formattedFriends = friends.map(
-      ({ _id, firstName, lastName, occupation, location, picturePath }) => {
-        return { _id, firstName, lastName, occupation, location, picturePath };
+      async ({
+        _id,
+        firstName,
+        lastName,
+        occupation,
+        location,
+        picturePath,
+      }) => {
+        if (user.picturePath !== null) {
+          const storageRef = ref(storage, picturePath);
+          const avatarUrl = await getDownloadURL(storageRef);
+        }
+        return {
+          _id,
+          firstName,
+          lastName,
+          occupation,
+          location,
+          picturePath: avatarUrl,
+        };
       }
     );
     res.status(200).json(formattedFriends);

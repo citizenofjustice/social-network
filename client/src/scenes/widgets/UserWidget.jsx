@@ -35,9 +35,11 @@ const UserWidget = ({ viewedUserData }) => {
   const authUser = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const token = useSelector((state) => state.auth.token);
-  console.log(viewedUserData);
+  // console.log(viewedUserData);
   const [isFriend, setIsFriend] = useState(
     viewedUserData.friends.find((friend) => {
+      console.log(friend);
+      console.log(authUser._id);
       if (friend === authUser._id) {
         return friend;
       } else return false;

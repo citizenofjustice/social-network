@@ -15,6 +15,9 @@ import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
 import { createPost, editPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
+import { ref, uploadBytesResumable } from "firebase/storage";
+import { upload } from "./middleware/multer.js";
+import { storage } from "./config/firebase.config.js";
 
 /* CONFIGURATION */
 const __filename = fileURLToPath(import.meta.url);
@@ -31,51 +34,78 @@ app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 /* FILE STORAGE */
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    let path;
-    if (req.params.userId) {
-      const userId = req.params.userId;
-      path = `public/assets/${userId}`;
-      if (!fs.existsSync(path)) {
-        fs.mkdirSync(path);
-      }
-    } else {
-      path = `public/assets/avatars`;
-      if (!fs.existsSync(path)) {
-        fs.mkdirSync(path);
-      }
-    }
-    cb(null, path);
-  },
-  filename: function (req, file, cb) {
-    const now = Date.now();
-    cb(null, `${now}_${file.originalname}`);
-  },
-});
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     let path;
+//     if (req.params.userId) {
+//       const userId = req.params.userId;
+//       path = `public/assets/${userId}`;
+//       if (!fs.existsSync(path)) {
+//         fs.mkdirSync(path);
+//       }
+//     } else {
+//       path = `public/assets/avatars`;
+//       if (!fs.existsSync(path)) {
+//         fs.mkdirSync(path);
+//       }
+//     }
+//     cb(null, path);
+//   },
+//   filename: function (req, file, cb) {
+//     const now = Date.now();
+//     cb(null, `${now}_${file.originalname}`);
+//   },
+// });
+// const fileFilter = (req, file, cb) => {
+//   if (
+//     file.mimetype === "image/png" ||
+//     file.mimetype === "image/jpg" ||
+//     file.mimetype === "image/jpeg"
+//   ) {
+//     cb(null, true);
+//   } else {
+//     cb(null, false);
+//   }
+// };
+
+// export const upload = multer({ storage, fileFilter });
+
+/* FIREBASE STORAGE */
+export const uploadImage = async (file) => {
+  const dateTime = Date.now();
+  const fileName = `${file.folder}/${dateTime}`;
+  const storageRef = ref(storage, fileName);
+  const metadata = {
+    contentType: file.type,
+  };
+  await uploadBytesResumable(storageRef, file.buffer, metadata);
+  return fileName;
 };
 
-export const upload = multer({ storage, fileFilter });
-
 /* ROUTES WITH FILES */
+// app.post("/auth/register", upload, async (req, res) => {
+//   const file = {
+//     type: req.file.mimetype,
+//     buffer: req.file.buffer,
+//   };
+//   try {
+//     const buildImage = await uploadImage(file);
+//     res.send({
+//       status: "SUCCESS",
+//       imageName: buildImage,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 app.post("/auth/register", upload.single("avatar"), register);
-app.post("/posts/:userId", verifyToken, upload.single("picture"), createPost);
-app.patch(
-  "/posts/:postId/edit/by/:userId",
-  verifyToken,
-  upload.single("picture"),
-  editPost
-);
+// app.post("/posts/:userId", verifyToken, upload.single("picture"), createPost);
+// app.patch(
+//   "/posts/:postId/edit/by/:userId",
+//   verifyToken,
+//   upload.single("picture"),
+//   editPost
+// );
 
 /* ROUTES */
 app.use("/auth", authRoutes);
