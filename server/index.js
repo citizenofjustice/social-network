@@ -53,7 +53,7 @@ export const uploadPictureAndGetUrl = async (file) => {
   const storedImage = await uploadImage(data);
   const path = `/${storedImage}`;
   const storageRef = ref(storage, path);
-  picturePath = await getDownloadURL(storageRef);
+  const picturePath = await getDownloadURL(storageRef);
   return picturePath;
 };
 
