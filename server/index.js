@@ -13,7 +13,7 @@ import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
 import { createPost, editPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { upload } from "./middleware/multer.js";
 import { storage } from "./config/firebase.config.js";
 
