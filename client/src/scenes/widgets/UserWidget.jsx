@@ -35,11 +35,8 @@ const UserWidget = ({ viewedUserData }) => {
   const authUser = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const token = useSelector((state) => state.auth.token);
-  // console.log(viewedUserData);
   const [isFriend, setIsFriend] = useState(
     viewedUserData.friends.find((friend) => {
-      console.log(friend);
-      console.log(authUser._id);
       if (friend === authUser._id) {
         return friend;
       } else return false;
@@ -275,7 +272,13 @@ const UserWidget = ({ viewedUserData }) => {
             </Typography>
           )}
         </Box>
-        <Box display="flex" alignItems="center" gap="1rem" marginTop="0.5rem">
+        <Box
+          display="flex"
+          alignItems="center"
+          gap="1rem"
+          marginTop="0.5rem"
+          paddingRight="1rem"
+        >
           <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
           {isProfileBeingEdited ? (
             <InputBase

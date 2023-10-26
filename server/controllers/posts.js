@@ -1,5 +1,6 @@
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
+import { uploadPictureAndGetUrl } from "../index.js";
 
 const postPopulateQuery = [
   { path: "user", select: "firstName lastName location picturePath" },
@@ -14,13 +15,16 @@ const postPopulateQuery = [
 export const createPost = async (req, res) => {
   try {
     const { userId, description } = req.body;
-    const filedata = req.file;
-    let picturePath = null;
-    if (filedata) picturePath = `${userId}/${filedata.filename}`;
+    let picturePath;
+    if (!req.file) {
+      picturePath = null;
+    } else {
+      picturePath = await uploadPictureAndGetUrl(req.file);
+    }
     const newPost = new Post({
       user: userId,
       description,
-      picturePath,
+      picturePath: picturePath,
       likes: {},
       comments: [],
       isEdited: false,
@@ -105,13 +109,16 @@ export const editPost = async (req, res) => {
   try {
     const { postId } = req.params;
     const { userId, description } = req.body;
-    const filedata = req.file;
     const post = await Post.findById(postId);
     let resStatus = 200;
     let result;
     if (post.user.toString() === userId) {
-      let picturePath = null;
-      if (filedata) picturePath = `${userId}/${filedata.filename}`;
+      let picturePath;
+      if (!req.file) {
+        picturePath = null;
+      } else {
+        picturePath = await uploadPictureAndGetUrl(req.file);
+      }
       // this option instructs the method to create a document if no documents match the filter
       const options = { upsert: true };
       const updatePost = {

@@ -3,11 +3,9 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import multer from "multer";
 import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
-import fs from "fs";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
@@ -33,43 +31,6 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-/* FILE STORAGE */
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     let path;
-//     if (req.params.userId) {
-//       const userId = req.params.userId;
-//       path = `public/assets/${userId}`;
-//       if (!fs.existsSync(path)) {
-//         fs.mkdirSync(path);
-//       }
-//     } else {
-//       path = `public/assets/avatars`;
-//       if (!fs.existsSync(path)) {
-//         fs.mkdirSync(path);
-//       }
-//     }
-//     cb(null, path);
-//   },
-//   filename: function (req, file, cb) {
-//     const now = Date.now();
-//     cb(null, `${now}_${file.originalname}`);
-//   },
-// });
-// const fileFilter = (req, file, cb) => {
-//   if (
-//     file.mimetype === "image/png" ||
-//     file.mimetype === "image/jpg" ||
-//     file.mimetype === "image/jpeg"
-//   ) {
-//     cb(null, true);
-//   } else {
-//     cb(null, false);
-//   }
-// };
-
-// export const upload = multer({ storage, fileFilter });
-
 /* FIREBASE STORAGE */
 export const uploadImage = async (file) => {
   const dateTime = Date.now();
@@ -82,30 +43,29 @@ export const uploadImage = async (file) => {
   return fileName;
 };
 
+export const uploadPictureAndGetUrl = async (file) => {
+  const data = {
+    type: file.mimetype,
+    buffer: file.buffer,
+    folder: file.fieldname,
+    // filename: file.originalname,
+  };
+  const storedImage = await uploadImage(data);
+  const path = `/${storedImage}`;
+  const storageRef = ref(storage, path);
+  picturePath = await getDownloadURL(storageRef);
+  return picturePath;
+};
+
 /* ROUTES WITH FILES */
-// app.post("/auth/register", upload, async (req, res) => {
-//   const file = {
-//     type: req.file.mimetype,
-//     buffer: req.file.buffer,
-//   };
-//   try {
-//     const buildImage = await uploadImage(file);
-//     res.send({
-//       status: "SUCCESS",
-//       imageName: buildImage,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
 app.post("/auth/register", upload.single("avatar"), register);
-// app.post("/posts/:userId", verifyToken, upload.single("picture"), createPost);
-// app.patch(
-//   "/posts/:postId/edit/by/:userId",
-//   verifyToken,
-//   upload.single("picture"),
-//   editPost
-// );
+app.post("/posts/:userId", verifyToken, upload.single("picture"), createPost);
+app.patch(
+  "/posts/:postId/edit/by/:userId",
+  verifyToken,
+  upload.single("picture"),
+  editPost
+);
 
 /* ROUTES */
 app.use("/auth", authRoutes);
@@ -124,9 +84,5 @@ mongoose
   })
   .then(() => {
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-
-    /* ADD DATA ONE TIME */
-    // User.insertMany(users);
-    // Post.insertMany(posts);
   })
   .catch((error) => console.log(`${error} did not connect`));
