@@ -5,6 +5,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
+    "firebase": "^10.5.0",
     "gridfs-stream": "^1.1.1",
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
@@ -17,7 +18,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -42,7 +42,14 @@ const NavbarDropdown = ({ name, color, loadingState }) => {
           input={<InputBase />}
         >
           <MenuItem value={name}>
-            <Typography ml="0.5rem">
+            <Typography
+              ml="0.5rem"
+              sx={{
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+              }}
+            >
               <SkeletonLoad loading={loadingState}>{name}</SkeletonLoad>
             </Typography>
           </MenuItem>

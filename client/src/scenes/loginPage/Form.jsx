@@ -24,7 +24,11 @@ const registerSchema = yup.object().shape({
   password: yup.string().required("required"),
   location: yup.string().required("required"),
   occupation: yup.string().required("required"),
-  avatar: yup.string().required("required"),
+  avatar: yup
+    .mixed()
+    .test("fileSize", "File size too large, max file size is 1 Mb", (file) =>
+      file ? file.size <= 10485760 : true
+    ),
 });
 
 const loginSchema = yup.object().shape({

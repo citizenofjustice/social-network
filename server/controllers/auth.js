@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { uploadPictureAndGetUrl } from "../index.js";
 
 /* REGISTER USER */
 export const register = async (req, res) => {
@@ -18,16 +19,19 @@ export const register = async (req, res) => {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const filedata = req.file;
-    let picturePath = null;
-    if (filedata) picturePath = `/avatars/${filedata.filename}`;
+    let picturePath;
+    if (!req.file) {
+      picturePath = null;
+    } else {
+      picturePath = await uploadPictureAndGetUrl(req.file);
+    }
 
     const newUser = new User({
       firstName,
       lastName,
       email,
       password: passwordHash,
-      picturePath,
+      picturePath: picturePath,
       friends,
       location,
       occupation,
@@ -53,7 +57,7 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     delete user.password;
-    res.status(200).json({ token, user });
+    res.status(200).json({ token, user: user._doc });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
