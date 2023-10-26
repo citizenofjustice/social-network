@@ -13,7 +13,7 @@ import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
 import { createPost, editPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { upload } from "./middleware/multer.js";
 import { storage } from "./config/firebase.config.js";
 
@@ -53,7 +53,7 @@ export const uploadPictureAndGetUrl = async (file) => {
   const storedImage = await uploadImage(data);
   const path = `/${storedImage}`;
   const storageRef = ref(storage, path);
-  picturePath = await getDownloadURL(storageRef);
+  const picturePath = await getDownloadURL(storageRef);
   return picturePath;
 };
 
