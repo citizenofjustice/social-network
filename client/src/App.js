@@ -43,7 +43,9 @@ function App() {
             }
           >
             <Routes>
-              <Route path="/" element={isAuth ? <Layout /> : <LoginPage />} />
+              <Route path="/" element={isAuth ? <Layout /> : <LoginPage />}
+                <Route path="" element={<HomePage />} />
+              </Route>
               <Route path="/profile:/id" element={isAuth ? <ProfilePage /> : <LoginPage />} />
             </Routes>
           </Suspense>
