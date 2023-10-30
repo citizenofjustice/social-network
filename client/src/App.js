@@ -43,13 +43,12 @@ function App() {
             }
           >
             <Routes>
-              <Route path="/" element={isAuth ? <HomePage /> : <LoginPage />}>
+              <Route path="/" element={isAuth ? <Layout /> : <LoginPage />}>
+                <Route path="/" element={<HomePage />} />
                 <Route path="/profile/:userId" element={<ProfilePage />} />
               </Route>
               // <Route path="/" element={isAuth ? <Layout /> : <LoginPage />}>
-              //   <Route
-              //     path="/"
-              //     element={
+              //   <Route path="/" element={
               //       isNonMobileScreen ? (
               //         <HomePage />
               //       ) : (
