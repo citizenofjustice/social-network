@@ -64,7 +64,7 @@ function App() {
                     )
                   }
                 />
-                <Route path="profile" />
+                <Route path="profile">
                   <Route path=":userId" element={<ProfilePage />} />
                 </Route>
                 <Route
