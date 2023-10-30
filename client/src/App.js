@@ -43,81 +43,8 @@ function App() {
             }
           >
             <Routes>
-              <Route path="/" element={isAuth ? <Layout /> : <LoginPage />}>
-                <Route
-                  path="/"
-                  element={
-                    isNonMobileScreen ? (
-                      <HomePage />
-                    ) : (
-                      <Navigate to="/feed" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="home"
-                  element={
-                    isNonMobileScreen ? (
-                      <HomePage />
-                    ) : (
-                      <Navigate to="/feed" replace />
-                    )
-                  }
-                />
-                <Route path="profile">
-                  <Route path=":userId" element={<ProfilePage />} />
-                </Route>
-                <Route
-                  path="feed"
-                  element={
-                    !isNonMobileScreen ? (
-                      <FeedPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="friends"
-                  element={
-                    !isNonMobileScreen ? (
-                      <FriendListPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="search"
-                  element={
-                    !isNonMobileScreen ? (
-                      <SearchPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="user"
-                  element={
-                    !isNonMobileScreen ? (
-                      <UserPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="myposts"
-                  element={
-                    !isNonMobileScreen ? (
-                      <MyPostPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-              </Route>
+              <Route path="/" element={isAuth ? <Layout /> : <LoginPage />} />
+              <Route path="/profile:/id" element={isAuth ? <ProfilePage /> : <LoginPage />} />
             </Routes>
           </Suspense>
         </ThemeProvider>
