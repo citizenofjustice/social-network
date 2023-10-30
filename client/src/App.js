@@ -45,7 +45,7 @@ function App() {
             <Routes>
               <Route path="/" element={isAuth ? <Layout /> : <LoginPage />}>
                 <Route path="" element={<HomePage />} />
-                <Route path="/profile:/id" element={<ProfilePage />} />
+                <Route path="profile:/id" element={<ProfilePage />} />
               </Route>
             </Routes>
           </Suspense>
