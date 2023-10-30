@@ -55,7 +55,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/home"
+                  path="home"
                   element={
                     isNonMobileScreen ? (
                       <HomePage />
@@ -64,9 +64,11 @@ function App() {
                     )
                   }
                 />
-                <Route path="/profile/:userId" element={<ProfilePage />} />
+                <Route path="profile" />
+                  <Route path=":userId" element={<ProfilePage />} />
+                </Route>
                 <Route
-                  path="/feed"
+                  path="feed"
                   element={
                     !isNonMobileScreen ? (
                       <FeedPage />
@@ -76,7 +78,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/friends"
+                  path="friends"
                   element={
                     !isNonMobileScreen ? (
                       <FriendListPage />
@@ -86,7 +88,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/search"
+                  path="search"
                   element={
                     !isNonMobileScreen ? (
                       <SearchPage />
@@ -96,7 +98,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/user"
+                  path="user"
                   element={
                     !isNonMobileScreen ? (
                       <UserPage />
@@ -106,7 +108,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/myposts"
+                  path="myposts"
                   element={
                     !isNonMobileScreen ? (
                       <MyPostPage />
