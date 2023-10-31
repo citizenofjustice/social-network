@@ -48,9 +48,9 @@ const Navbar = () => {
   const primaryDark = theme.palette.primary.dark;
   const alt = theme.palette.background.alt;
 
-  if (isAuth) {
-    const fullName = `${user.firstName} ${user.lastName}`;
-  }
+  // if (isAuth) {
+  //   const fullName = `${user.firstName} ${user.lastName}`;
+  // }
 
   useEffect(() => {
     // toggle menu when location.pathname changed
@@ -116,7 +116,7 @@ const Navbar = () => {
             <Help sx={{ fontSize: "25px" }} />
           </IconButton> */}
 
-          {isAuth && <><NavbarDropdown
+{/*           {isAuth && <><NavbarDropdown
             name={fullName}
             color={neutralLight}
             loadingState={isUserLoading}
@@ -130,7 +130,7 @@ const Navbar = () => {
               image={user.picturePath}
               size="30px"
             />
-          </IconButton></>}
+          </IconButton></>} */}
         </FlexBetween>
       ) : (
         <Box display="flex">
