@@ -31,6 +31,7 @@ import useComponentVisible from "hooks/useComponentVisible";
 import NavbarDropdown from "components/NavbarDropdown";
 
 const Navbar = () => {
+  const isAuth = Boolean(useSelector((state) => state.auth.token));
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
   const dispatch = useDispatch();
@@ -46,8 +47,6 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryDark = theme.palette.primary.dark;
   const alt = theme.palette.background.alt;
-
-  const fullName = `${user.firstName} ${user.lastName}`;
 
   useEffect(() => {
     // toggle menu when location.pathname changed
@@ -81,7 +80,7 @@ const Navbar = () => {
         >
           StayInTouch
         </Typography>
-        {isNonMobileScreen && (
+        {isAuth && isNonMobileScreen && (
           <SearchBar
             width="20vw"
             style={{
@@ -113,21 +112,25 @@ const Navbar = () => {
             <Help sx={{ fontSize: "25px" }} />
           </IconButton> */}
 
-          <NavbarDropdown
-            name={fullName}
-            color={neutralLight}
-            loadingState={isUserLoading}
-          />
-          <IconButton
-            onClick={() => navigate("/user")}
-            style={{ backgroundColor: "transparent" }}
-          >
-            <UserImage
-              loading={isUserLoading}
-              image={user.picturePath}
-              size="30px"
+          {isAuth && (
+            <NavbarDropdown
+              name={`${user.firstName} ${user.lastName}`}
+              color={neutralLight}
+              loadingState={isUserLoading}
             />
-          </IconButton>
+          )}
+          {isAuth && (
+            <IconButton
+              onClick={() => navigate("/user")}
+              style={{ backgroundColor: "transparent" }}
+            >
+              <UserImage
+                loading={isUserLoading}
+                image={user.picturePath}
+                size="30px"
+              />
+            </IconButton>
+          )}
         </FlexBetween>
       ) : (
         <Box display="flex">

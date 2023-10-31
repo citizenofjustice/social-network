@@ -43,6 +43,25 @@ function App() {
             }
           >
             <Routes>
+              <Route path="/" element={<Layout />}>
+                {isAuth ? (
+                  <>
+                    <Route index element={<HomePage />} />
+                    <Route path="profile">
+                      <Route path=":userId" element={<ProfilePage />} />
+                    </Route>
+                  </>
+                ) : (
+                  <>
+                    <Route index element={<LoginPage />} />
+                    <Route path="profile">
+                      <Route path=":userId" element={<LoginPage />} />
+                    </Route>
+                  </>
+                )}
+              </Route>
+            </Routes>
+            {/* <Routes>
               <Route path="/" element={isAuth ? <Layout /> : <LoginPage />}>
                 <Route
                   path="/"
@@ -116,7 +135,7 @@ function App() {
                   }
                 />
               </Route>
-            </Routes>
+            </Routes> */}
           </Suspense>
         </ThemeProvider>
       </BrowserRouter>
