@@ -31,7 +31,6 @@ import useComponentVisible from "hooks/useComponentVisible";
 import NavbarDropdown from "components/NavbarDropdown";
 
 const Navbar = () => {
-  const isAuth = Boolean(useSelector((state) => state.auth.token));
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
   const dispatch = useDispatch();
@@ -48,9 +47,7 @@ const Navbar = () => {
   const primaryDark = theme.palette.primary.dark;
   const alt = theme.palette.background.alt;
 
-  // if (isAuth) {
-  //   const fullName = `${user.firstName} ${user.lastName}`;
-  // }
+  const fullName = `${user.firstName} ${user.lastName}`;
 
   useEffect(() => {
     // toggle menu when location.pathname changed
@@ -84,7 +81,7 @@ const Navbar = () => {
         >
           StayInTouch
         </Typography>
-        {isAuth && isNonMobileScreen && (
+        {isNonMobileScreen && (
           <SearchBar
             width="20vw"
             style={{
@@ -116,7 +113,7 @@ const Navbar = () => {
             <Help sx={{ fontSize: "25px" }} />
           </IconButton> */}
 
-{/*           {isAuth && <><NavbarDropdown
+          <NavbarDropdown
             name={fullName}
             color={neutralLight}
             loadingState={isUserLoading}
@@ -130,7 +127,7 @@ const Navbar = () => {
               image={user.picturePath}
               size="30px"
             />
-          </IconButton></>} */}
+          </IconButton>
         </FlexBetween>
       ) : (
         <Box display="flex">
