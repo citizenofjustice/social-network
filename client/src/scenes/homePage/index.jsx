@@ -16,6 +16,10 @@ const HomePage = () => {
     setUser(data);
   }, [userId, token]);
 
+  const callApiTest = async () => {
+    const result = await fetchUser(userId, token);
+    console.log(result.json());
+  }
   useEffect(() => {
     getUserData();
   }, [getUserData, userFriends]);
@@ -31,6 +35,7 @@ const HomePage = () => {
       justifyContent={"space-between"}
     >
       {isNonMobileScreens && (
+        <button onClick={callApiTest}>click</button>
         <HomePageDesktop user={user} isNonMobileScreens={isNonMobileScreens} />
       )}
     </Box>
