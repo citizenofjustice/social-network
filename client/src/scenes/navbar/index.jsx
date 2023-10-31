@@ -67,7 +67,7 @@ const Navbar = () => {
     >
       <FlexBetween gap="1.75rem">
         <Typography
-          onClick={() => navigate(!isNonMobileScreen ? "/feed" : "/home")}
+          onClick={() => navigate(!isNonMobileScreen ? "/feed" : "/")}
           sx={{
             "&:hover": {
               color: primaryDark,

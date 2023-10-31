@@ -12,6 +12,7 @@ import FeedPage from "scenes/mobilePages/FeedPage";
 import UserPage from "scenes/mobilePages/UserPage";
 import MyPostPage from "scenes/mobilePages/MyPostPage";
 import Layout from "components/Layout";
+import ProtectedRoutes from "components/ProtectedRoutes";
 
 const HomePage = lazy(() => import("scenes/homePage"));
 const LoginPage = lazy(() => import("scenes/loginPage"));
@@ -44,98 +45,96 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<Layout />}>
-                {isAuth ? (
-                  <>
-                    <Route index element={<HomePage />} />
-                    <Route path="profile">
-                      <Route path=":userId" element={<ProfilePage />} />
-                    </Route>
-                  </>
-                ) : (
-                  <>
-                    <Route index element={<LoginPage />} />
-                    <Route path="profile">
-                      <Route path=":userId" element={<LoginPage />} />
-                    </Route>
-                  </>
-                )}
+                <Route
+                  path="login"
+                  element={
+                    <ProtectedRoutes allowed={!isAuth} path="/">
+                      <LoginPage />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  index
+                  element={
+                    <ProtectedRoutes allowed={isAuth}>
+                      {isNonMobileScreen ? (
+                        <HomePage />
+                      ) : (
+                        <Navigate to="/feed" replace />
+                      )}
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="profile/:userId"
+                  element={
+                    <ProtectedRoutes allowed={isAuth}>
+                      <ProfilePage />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="feed"
+                  element={
+                    <ProtectedRoutes allowed={isAuth}>
+                      {!isNonMobileScreen ? (
+                        <FeedPage />
+                      ) : (
+                        <Navigate to="/" replace />
+                      )}
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="friends"
+                  element={
+                    <ProtectedRoutes allowed={isAuth}>
+                      {!isNonMobileScreen ? (
+                        <FriendListPage />
+                      ) : (
+                        <Navigate to="/" replace />
+                      )}
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="search"
+                  element={
+                    <ProtectedRoutes allowed={isAuth}>
+                      {!isNonMobileScreen ? (
+                        <SearchPage />
+                      ) : (
+                        <Navigate to="/" replace />
+                      )}
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="user"
+                  element={
+                    <ProtectedRoutes allowed={isAuth}>
+                      {!isNonMobileScreen ? (
+                        <UserPage />
+                      ) : (
+                        <Navigate to="/" replace />
+                      )}
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="myposts"
+                  element={
+                    <ProtectedRoutes allowed={isAuth}>
+                      {!isNonMobileScreen ? (
+                        <MyPostPage />
+                      ) : (
+                        <Navigate to="/" replace />
+                      )}
+                    </ProtectedRoutes>
+                  }
+                />
               </Route>
             </Routes>
-            {/* <Routes>
-              <Route path="/" element={isAuth ? <Layout /> : <LoginPage />}>
-                <Route
-                  path="/"
-                  element={
-                    isNonMobileScreen ? (
-                      <HomePage />
-                    ) : (
-                      <Navigate to="/feed" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="/home"
-                  element={
-                    isNonMobileScreen ? (
-                      <HomePage />
-                    ) : (
-                      <Navigate to="/feed" replace />
-                    )
-                  }
-                />
-                <Route path="/profile/:userId" element={<ProfilePage />} />
-                <Route
-                  path="/feed"
-                  element={
-                    !isNonMobileScreen ? (
-                      <FeedPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="/friends"
-                  element={
-                    !isNonMobileScreen ? (
-                      <FriendListPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="/search"
-                  element={
-                    !isNonMobileScreen ? (
-                      <SearchPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="/user"
-                  element={
-                    !isNonMobileScreen ? (
-                      <UserPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-                <Route
-                  path="/myposts"
-                  element={
-                    !isNonMobileScreen ? (
-                      <MyPostPage />
-                    ) : (
-                      <Navigate to="/home" replace />
-                    )
-                  }
-                />
-              </Route>
-            </Routes> */}
           </Suspense>
         </ThemeProvider>
       </BrowserRouter>

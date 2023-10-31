@@ -92,7 +92,7 @@ const Form = () => {
           friends: friendsData,
         })
       );
-      navigate("/home");
+      navigate("/");
     }
     // should be removed later
     // setTimeout(() => dispatch(setIsUserLoading()), 2000);
