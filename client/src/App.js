@@ -43,21 +43,16 @@ function App() {
             }
           >
            <Route path="/" element={<Layout />}>
-                {/* public routes */}
-                <Route
-                  index
-                  element={
-                    <h1
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginTop: "5rem",
-                      }}
-                    >
-                      Welcome to StayInTouch!
-                    </h1>
-                  }
+              {/* public routes */}
+               <Route index element={<h1 style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "5rem",
+                  }}>
+                    Welcome to StayInTouch!
+                  </h1>
+                }
                 />
                 <Route path="login" element={<LoginPage />} />
 
@@ -65,7 +60,6 @@ function App() {
                 <Route path="home" element={<HomePage />} />
                 <Route path="profile">
                   <Route path=":userId" element={<ProfilePage />} />
-                  <Route />
                 </Route>
               </Route>
             </Routes>
