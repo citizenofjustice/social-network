@@ -42,6 +42,7 @@ function App() {
               </Box>
             }
           >
+          <Routes>
            <Route path="/" element={<Layout />}>
               {/* public routes */}
                <Route index element={<h1 style={{
