@@ -31,6 +31,7 @@ import useComponentVisible from "hooks/useComponentVisible";
 import NavbarDropdown from "components/NavbarDropdown";
 
 const Navbar = () => {
+  const isAuth = Boolean(useSelector((state) => state.auth.token));
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
   const dispatch = useDispatch();
@@ -81,7 +82,7 @@ const Navbar = () => {
         >
           StayInTouch
         </Typography>
-        {isNonMobileScreen && (
+        {isAuth && isNonMobileScreen && (
           <SearchBar
             width="20vw"
             style={{
@@ -113,7 +114,7 @@ const Navbar = () => {
             <Help sx={{ fontSize: "25px" }} />
           </IconButton> */}
 
-          <NavbarDropdown
+          {isAuth && <><NavbarDropdown
             name={fullName}
             color={neutralLight}
             loadingState={isUserLoading}
@@ -127,7 +128,7 @@ const Navbar = () => {
               image={user.picturePath}
               size="30px"
             />
-          </IconButton>
+          </IconButton></>}
         </FlexBetween>
       ) : (
         <Box display="flex">
