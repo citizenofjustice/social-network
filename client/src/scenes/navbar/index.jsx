@@ -160,15 +160,17 @@ const Navbar = () => {
         >
           {/* CLOSE ICON */}
 
-          <Box display="flex" justifyContent="center" p="1rem">
-            <IconButton
-              onClick={() => {
-                setIsComponentVisible(!isComponentVisible);
-              }}
-            >
-              <Close sx={{ color: dark, fontSize: "25px" }} />
-            </IconButton>
-          </Box>
+          {
+            <Box display="flex" justifyContent="center" p="1rem">
+              <IconButton
+                onClick={() => {
+                  setIsComponentVisible(!isComponentVisible);
+                }}
+              >
+                <Close sx={{ color: dark, fontSize: "25px" }} />
+              </IconButton>
+            </Box>
+          }
 
           {/* MENU ITEMS */}
           <FlexBetween
@@ -179,29 +181,35 @@ const Navbar = () => {
             gap="2.5rem"
             mt="2rem"
           >
-            <IconButton
-              onClick={() => navigate("/user")}
-              style={{ backgroundColor: "transparent" }}
-            >
-              <UserImage
-                loading={isUserLoading}
-                image={user.picturePath}
-                size="40px"
-              />
-            </IconButton>
+            {isAuth && (
+              <IconButton
+                onClick={() => navigate("/user")}
+                style={{ backgroundColor: "transparent" }}
+              >
+                <UserImage
+                  loading={isUserLoading}
+                  image={user.picturePath}
+                  size="40px"
+                />
+              </IconButton>
+            )}
 
-            <IconButton onClick={() => navigate("/feed")}>
-              <DynamicFeedOutlined sx={{ color: dark, fontSize: "25px" }} />
-            </IconButton>
-            <IconButton onClick={() => navigate("/friends")}>
-              <PeopleOutlineOutlined sx={{ color: dark, fontSize: "25px" }} />
-            </IconButton>
-            {!isNonMobileScreen && (
+            {isAuth && (
+              <IconButton onClick={() => navigate("/feed")}>
+                <DynamicFeedOutlined sx={{ color: dark, fontSize: "25px" }} />
+              </IconButton>
+            )}
+            {isAuth && (
+              <IconButton onClick={() => navigate("/friends")}>
+                <PeopleOutlineOutlined sx={{ color: dark, fontSize: "25px" }} />
+              </IconButton>
+            )}
+            {isAuth && (
               <IconButton onClick={() => navigate("/search")}>
                 <PersonSearchOutlined sx={{ color: dark, fontSize: "25px" }} />
               </IconButton>
             )}
-            {!isNonMobileScreen && (
+            {isAuth && (
               <IconButton onClick={() => navigate("/myposts")}>
                 <Message sx={{ color: dark, fontSize: "25px" }} />
               </IconButton>
@@ -219,9 +227,11 @@ const Navbar = () => {
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
-            <IconButton onClick={() => dispatch(setLogout())}>
-              <LogoutOutlined sx={{ color: dark, fontSize: "25px" }} />
-            </IconButton>
+            {isAuth && (
+              <IconButton onClick={() => dispatch(setLogout())}>
+                <LogoutOutlined sx={{ color: dark, fontSize: "25px" }} />
+              </IconButton>
+            )}
           </FlexBetween>
         </Box>
       )}
