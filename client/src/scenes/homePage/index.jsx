@@ -18,8 +18,9 @@ const HomePage = () => {
 
   const callApiTest = async () => {
     const result = await fetchUser(userId, token);
-    console.log(result.json());
+    console.log(result);
   }
+  
   useEffect(() => {
     getUserData();
   }, [getUserData, userFriends]);
