@@ -15,7 +15,7 @@ const HomePage = () => {
     const data = await fetchUser(userId, token);
     setUser(data);
   }, [userId, token]);
-
+  
   useEffect(() => {
     getUserData();
   }, [getUserData, userFriends]);
@@ -31,7 +31,7 @@ const HomePage = () => {
       justifyContent={"space-between"}
     >
       {isNonMobileScreens && (
-        <HomePageDesktop user={user} isNonMobileScreens={isNonMobileScreens} />
+          <HomePageDesktop user={user} isNonMobileScreens={isNonMobileScreens} />
       )}
     </Box>
   );
