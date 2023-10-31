@@ -48,7 +48,9 @@ const Navbar = () => {
   const primaryDark = theme.palette.primary.dark;
   const alt = theme.palette.background.alt;
 
-  const fullName = `${user.firstName} ${user.lastName}`;
+  if (isAuth) {
+    const fullName = `${user.firstName} ${user.lastName}`;
+  }
 
   useEffect(() => {
     // toggle menu when location.pathname changed
