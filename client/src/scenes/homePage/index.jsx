@@ -36,8 +36,10 @@ const HomePage = () => {
       justifyContent={"space-between"}
     >
       {isNonMobileScreens && (
-        <button onClick={callApiTest}>click</button>
-        <HomePageDesktop user={user} isNonMobileScreens={isNonMobileScreens} />
+        <>
+          <button onClick={callApiTest}>click</button>
+          <HomePageDesktop user={user} isNonMobileScreens={isNonMobileScreens} />
+        </>
       )}
     </Box>
   );
