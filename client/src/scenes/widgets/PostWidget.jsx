@@ -17,6 +17,7 @@ import { patchPostLikes } from "API";
 import SkeletonLoad from "components/SkeletonLoad";
 import DropdownMenu from "components/DropdownMenu";
 import CommentsList from "components/CommentsList";
+import LazyImage from "components/LazyImage";
 
 const PostWidget = ({
   postId,
@@ -109,12 +110,14 @@ const PostWidget = ({
       </Typography>
       <SkeletonLoad loading={isPostLoading} height="15rem">
         {picturePath && (
-          <img
-            width="100%"
-            height="auto"
-            alt="post"
-            style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={picturePath}
+          <LazyImage
+            image={{
+              src: picturePath,
+              alt: "post picture",
+              width: "100%",
+              height: "auto",
+              style: { borderRadius: "0.75rem", marginTop: "0.75rem" },
+            }}
           />
         )}
       </SkeletonLoad>
