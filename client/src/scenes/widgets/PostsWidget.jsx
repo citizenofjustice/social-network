@@ -68,7 +68,7 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
     }
   }, [inView, feedIsNotFull]);
 
-  if (posts.length === 0)
+  if (posts.length === 0 && !isPostsLoading)
     return (
       <WidgetWrapper>
         <Box display="flex" justifyContent="center" pb="0.75rem">
@@ -117,7 +117,7 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
         )
       )}
       <Box display="flex" justifyContent="center">
-        {isPostsLoading && <CircularProgress />}
+        {isPostsLoading && <CircularProgress sx={{ marginTop: "2rem" }} />}
       </Box>
       {posts && <div ref={ref}></div>}
     </>

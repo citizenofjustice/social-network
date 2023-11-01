@@ -27,8 +27,11 @@ const UserSchema = new mongoose.Schema(
       min: 8,
     },
     picturePath: {
-      type: String,
-      default: "",
+      type: Object,
+      default: {
+        sourceUrl: { type: String, default: "" },
+        placeholderUrl: { type: String, default: "" },
+      },
     },
     friends: {
       type: Array,

@@ -99,7 +99,7 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
 
   useEffect(() => {
     const loadImgIntoThumbnail = async () => {
-      const imgBlob = fetch(editablePost.picturePath)
+      const imgBlob = fetch(editablePost.picturePath.sourceUrl)
         .then((response) => response.blob())
         .then((blob) => {
           return URL.createObjectURL(blob);
