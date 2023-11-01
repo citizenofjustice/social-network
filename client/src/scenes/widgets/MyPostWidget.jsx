@@ -69,6 +69,11 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
     dispatch(triggerReloadToggle());
   };
 
+  const handleEditCancelation = () => {
+    dispatch(setEditablePost({ editablePost: {} }));
+    clearForm();
+  };
+
   const appendFormInputs = (form) => {
     form.append("userId", _id);
     form.append("description", postText);
@@ -161,8 +166,12 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
                       <Box display="block" margin="0 auto">
                         <img
                           src={thumbnail}
-                          alt=""
-                          style={{ borderRadius: "0.5rem", width: "100%" }}
+                          alt="thumbnail"
+                          style={{
+                            borderRadius: "0.5rem",
+                            width: "100%",
+                            maxHeight: "10rem",
+                          }}
                         />
                       </Box>
                       <EditOutlined sx={{ ml: "0.5rem" }} />
@@ -174,6 +183,7 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
                     onClick={() => {
                       setImage(null);
                       setThumbnail(null);
+                      setIsImage(false);
                     }}
                     sx={{ ml: "0.5rem" }}
                   >
@@ -188,7 +198,7 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
 
       <Divider sx={{ margin: "1.25rem 0" }} />
 
-      <FlexBetween>
+      <FlexBetween padding="0 1rem">
         <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
           <ImageOutlined sx={{ color: mediumMain }} />
           <Typography
@@ -222,18 +232,34 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
             </FlexBetween>
           </>
         )}
-
-        <Button
-          disabled={!postText}
-          onClick={handlePost}
-          sx={{
-            color: palette.background.alt,
-            backgroundColor: palette.primary.main,
-            borderRadius: "3rem",
-          }}
-        >
-          POST
-        </Button>
+        <Box>
+          {editablePost._id && (
+            <Button
+              onClick={handleEditCancelation}
+              sx={{
+                color: palette.background.alt,
+                backgroundColor: palette.primary.main,
+                borderRadius: "3rem",
+                marginRight: "0.5rem",
+                "&:hover": { color: palette.primary.main },
+              }}
+            >
+              Cancel
+            </Button>
+          )}
+          <Button
+            disabled={!postText}
+            onClick={handlePost}
+            sx={{
+              color: palette.background.alt,
+              backgroundColor: palette.primary.main,
+              borderRadius: "3rem",
+              "&:hover": { color: palette.primary.main },
+            }}
+          >
+            POST
+          </Button>
+        </Box>
       </FlexBetween>
     </WidgetWrapper>
   );
