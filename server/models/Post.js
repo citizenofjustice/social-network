@@ -9,7 +9,14 @@ const postSchema = mongoose.Schema(
       required: true,
     },
     description: String,
-    picturePath: String,
+    picturePath: {
+      type: Object,
+      default: {
+        sourceUrl: { type: String, default: "" },
+        placeholderUrl: { type: String, default: "" },
+      },
+    },
+    aspectRatio: String,
     likes: {
       type: Map,
       of: Boolean,

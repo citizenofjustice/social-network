@@ -28,11 +28,11 @@ const PostWidget = ({
   description,
   location,
   picturePath,
+  aspectRatio,
   userPicturePath,
   likes,
   comments,
   isEdited,
-  isPostLoading,
 }) => {
   const [isCommentsShown, setIsCommentsShown] = useState(false);
   const token = useSelector((state) => state.auth.token);
@@ -86,7 +86,6 @@ const PostWidget = ({
           name={name}
           subtitle={location}
           userPicturePath={userPicturePath}
-          isContentLoading={isPostLoading}
           style={{ flexBasis: "100%", marginRight: "1rem" }}
         />
         {
@@ -105,22 +104,24 @@ const PostWidget = ({
           </Box>
         }
       </Box>
-      <Typography color={main} sx={{ mt: "1rem", whiteSpace: "pre-line" }}>
-        <SkeletonLoad loading={isPostLoading}>{description}</SkeletonLoad>
+      <Typography color={main} sx={{ m: "0.5rem 0", whiteSpace: "pre-line" }}>
+        <SkeletonLoad>{description}</SkeletonLoad>
       </Typography>
-      <SkeletonLoad loading={isPostLoading} height="15rem">
-        {picturePath && (
-          <LazyImage
-            image={{
-              src: picturePath,
-              alt: "post picture",
-              width: "100%",
-              height: "auto",
-              style: { borderRadius: "0.75rem", marginTop: "0.75rem" },
-            }}
-          />
-        )}
-      </SkeletonLoad>
+      {picturePath && (
+        <LazyImage
+          image={{
+            src: picturePath.sourceUrl,
+            placeholderSrc: picturePath.placeholderUrl,
+            alt: "post picture",
+            width: "100%",
+            height: "auto",
+            style: {
+              borderRadius: "0.75rem",
+              aspectRatio: aspectRatio,
+            },
+          }}
+        />
+      )}
 
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">

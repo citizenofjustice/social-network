@@ -12,6 +12,7 @@ const LazyImage = ({ image }) => {
         height={image.height}
         style={image.style}
         effect="blur"
+        placeholderSrc={image.placeholderSrc}
       />
     </Box>
   );

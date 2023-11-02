@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, Divider, useMediaQuery, useTheme } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -17,6 +17,9 @@ const ProfilePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px");
   const isOneself = userId === _id;
 
+  const { palette } = useTheme();
+  const background = palette.background.default;
+
   const getUserData = useCallback(async () => {
     const data = await fetchUser(userId, token);
     setUser(data);
@@ -30,14 +33,20 @@ const ProfilePage = () => {
 
   return (
     <Box
-      width="100%"
-      p="2rem 6%"
-      display={isNonMobileScreens ? "flex" : "block"}
-      gap="2rem"
-      justifyContent="center"
+      sx={{
+        display: isNonMobileScreens ? "flex" : "block",
+        width: "100%",
+        padding: "0rem 6%",
+        gap: "2rem",
+        justifyContent: "center",
+        alignItems: "flex-start",
+      }}
     >
       {(isNonMobileScreens || !isOneself) && (
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+        <Box
+          flexBasis={isNonMobileScreens ? "26%" : undefined}
+          sx={{ position: "sticky", top: "0", paddingTop: "2rem" }}
+        >
           <UserWidget viewedUserData={user} />
           <Box m="2rem 0" />
           <FriendListWidget userId={userId} />
@@ -46,9 +55,25 @@ const ProfilePage = () => {
       <Box
         flexBasis={isNonMobileScreens ? "42%" : undefined}
         mt={isNonMobileScreens ? undefined : "2rem"}
+        sx={{ position: "relative" }}
       >
-        {isOneself && <MyPostWidget picturePath={user.picturePath} />}
-        <PostsWidget userId={userId} isProfile />
+        {isOneself && (
+          <Box
+            sx={{
+              position: "sticky",
+              top: "0",
+              zIndex: "10",
+              padding: "2rem 0 0",
+              backgroundColor: background,
+            }}
+          >
+            <MyPostWidget picturePath={user.picturePath} />
+            <Divider sx={{ margin: "1rem 0" }} />
+          </Box>
+        )}
+        <Box sx={{ position: "relative", zIndex: "5" }}>
+          <PostsWidget userId={userId} isProfile />
+        </Box>
       </Box>
     </Box>
   );

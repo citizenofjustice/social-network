@@ -15,7 +15,7 @@ root.render(
     <PersistGate
       loading={
         <Box display="flex" justifyContent="center" alignItems="center">
-          <CircularProgress />
+          <CircularProgress sx={{ marginTop: "6rem" }} />
         </Box>
       }
       persistor={persistor}

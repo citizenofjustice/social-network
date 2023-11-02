@@ -99,7 +99,7 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
 
   useEffect(() => {
     const loadImgIntoThumbnail = async () => {
-      const imgBlob = fetch(editablePost.picturePath)
+      const imgBlob = fetch(editablePost.picturePath.sourceUrl)
         .then((response) => response.blob())
         .then((blob) => {
           return URL.createObjectURL(blob);
@@ -117,7 +117,7 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
   }, [editablePost]);
 
   return (
-    <WidgetWrapper mb="2rem">
+    <WidgetWrapper /*mb="2rem"*/>
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} loading={isUserLoading} />
         <InputBase

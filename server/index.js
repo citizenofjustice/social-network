@@ -16,6 +16,8 @@ import { verifyToken } from "./middleware/auth.js";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { upload } from "./middleware/multer.js";
 import { storage } from "./config/firebase.config.js";
+import sharp from "sharp";
+import imageSize from "image-size";
 
 /* CONFIGURATION */
 const __filename = fileURLToPath(import.meta.url);
@@ -34,27 +36,39 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 /* FIREBASE STORAGE */
 export const uploadImage = async (file) => {
   const dateTime = Date.now();
-  const fileName = `${file.folder}/${dateTime}`;
-  const storageRef = ref(storage, fileName);
+  const sourcePath = `${file.folder}/${dateTime}/source`;
+  const placeholderPath = `${file.folder}/${dateTime}/placeholder`;
+  const placeholderRef = ref(storage, placeholderPath);
+  const sourceRef = ref(storage, sourcePath);
   const metadata = {
     contentType: file.type,
   };
-  await uploadBytesResumable(storageRef, file.buffer, metadata);
-  return fileName;
+  await uploadBytesResumable(placeholderRef, file.placeholder, metadata);
+  await uploadBytesResumable(sourceRef, file.source, metadata);
+  return { sourcePath, placeholderPath };
 };
 
 export const uploadPictureAndGetUrl = async (file) => {
-  const data = {
+  const { width, height } = imageSize(file.buffer);
+  const sourceAspectRatio = `${width} / ${height}`;
+
+  const resizedBuffer = await sharp(file.buffer)
+    .resize(100, 70, {
+      fit: "inside",
+    })
+    .toBuffer();
+  const storedImages = await uploadImage({
     type: file.mimetype,
-    buffer: file.buffer,
     folder: file.fieldname,
-    // filename: file.originalname,
-  };
-  const storedImage = await uploadImage(data);
-  const path = `/${storedImage}`;
-  const storageRef = ref(storage, path);
-  const picturePath = await getDownloadURL(storageRef);
-  return picturePath;
+    source: file.buffer,
+    placeholder: resizedBuffer,
+  });
+
+  const sourceRef = ref(storage, storedImages.sourcePath);
+  const placeholderRef = ref(storage, storedImages.placeholderPath);
+  const sourceUrl = await getDownloadURL(sourceRef);
+  const placeholderUrl = await getDownloadURL(placeholderRef);
+  return { sourceUrl, sourceAspectRatio, placeholderUrl };
 };
 
 /* ROUTES WITH FILES */
