@@ -16,15 +16,23 @@ export const createPost = async (req, res) => {
   try {
     const { userId, description } = req.body;
     let picturePath;
+    let aspectRatio;
     if (!req.file) {
       picturePath = null;
+      aspectRatio = null;
     } else {
-      picturePath = await uploadPictureAndGetUrl(req.file);
+      const imageData = await uploadPictureAndGetUrl(req.file);
+      picturePath = {
+        sourceUrl: imageData.sourceUrl,
+        placeholderUrl: imageData.placeholderUrl,
+      };
+      aspectRatio = imageData.sourceAspectRatio;
     }
     const newPost = new Post({
       user: userId,
       description,
       picturePath: picturePath,
+      aspectRatio: aspectRatio,
       likes: {},
       comments: [],
       isEdited: false,
@@ -114,10 +122,17 @@ export const editPost = async (req, res) => {
     let result;
     if (post.user.toString() === userId) {
       let picturePath;
+      let aspectRatio;
       if (!req.file) {
         picturePath = null;
+        aspectRatio = null;
       } else {
-        picturePath = await uploadPictureAndGetUrl(req.file);
+        const imageData = await uploadPictureAndGetUrl(req.file);
+        picturePath = {
+          sourceUrl: imageData.sourceUrl,
+          placeholderUrl: imageData.placeholderUrl,
+        };
+        aspectRatio = imageData.sourceAspectRatio;
       }
       // this option instructs the method to create a document if no documents match the filter
       const options = { upsert: true };
@@ -125,6 +140,7 @@ export const editPost = async (req, res) => {
         $set: {
           description: description,
           picturePath: picturePath,
+          aspectRatio: aspectRatio,
           isEdited: true,
         },
       };

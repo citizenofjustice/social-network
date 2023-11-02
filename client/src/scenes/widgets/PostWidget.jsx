@@ -28,6 +28,7 @@ const PostWidget = ({
   description,
   location,
   picturePath,
+  aspectRatio,
   userPicturePath,
   likes,
   comments,
@@ -113,8 +114,11 @@ const PostWidget = ({
             placeholderSrc: picturePath.placeholderUrl,
             alt: "post picture",
             width: "100%",
-            height: "auto%",
-            style: { borderRadius: "0.75rem" },
+            height: "auto",
+            style: {
+              borderRadius: "0.75rem",
+              aspectRatio: aspectRatio,
+            },
           }}
         />
       )}

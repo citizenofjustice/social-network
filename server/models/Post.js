@@ -16,6 +16,7 @@ const postSchema = mongoose.Schema(
         placeholderUrl: { type: String, default: "" },
       },
     },
+    aspectRatio: String,
     likes: {
       type: Map,
       of: Boolean,

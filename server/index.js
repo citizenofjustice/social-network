@@ -17,6 +17,7 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { upload } from "./middleware/multer.js";
 import { storage } from "./config/firebase.config.js";
 import sharp from "sharp";
+import imageSize from "image-size";
 
 /* CONFIGURATION */
 const __filename = fileURLToPath(import.meta.url);
@@ -48,6 +49,9 @@ export const uploadImage = async (file) => {
 };
 
 export const uploadPictureAndGetUrl = async (file) => {
+  const { width, height } = imageSize(file.buffer);
+  const sourceAspectRatio = `${width} / ${height}`;
+
   const resizedBuffer = await sharp(file.buffer)
     .resize(100, 70, {
       fit: "inside",
@@ -59,11 +63,12 @@ export const uploadPictureAndGetUrl = async (file) => {
     source: file.buffer,
     placeholder: resizedBuffer,
   });
+
   const sourceRef = ref(storage, storedImages.sourcePath);
   const placeholderRef = ref(storage, storedImages.placeholderPath);
   const sourceUrl = await getDownloadURL(sourceRef);
   const placeholderUrl = await getDownloadURL(placeholderRef);
-  return { sourceUrl, placeholderUrl };
+  return { sourceUrl, sourceAspectRatio, placeholderUrl };
 };
 
 /* ROUTES WITH FILES */
