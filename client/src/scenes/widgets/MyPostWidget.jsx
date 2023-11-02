@@ -117,7 +117,7 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
   }, [editablePost]);
 
   return (
-    <WidgetWrapper mb="2rem">
+    <WidgetWrapper /*mb="2rem"*/>
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} loading={isUserLoading} />
         <InputBase
