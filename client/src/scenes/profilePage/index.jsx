@@ -54,7 +54,6 @@ const ProfilePage = () => {
       )}
       <Box
         flexBasis={isNonMobileScreens ? "42%" : undefined}
-        mt={isNonMobileScreens ? undefined : "2rem"}
         sx={{ position: "relative" }}
       >
         {isOneself && (

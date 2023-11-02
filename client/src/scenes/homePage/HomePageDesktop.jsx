@@ -7,7 +7,10 @@ import FriendListWidget from "scenes/widgets/FriendListWidget";
 const HomePageDesktop = ({ user, isNonMobileScreens }) => {
   return (
     <>
-      <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+      <Box
+        sx={{ position: "sticky", top: "2rem" }}
+        flexBasis={isNonMobileScreens ? "26%" : undefined}
+      >
         <UserWidget viewedUserData={user} />
       </Box>
       <Box
@@ -17,7 +20,7 @@ const HomePageDesktop = ({ user, isNonMobileScreens }) => {
         <PostsWidget userId={user._id} />
       </Box>
       {isNonMobileScreens && (
-        <Box flexBasis="26%">
+        <Box flexBasis="26%" sx={{ position: "sticky", top: "2rem" }}>
           <AdvertWidget />
           <Box m="2rem 0" />
           <FriendListWidget userId={user._id} />

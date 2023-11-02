@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, Divider, useMediaQuery, useTheme } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import PostsWidget from "scenes/widgets/PostsWidget";
@@ -11,6 +11,9 @@ const MyPostPage = () => {
   const token = useSelector((state) => state.auth.token);
   const userFriends = useSelector((state) => state.auth.user.friends);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px");
+
+  const { palette } = useTheme();
+  const background = palette.background.default;
 
   const getUserData = useCallback(async () => {
     const data = await fetchUser(_id, token);
@@ -30,15 +33,24 @@ const MyPostPage = () => {
       display={isNonMobileScreens ? "flex" : "block"}
       gap="2rem"
       justifyContent="center"
+      alignItems="flex-start"
     >
       <Box
-        flexBasis={isNonMobileScreens ? "42%" : undefined}
-        mt={isNonMobileScreens ? undefined : "2rem"}
+        sx={{
+          position: "sticky",
+          top: "0",
+          zIndex: "10",
+          padding: "2rem 0 0",
+          backgroundColor: background,
+        }}
       >
         <MyPostWidget
           picturePath={user.picturePath}
           isNonMobileScreens={isNonMobileScreens}
         />
+        <Divider sx={{ margin: "1rem 0" }} />
+      </Box>
+      <Box>
         <PostsWidget userId={_id} isProfile />
       </Box>
     </Box>
