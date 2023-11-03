@@ -266,7 +266,7 @@ const UserWidget = ({ viewedUserData }) => {
               textAlign="center"
               sx={{ width: "100%" }}
             >
-              <SkeletonLoad loading={isUserLoading} count={1}>
+              <SkeletonLoad loading={isUserLoading} width="5rem" count={1}>
                 {location}
               </SkeletonLoad>
             </Typography>
@@ -298,7 +298,7 @@ const UserWidget = ({ viewedUserData }) => {
               textAlign="center"
               sx={{ width: "100%" }}
             >
-              <SkeletonLoad loading={isUserLoading} count={1}>
+              <SkeletonLoad loading={isUserLoading} width="5rem" count={1}>
                 {occupation}
               </SkeletonLoad>
             </Typography>
@@ -321,7 +321,12 @@ const UserWidget = ({ viewedUserData }) => {
               <Typography color={medium} mr="0.5rem">
                 Who's viewed your profile
               </Typography>
-              <Typography color={main} fontWeight="500" textAlign="right">
+              <Typography
+                color={main}
+                fontWeight="500"
+                width="2rem"
+                textAlign="right"
+              >
                 <SkeletonLoad loading={isUserLoading} count={1}>
                   {viewedProfile}
                 </SkeletonLoad>
@@ -332,7 +337,7 @@ const UserWidget = ({ viewedUserData }) => {
                 Impressions of your post
               </Typography>
               <Typography color={main} fontWeight="500" textAlign="right">
-                <SkeletonLoad loading={isUserLoading} count={1}>
+                <SkeletonLoad loading={isUserLoading} width="2rem" count={1}>
                   {impressions}
                 </SkeletonLoad>
               </Typography>

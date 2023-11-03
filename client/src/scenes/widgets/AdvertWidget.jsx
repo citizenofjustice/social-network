@@ -1,5 +1,6 @@
 import { Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
+import LazyImage from "components/LazyImage";
 import WidgetWrapper from "components/WidgetWrapper";
 
 const AdvertWidget = () => {
@@ -16,12 +17,19 @@ const AdvertWidget = () => {
         </Typography>
         <Typography color={medium}>Create Ad</Typography>
       </FlexBetween>
-      <img
-        width="100%"
-        height="auto"
-        alt="advert"
-        src={`${process.env.REACT_APP_API_URL}assets/info4.jpeg`}
-        style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
+      <LazyImage
+        image={{
+          src: `${process.env.REACT_APP_API_URL}assets/info4.jpeg`,
+          placeholderSrc: `${process.env.REACT_APP_API_URL}assets/info4-placeholder.jpeg`,
+          alt: "advertisement picture",
+          width: "100%",
+          height: "auto",
+          style: {
+            borderRadius: "0.75rem",
+            margin: "0.75rem 0",
+            aspectRatio: "150/100",
+          },
+        }}
       />
       <FlexBetween>
         <Typography color={main}>MikaCosmetics</Typography>
