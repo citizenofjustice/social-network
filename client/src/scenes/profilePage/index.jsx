@@ -45,7 +45,12 @@ const ProfilePage = () => {
       {(isNonMobileScreens || !isOneself) && (
         <Box
           flexBasis={isNonMobileScreens ? "26%" : undefined}
-          sx={{ position: "sticky", top: "0", paddingTop: "2rem" }}
+          sx={{
+            position: isOneself ? "sticky" : "static",
+            top: "0",
+            paddingTop: "2rem",
+            marginBottom: "2rem",
+          }}
         >
           <UserWidget viewedUserData={user} />
           <Box m="2rem 0" />

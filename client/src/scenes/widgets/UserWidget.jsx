@@ -20,7 +20,7 @@ import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import SkeletonLoad from "components/SkeletonLoad";
 import SocialNetworks from "components/SocialNetworks";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { updateProfileInfo } from "API";
@@ -28,6 +28,7 @@ import { updateUser } from "state/authSlice";
 import { triggerReloadToggle } from "state/postsSlice";
 import { patchFriend } from "API";
 import { setFriends } from "state/authSlice";
+import StyledLink from "components/StyledLink";
 
 const UserWidget = ({ viewedUserData }) => {
   const { palette } = useTheme();
@@ -58,7 +59,6 @@ const UserWidget = ({ viewedUserData }) => {
   );
   const [currentUserData, setCurrentUserData] = useState(authUser);
 
-  const navigate = useNavigate();
   const routerLocation = useLocation();
   const isProfilePage =
     /^\/profile\/.*$/.test(routerLocation.pathname) ||
@@ -167,31 +167,33 @@ const UserWidget = ({ viewedUserData }) => {
             />
           </>
         ) : (
-          <FlexBetween
-            onClick={() => navigate(`/profile/${_id}`)}
-            gap="1rem"
-            sx={{ width: "100%" }}
-          >
-            <UserImage image={picturePath} loading={isUserLoading} />
-            <Box sx={{ width: "100%", padding: "0.5rem" }}>
-              <SkeletonLoad loading={isUserLoading} count={2}>
-                <Typography
-                  variant="h4"
-                  color={dark}
-                  fontWeight="500"
-                  sx={{
-                    "&:hover": {
-                      color: primaryDark,
-                      cursor: "pointer",
-                    },
-                  }}
-                >
-                  {firstName} {lastName}
-                </Typography>
-                <Typography color={medium}>{friends.length} friends</Typography>
-              </SkeletonLoad>
-            </Box>
-          </FlexBetween>
+          <StyledLink path={`/profile/${_id}`}>
+            <FlexBetween gap="1rem" sx={{ width: "100%" }}>
+              <UserImage image={picturePath} loading={isUserLoading} />
+              <Box sx={{ width: "100%", padding: "0.5rem" }}>
+                <SkeletonLoad loading={isUserLoading} count={2}>
+                  <Typography
+                    variant="h4"
+                    color={dark}
+                    fontWeight="500"
+                    sx={{
+                      "&:hover": {
+                        color: primaryDark,
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    {firstName} {lastName}
+                  </Typography>
+                  <Typography color={medium}>
+                    {`${friends.length} ${
+                      friends.length === 1 ? "friend" : "friends"
+                    }`}
+                  </Typography>
+                </SkeletonLoad>
+              </Box>
+            </FlexBetween>
+          </StyledLink>
         )}
         {isProfilePage && (
           <>

@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback } from "react";
 import useComponentVisible from "hooks/useComponentVisible";
 import { findUsersLike } from "API";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import {
   Box,
   IconButton,
@@ -13,6 +12,7 @@ import {
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
+import StyledLink from "./StyledLink";
 
 const SearchBar = ({ width, style }) => {
   const [foundUsers, setFoundUser] = useState([]);
@@ -76,19 +76,10 @@ const SearchBar = ({ width, style }) => {
           ref={ref}
         >
           {foundUsers.map((user) => (
-            <Link
-              to={`/profile/${user._id}`}
-              key={user._id}
-              style={{
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                color: "inherit",
-              }}
-            >
+            <StyledLink path={`/profile/${user._id}`}>
               <UserImage image={user.picturePath} size="30px" />
               <Typography p="0 2rem">{user.name}</Typography>
-            </Link>
+            </StyledLink>
           ))}
           {foundUsers.length === 0 && (
             <Typography p="0 2rem">User not found...</Typography>

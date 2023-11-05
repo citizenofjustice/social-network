@@ -70,7 +70,7 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
 
   if (posts.length === 0 && !isPostsLoading)
     return (
-      <WidgetWrapper marginTop={isProfile && "2rem"}>
+      <WidgetWrapper marginTop={isProfile && "1rem"}>
         <Box display="flex" justifyContent="center" pb="0.75rem">
           <Typography fontSize="1rem">
             {isProfile

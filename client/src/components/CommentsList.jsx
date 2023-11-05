@@ -10,8 +10,8 @@ import {
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import UserImage from "components/UserImage";
-import { Link } from "react-router-dom";
 import { addCommentToPost, removeCommentFromPost } from "API";
+import StyledLink from "./StyledLink";
 
 const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
   const [commentText, setCommentText] = useState("");
@@ -64,15 +64,7 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
                 >
                   <UserImage image={comment.author.picturePath} size="45px" />
                   <Box display="flex" flexDirection="column" ml="0.5rem">
-                    <Link
-                      to={`/profile/${comment.author._id}`}
-                      style={{
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        color: "inherit",
-                      }}
-                    >
+                    <StyledLink path={`/profile/${comment.author._id}`}>
                       <Box
                         display="flex"
                         flexDirection="column"
@@ -97,7 +89,7 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
                           })}
                         </Typography>
                       </Box>
-                    </Link>
+                    </StyledLink>
                     <Typography
                       sx={{
                         color: main,

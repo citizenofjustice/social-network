@@ -10,7 +10,6 @@ import SearchPage from "scenes/mobilePages/SearchPage";
 import FriendListPage from "scenes/mobilePages/FriendListPage";
 import FeedPage from "scenes/mobilePages/FeedPage";
 import UserPage from "scenes/mobilePages/UserPage";
-import MyPostPage from "scenes/mobilePages/MyPostPage";
 import Layout from "components/Layout";
 import ProtectedRoutes from "components/ProtectedRoutes";
 
@@ -115,18 +114,6 @@ function App() {
                     <ProtectedRoutes allowed={isAuth}>
                       {!isNonMobileScreen ? (
                         <UserPage />
-                      ) : (
-                        <Navigate to="/" replace />
-                      )}
-                    </ProtectedRoutes>
-                  }
-                />
-                <Route
-                  path="myposts"
-                  element={
-                    <ProtectedRoutes allowed={isAuth}>
-                      {!isNonMobileScreen ? (
-                        <MyPostPage />
                       ) : (
                         <Navigate to="/" replace />
                       )}

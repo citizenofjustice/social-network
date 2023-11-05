@@ -1,18 +1,12 @@
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
-import {
-  Box,
-  IconButton,
-  Typography,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setFriends } from "state/authSlice";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import SkeletonLoad from "components/SkeletonLoad";
 import { patchFriend } from "API";
-import { Link } from "react-router-dom";
+import StyledLink from "./StyledLink";
 
 const Friend = ({
   className,
@@ -27,7 +21,6 @@ const Friend = ({
   const { _id } = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
   const friends = useSelector((state) => state.auth.user.friends);
-  const isNonMobileScreen = useMediaQuery("(min-width: 1000px");
   const isOneself = _id === friendId;
 
   const { palette } = useTheme();
@@ -43,33 +36,23 @@ const Friend = ({
     dispatch(setFriends({ friends: friendsData }));
   };
 
-  let linkPath;
-  if (isOneself && !isNonMobileScreen) {
-    linkPath = "/myposts";
-  } else {
-    linkPath = `/profile/${friendId}`;
-  }
-
   return (
     <FlexBetween className={className} sx={style}>
       <FlexBetween gap="1rem" sx={{ width: "100%" }}>
-        <UserImage
-          image={userPicturePath}
-          size="55px"
-          loading={isContentLoading}
-        />
+        <StyledLink path={`/profile/${friendId}`}>
+          <UserImage
+            image={userPicturePath}
+            size="55px"
+            loading={isContentLoading}
+          />
+        </StyledLink>
         <Box
           sx={{
             width: "100%",
             mr: "0.75rem",
           }}
         >
-          <Link
-            to={linkPath}
-            style={{
-              textDecoration: "none",
-            }}
-          >
+          <StyledLink path={`/profile/${friendId}`}>
             <Typography
               color={main}
               variant="h5"
@@ -83,10 +66,10 @@ const Friend = ({
             >
               <SkeletonLoad loading={isContentLoading}>{name}</SkeletonLoad>
             </Typography>
-            <Typography color={medium} fontSize="0.75rem">
-              <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
-            </Typography>
-          </Link>
+          </StyledLink>
+          <Typography color={medium} fontSize="0.75rem">
+            <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
+          </Typography>
         </Box>
       </FlexBetween>
       {!isOneself && (
