@@ -1,5 +1,11 @@
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setFriends } from "state/authSlice";
 import FlexBetween from "./FlexBetween";
@@ -21,6 +27,7 @@ const Friend = ({
   const { _id } = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
   const friends = useSelector((state) => state.auth.user.friends);
+  const isNonMobileScreen = useMediaQuery("(min-width: 1000px");
   const isOneself = _id === friendId;
 
   const { palette } = useTheme();
@@ -35,6 +42,13 @@ const Friend = ({
     const friendsData = await patchFriend(_id, friendId, token);
     dispatch(setFriends({ friends: friendsData }));
   };
+
+  let linkPath;
+  if (isOneself && !isNonMobileScreen) {
+    linkPath = "/myposts";
+  } else {
+    linkPath = `/profile/${friendId}`;
+  }
 
   return (
     <FlexBetween className={className} sx={style}>
@@ -51,7 +65,7 @@ const Friend = ({
           }}
         >
           <Link
-            to={`/profile/${friendId}`}
+            to={linkPath}
             style={{
               textDecoration: "none",
             }}

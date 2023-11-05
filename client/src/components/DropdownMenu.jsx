@@ -26,6 +26,7 @@ const DropdownMenu = ({ postId, menuItems }) => {
               position: "absolute",
               top: "-10px",
               right: "0",
+              zIndex: "10",
             }}
             ref={ref}
           >

@@ -19,8 +19,8 @@ const AdvertWidget = () => {
       </FlexBetween>
       <LazyImage
         image={{
-          src: `${process.env.REACT_APP_API_URL}assets/info4.jpeg`,
-          placeholderSrc: `${process.env.REACT_APP_API_URL}assets/info4-placeholder.jpeg`,
+          src: `${process.env.REACT_APP_API_URL}assets/info4.jpg`,
+          placeholderSrc: `${process.env.REACT_APP_API_URL}assets/info4-placeholder.jpg`,
           alt: "advertisement picture",
           width: "100%",
           height: "auto",
@@ -32,12 +32,13 @@ const AdvertWidget = () => {
         }}
       />
       <FlexBetween>
-        <Typography color={main}>MikaCosmetics</Typography>
-        <Typography color={medium}>mikacosmetics.com</Typography>
+        <Typography color={main}>NY Coffe</Typography>
+        <Typography color={medium}>ny-coffe.com</Typography>
       </FlexBetween>
       <Typography color={medium} m="0.5rem 0">
-        Get your pathway to stunning and immaculate beauty and made sure your
-        skin is exfoliating and shining like light.
+        Are you looking for a place to relax, enjoy, and savor the best coffee
+        in town? Look no further than NYcoffe coffee house, the ultimate
+        destination for coffee lovers!
       </Typography>
     </WidgetWrapper>
   );
