@@ -35,9 +35,9 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 /* FIREBASE STORAGE */
 export const uploadImage = async (file) => {
-  const dateTime = Date.now();
-  const sourcePath = `${file.folder}/${dateTime}/source`;
-  const placeholderPath = `${file.folder}/${dateTime}/placeholder`;
+  const fileId = crypto.randomUUID();
+  const sourcePath = `${file.folder}/${fileId}/source`;
+  const placeholderPath = `${file.folder}/${fileId}/placeholder`;
   const placeholderRef = ref(storage, placeholderPath);
   const sourceRef = ref(storage, sourcePath);
   const metadata = {
@@ -85,9 +85,6 @@ app.patch(
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
-
-/* TEST FOR DEPLOYMENT */
-app.get("/", (req, res) => res.json("Hello world!"));
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
