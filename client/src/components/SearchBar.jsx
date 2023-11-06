@@ -76,10 +76,18 @@ const SearchBar = ({ width, style }) => {
           ref={ref}
         >
           {foundUsers.map((user) => (
-            <StyledLink path={`/profile/${user._id}`}>
-              <UserImage image={user.picturePath} size="30px" />
-              <Typography p="0 2rem">{user.name}</Typography>
-            </StyledLink>
+            <Box
+              key={user._id}
+              onClick={() => {
+                setIsComponentVisible(false);
+                setSearchQuery("");
+              }}
+            >
+              <StyledLink path={`/profile/${user._id}`}>
+                <UserImage image={user.picturePath} size="30px" />
+                <Typography p="0 2rem">{user.name}</Typography>
+              </StyledLink>
+            </Box>
           ))}
           {foundUsers.length === 0 && (
             <Typography p="0 2rem">User not found...</Typography>
