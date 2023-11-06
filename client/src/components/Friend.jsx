@@ -38,7 +38,7 @@ const Friend = ({
 
   return (
     <FlexBetween className={className} sx={style}>
-      <FlexBetween gap="1rem" sx={{ width: "100%" }}>
+      <Box gap="1rem" display="flex" alignItems="center">
         <StyledLink path={`/profile/${friendId}`}>
           <UserImage
             image={userPicturePath}
@@ -71,7 +71,7 @@ const Friend = ({
             <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
           </Typography>
         </Box>
-      </FlexBetween>
+      </Box>
       {!isOneself && (
         <IconButton
           onClick={() => updateFriend()}

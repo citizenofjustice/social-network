@@ -33,8 +33,9 @@ const PostWidget = ({
   likes,
   comments,
   isEdited,
+  displayComments = false,
 }) => {
-  const [isCommentsShown, setIsCommentsShown] = useState(false);
+  const [isCommentsShown, setIsCommentsShown] = useState(displayComments);
   const token = useSelector((state) => state.auth.token);
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const [postLikes, setPostLikes] = useState(likes);

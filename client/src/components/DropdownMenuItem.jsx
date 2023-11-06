@@ -23,6 +23,10 @@ const DropdownMenuItem = ({ menuItem, postId }) => {
       const response = await removeSelectedPost(postId, token, loggedInUserId);
       if (response.ok) dispatch(triggerReloadToggle());
     }
+    if ((menuItem.type = "SHARE")) {
+      const shareLink = `${window.location.origin}/post/?id=${postId}`;
+      console.log(shareLink);
+    }
   };
 
   return (
