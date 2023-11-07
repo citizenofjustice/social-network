@@ -18,6 +18,8 @@ import SkeletonLoad from "components/SkeletonLoad";
 import DropdownMenu from "components/DropdownMenu";
 import CommentsList from "components/CommentsList";
 import LazyImage from "components/LazyImage";
+import CopyLink from "components/CopyLink";
+import useComponentVisible from "hooks/useComponentVisible";
 
 const PostWidget = ({
   postId,
@@ -36,6 +38,9 @@ const PostWidget = ({
   displayComments = false,
 }) => {
   const [isCommentsShown, setIsCommentsShown] = useState(displayComments);
+  const [shareLink, setShareLink] = useState("");
+  const { ref, isComponentVisible, setIsComponentVisible } =
+    useComponentVisible(false);
   const token = useSelector((state) => state.auth.token);
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const [postLikes, setPostLikes] = useState(likes);
@@ -79,6 +84,16 @@ const PostWidget = ({
     setCommentCounter(counter);
   };
 
+  const handleCopyLinkShow = (shareData) => {
+    const { state, link } = shareData;
+    setIsComponentVisible(state);
+    setShareLink(link);
+  };
+
+  const handleCopyIconClick = (state) => {
+    setIsComponentVisible(state);
+  };
+
   return (
     <WidgetWrapper mb="2rem">
       <Box display="flex">
@@ -101,10 +116,25 @@ const PostWidget = ({
               isMyPost={isMyPost}
               postId={postId}
               menuItems={postDropdownMenuItems}
+              onShareLink={handleCopyLinkShow}
             />
           </Box>
         }
       </Box>
+      {isComponentVisible && (
+        <Box
+          ref={ref}
+          width="fit-content"
+          sx={{
+            position: "relative",
+            zIndex: "5",
+            top: "-3.25rem",
+            float: "right",
+          }}
+        >
+          <CopyLink link={shareLink} onCopy={handleCopyIconClick} />
+        </Box>
+      )}
       <Typography color={main} sx={{ m: "0.5rem 0", whiteSpace: "pre-line" }}>
         <SkeletonLoad>{description}</SkeletonLoad>
       </Typography>
