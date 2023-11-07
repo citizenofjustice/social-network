@@ -14,8 +14,8 @@ import { rootReducer } from "state/index";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "ui"],
-  blacklist: ["auth.isUserLoading"],
+  whitelist: ["auth", "ui.mode", "ui.dateTimeFormat"],
+  blacklist: ["auth.isUserLoading, ui.errors"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
