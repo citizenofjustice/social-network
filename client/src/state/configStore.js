@@ -9,14 +9,34 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import { rootReducer } from "state/index";
+import authReducer from "./authSlice";
+import uiReducer from "state/uiSlice";
+import postsReducer from "state/postsSlice";
+import { combineReducers } from "@reduxjs/toolkit";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "ui.mode", "ui.dateTimeFormat"],
-  blacklist: ["auth.isUserLoading, ui.errors"],
 };
+
+const authPersistConfig = {
+  key: "auth",
+  storage: storage,
+  blacklist: ["isUserLoading"],
+};
+
+const uiPersistConfig = {
+  key: "ui",
+  storage: storage,
+  whitelist: ["mode", "dateTimeFormat"],
+  blacklist: ["errors"],
+};
+
+const rootReducer = combineReducers({
+  auth: persistReducer(authPersistConfig, authReducer),
+  ui: persistReducer(uiPersistConfig, uiReducer),
+  posts: postsReducer,
+});
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
