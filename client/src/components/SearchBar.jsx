@@ -2,8 +2,7 @@ import { Search } from "@mui/icons-material";
 import { useState, useEffect, useCallback } from "react";
 import useComponentVisible from "hooks/useComponentVisible";
 import { findUsersLike } from "API";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
   IconButton,
@@ -13,23 +12,42 @@ import {
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
+import StyledLink from "./StyledLink";
+import { addErrors, dropError } from "state/uiSlice";
 
 const SearchBar = ({ width, style }) => {
   const [foundUsers, setFoundUser] = useState([]);
+  const { duration } = useSelector((state) => state.ui.errors);
   const [searchQuery, setSearchQuery] = useState("");
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
   const token = useSelector((state) => state.auth.token);
 
+  const dispatch = useDispatch();
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
 
   const handleSearch = useCallback(async () => {
-    const data = await findUsersLike(searchQuery, loggedInUserId, token);
-    setFoundUser(data);
-    setIsComponentVisible(true);
-  }, [searchQuery, loggedInUserId, token, setIsComponentVisible]);
+    try {
+      const data = await findUsersLike(searchQuery, loggedInUserId, token);
+      setFoundUser(data);
+      setIsComponentVisible(true);
+    } catch (err) {
+      const errorId = crypto.randomUUID();
+      dispatch(
+        addErrors({
+          error: {
+            id: errorId,
+            text: "There are some errors in search querry. Try to correct it.",
+          },
+        })
+      );
+      setTimeout(() => {
+        dispatch(dropError({ errorId }));
+      }, duration);
+    }
+  }, [searchQuery, loggedInUserId, token, setIsComponentVisible, duration]);
 
   useEffect(() => {
     if (searchQuery.length > 0) {
@@ -75,22 +93,22 @@ const SearchBar = ({ width, style }) => {
           }}
           ref={ref}
         >
-          {foundUsers.map((user) => (
-            <Link
-              to={`/profile/${user._id}`}
-              key={user._id}
-              style={{
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                color: "inherit",
-              }}
-            >
-              <UserImage image={user.picturePath} size="30px" />
-              <Typography p="0 2rem">{user.name}</Typography>
-            </Link>
-          ))}
-          {foundUsers.length === 0 && (
+          {foundUsers.length > 0 &&
+            foundUsers.map((user) => (
+              <Box
+                key={user._id}
+                onClick={() => {
+                  setIsComponentVisible(false);
+                  setSearchQuery("");
+                }}
+              >
+                <StyledLink path={`/profile/${user._id}`}>
+                  <UserImage image={user.picturePath} size="30px" />
+                  <Typography p="0 2rem">{user.name}</Typography>
+                </StyledLink>
+              </Box>
+            ))}
+          {foundUsers.length === 0 && searchQuery.length !== 0 && (
             <Typography p="0 2rem">User not found...</Typography>
           )}
         </FlexBetween>

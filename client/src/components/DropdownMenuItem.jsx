@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { triggerReloadToggle, setEditablePost } from "state/postsSlice";
 
-const DropdownMenuItem = ({ menuItem, postId }) => {
+const DropdownMenuItem = ({ menuItem, postId, onShare }) => {
   const token = useSelector((state) => state.auth.token);
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const dispatch = useDispatch();
@@ -22,6 +22,11 @@ const DropdownMenuItem = ({ menuItem, postId }) => {
     if (menuItem.type === "REMOVE") {
       const response = await removeSelectedPost(postId, token, loggedInUserId);
       if (response.ok) dispatch(triggerReloadToggle());
+    }
+    if ((menuItem.type = "SHARE")) {
+      const shareLink = `${window.location.origin}/post/?id=${postId}`;
+      onShare({ state: true, link: shareLink });
+      console.log(shareLink);
     }
   };
 

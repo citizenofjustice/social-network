@@ -8,6 +8,7 @@ const SkeletonLoad = (props) => {
         <Skeleton
           count={props.count}
           height={props.height}
+          width={props.width}
           margin={props.margin}
         />
       ) : (

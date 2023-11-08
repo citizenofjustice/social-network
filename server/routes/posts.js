@@ -7,6 +7,7 @@ import {
   removePost,
   addNewComment,
   removePostComment,
+  getСertainPost,
 } from "../controllers/posts.js";
 import { verifyToken } from "../middleware/auth.js";
 import multer from "multer";
@@ -21,6 +22,7 @@ router.get(
   verifyToken,
   getUserPosts
 );
+router.get("/view/:postId", verifyToken, getСertainPost);
 router.get("/:postId/get/edit/by/:userId", verifyToken, getPostEditData);
 
 /* UPDATE */

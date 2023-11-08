@@ -170,7 +170,7 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
                           style={{
                             borderRadius: "0.5rem",
                             width: "100%",
-                            maxHeight: "10rem",
+                            maxHeight: "7rem",
                           }}
                         />
                       </Box>

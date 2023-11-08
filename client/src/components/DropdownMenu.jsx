@@ -3,11 +3,15 @@ import { MoreHoriz } from "@mui/icons-material";
 import useComponentVisible from "hooks/useComponentVisible";
 import DropdownMenuItem from "components/DropdownMenuItem";
 
-const DropdownMenu = ({ postId, menuItems }) => {
+const DropdownMenu = ({ postId, menuItems, onShareLink }) => {
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
+
+  const handleShareLink = (shareData) => {
+    onShareLink(shareData);
+  };
 
   return (
     <>
@@ -26,6 +30,7 @@ const DropdownMenu = ({ postId, menuItems }) => {
               position: "absolute",
               top: "-10px",
               right: "0",
+              zIndex: "10",
             }}
             ref={ref}
           >
@@ -33,7 +38,11 @@ const DropdownMenu = ({ postId, menuItems }) => {
             {menuItems.map((item, index) => (
               <Box key={index}>
                 {item.access && (
-                  <DropdownMenuItem postId={postId} menuItem={item} />
+                  <DropdownMenuItem
+                    postId={postId}
+                    menuItem={item}
+                    onShare={handleShareLink}
+                  />
                 )}
               </Box>
             ))}

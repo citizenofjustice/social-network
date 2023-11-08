@@ -212,3 +212,16 @@ export const changeAuthData = async (formData, userId, token) => {
   const updatedData = await response.json();
   return updatedData;
 };
+
+export const fetchСertainPost = async (postId, token) => {
+  const response = await fetch(URL + `posts/view/${postId}`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    return response.status;
+  }
+};

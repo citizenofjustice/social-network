@@ -45,16 +45,23 @@ const ProfilePage = () => {
       {(isNonMobileScreens || !isOneself) && (
         <Box
           flexBasis={isNonMobileScreens ? "26%" : undefined}
-          sx={{ position: "sticky", top: "0", paddingTop: "2rem" }}
+          sx={{
+            position: !isNonMobileScreens && !isOneself ? "static" : "sticky",
+            top: "0",
+            paddingTop: "2rem",
+            marginBottom: "2rem",
+          }}
         >
           <UserWidget viewedUserData={user} />
           <Box m="2rem 0" />
-          <FriendListWidget userId={userId} />
+          <FriendListWidget
+            userId={userId}
+            isOneself={isOneself ? true : false}
+          />
         </Box>
       )}
       <Box
         flexBasis={isNonMobileScreens ? "42%" : undefined}
-        mt={isNonMobileScreens ? undefined : "2rem"}
         sx={{ position: "relative" }}
       >
         {isOneself && (
@@ -71,7 +78,13 @@ const ProfilePage = () => {
             <Divider sx={{ margin: "1rem 0" }} />
           </Box>
         )}
-        <Box sx={{ position: "relative", zIndex: "5" }}>
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: "5",
+            marginTop: isOneself ? 0 : "2rem",
+          }}
+        >
           <PostsWidget userId={userId} isProfile />
         </Box>
       </Box>

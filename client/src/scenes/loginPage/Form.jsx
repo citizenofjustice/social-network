@@ -78,7 +78,6 @@ const Form = () => {
     dispatch(setIsUserLoading());
     const loggedIn = await loginUser(values);
     onSubmitProps.resetForm();
-    dispatch(setIsUserLoading());
     if (loggedIn) {
       dispatch(
         setLogin({
@@ -86,6 +85,7 @@ const Form = () => {
           token: loggedIn.token,
         })
       );
+      dispatch(setIsUserLoading());
       const friendsData = await fetchFriends(loggedIn.user._id, loggedIn.token);
       dispatch(
         setFriends({
@@ -93,9 +93,9 @@ const Form = () => {
         })
       );
       navigate("/");
+    } else {
+      dispatch(setIsUserLoading());
     }
-    // should be removed later
-    // setTimeout(() => dispatch(setIsUserLoading()), 2000);
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {

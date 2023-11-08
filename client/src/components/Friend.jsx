@@ -6,7 +6,7 @@ import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import SkeletonLoad from "components/SkeletonLoad";
 import { patchFriend } from "API";
-import { Link } from "react-router-dom";
+import StyledLink from "./StyledLink";
 
 const Friend = ({
   className,
@@ -38,24 +38,21 @@ const Friend = ({
 
   return (
     <FlexBetween className={className} sx={style}>
-      <FlexBetween gap="1rem" sx={{ width: "100%" }}>
-        <UserImage
-          image={userPicturePath}
-          size="55px"
-          loading={isContentLoading}
-        />
+      <Box gap="1rem" display="flex" alignItems="center">
+        <StyledLink path={`/profile/${friendId}`}>
+          <UserImage
+            image={userPicturePath}
+            size="55px"
+            loading={isContentLoading}
+          />
+        </StyledLink>
         <Box
           sx={{
             width: "100%",
             mr: "0.75rem",
           }}
         >
-          <Link
-            to={`/profile/${friendId}`}
-            style={{
-              textDecoration: "none",
-            }}
-          >
+          <StyledLink path={`/profile/${friendId}`}>
             <Typography
               color={main}
               variant="h5"
@@ -69,12 +66,12 @@ const Friend = ({
             >
               <SkeletonLoad loading={isContentLoading}>{name}</SkeletonLoad>
             </Typography>
-            <Typography color={medium} fontSize="0.75rem">
-              <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
-            </Typography>
-          </Link>
+          </StyledLink>
+          <Typography color={medium} fontSize="0.75rem">
+            <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
+          </Typography>
         </Box>
-      </FlexBetween>
+      </Box>
       {!isOneself && (
         <IconButton
           onClick={() => updateFriend()}

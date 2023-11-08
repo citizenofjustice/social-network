@@ -7,11 +7,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import {
-  Message,
+  PostAdd,
   DarkMode,
   LightMode,
-  Notifications,
-  Help,
   Menu,
   Close,
   LogoutOutlined,
@@ -22,20 +20,20 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "state/authSlice";
 import { setMode } from "state/uiSlice";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 
 import SearchBar from "components/SearchBar";
 import useComponentVisible from "hooks/useComponentVisible";
 import NavbarDropdown from "components/NavbarDropdown";
+import StyledLink from "components/StyledLink";
 
 const Navbar = () => {
   const isAuth = Boolean(useSelector((state) => state.auth.token));
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
   const user = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
@@ -66,20 +64,21 @@ const Navbar = () => {
       height="5rem"
     >
       <FlexBetween gap="1.75rem">
-        <Typography
-          onClick={() => navigate(!isNonMobileScreen ? "/feed" : "/")}
-          sx={{
-            "&:hover": {
-              color: primaryDark,
-              cursor: "pointer",
-            },
-          }}
-          fontWeight="bold"
-          fontSize="clamp(1rem, 2rem, 2.25rem)"
-          color="primary"
-        >
-          StayInTouch
-        </Typography>
+        <StyledLink path={!isNonMobileScreen ? "/feed" : "/"}>
+          <Typography
+            sx={{
+              "&:hover": {
+                color: primaryDark,
+                cursor: "pointer",
+              },
+            }}
+            fontWeight="bold"
+            fontSize="clamp(1rem, 2rem, 2.25rem)"
+            color="primary"
+          >
+            StayInTouch
+          </Typography>
+        </StyledLink>
         {isAuth && isNonMobileScreen && (
           <SearchBar
             width="20vw"
@@ -102,16 +101,6 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          {/* <IconButton>
-            <Message sx={{ color: dark, fontSize: "25px" }} />
-          </IconButton> */}
-          {/* <IconButton>
-            <Notifications sx={{ fontSize: "25px" }} />
-          </IconButton>
-          <IconButton>
-            <Help sx={{ fontSize: "25px" }} />
-          </IconButton> */}
-
           {isAuth && (
             <NavbarDropdown
               name={`${user.firstName} ${user.lastName}`}
@@ -120,16 +109,15 @@ const Navbar = () => {
             />
           )}
           {isAuth && (
-            <IconButton
-              onClick={() => navigate("/user")}
-              style={{ backgroundColor: "transparent" }}
-            >
-              <UserImage
-                loading={isUserLoading}
-                image={user.picturePath}
-                size="30px"
-              />
-            </IconButton>
+            <StyledLink path="/user">
+              <IconButton style={{ backgroundColor: "transparent" }}>
+                <UserImage
+                  loading={isUserLoading}
+                  image={user.picturePath}
+                  size="30px"
+                />
+              </IconButton>
+            </StyledLink>
           )}
         </FlexBetween>
       ) : (
@@ -182,41 +170,44 @@ const Navbar = () => {
             mt="2rem"
           >
             {isAuth && (
-              <IconButton
-                onClick={() => navigate("/user")}
-                style={{ backgroundColor: "transparent" }}
-              >
-                <UserImage
-                  loading={isUserLoading}
-                  image={user.picturePath}
-                  size="40px"
-                />
-              </IconButton>
+              <>
+                <StyledLink path="/user">
+                  <IconButton style={{ backgroundColor: "transparent" }}>
+                    <UserImage
+                      loading={isUserLoading}
+                      image={user.picturePath}
+                      size="40px"
+                    />
+                  </IconButton>
+                </StyledLink>
+                <StyledLink path="feed">
+                  <IconButton>
+                    <DynamicFeedOutlined
+                      sx={{ color: dark, fontSize: "25px" }}
+                    />
+                  </IconButton>
+                </StyledLink>
+                <StyledLink path={`/profile/${user._id}`}>
+                  <IconButton>
+                    <PostAdd sx={{ color: dark, fontSize: "25px" }} />
+                  </IconButton>
+                </StyledLink>
+                <StyledLink path="/friends">
+                  <IconButton>
+                    <PeopleOutlineOutlined
+                      sx={{ color: dark, fontSize: "25px" }}
+                    />
+                  </IconButton>
+                </StyledLink>
+                <StyledLink path="/search">
+                  <IconButton>
+                    <PersonSearchOutlined
+                      sx={{ color: dark, fontSize: "25px" }}
+                    />
+                  </IconButton>
+                </StyledLink>
+              </>
             )}
-
-            {isAuth && (
-              <IconButton onClick={() => navigate("/feed")}>
-                <DynamicFeedOutlined sx={{ color: dark, fontSize: "25px" }} />
-              </IconButton>
-            )}
-            {isAuth && (
-              <IconButton onClick={() => navigate("/friends")}>
-                <PeopleOutlineOutlined sx={{ color: dark, fontSize: "25px" }} />
-              </IconButton>
-            )}
-            {isAuth && (
-              <IconButton onClick={() => navigate("/search")}>
-                <PersonSearchOutlined sx={{ color: dark, fontSize: "25px" }} />
-              </IconButton>
-            )}
-            {isAuth && (
-              <IconButton onClick={() => navigate("/myposts")}>
-                <Message sx={{ color: dark, fontSize: "25px" }} />
-              </IconButton>
-            )}
-            {/* <IconButton>
-              <Notifications sx={{ fontSize: "25px" }} />
-            </IconButton> */}
             <IconButton
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: "25px" }}

@@ -6,7 +6,7 @@ import { fetchFriends } from "API";
 import WidgetWrapper from "components/WidgetWrapper";
 import Slider from "components/Slider";
 
-const FriendListWidget = ({ userId }) => {
+const FriendListWidget = ({ userId, isOneself = true }) => {
   // const [isFriendListLoadnig, setIsFriendListLoading] = useState(false);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const token = useSelector((state) => state.auth.token);
@@ -40,9 +40,9 @@ const FriendListWidget = ({ userId }) => {
         )}
         {friendsList.length === 0 && (
           <Box>
-            You haven't added any friends.
-            <br />
-            Try to find your friends using search.
+            {`${isOneself ? "You" : "User"} haven't added any friends.`}
+            {isOneself && <br />}
+            {isOneself && "Try to find your friends using search."}
           </Box>
         )}
       </Box>

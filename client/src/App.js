@@ -10,13 +10,14 @@ import SearchPage from "scenes/mobilePages/SearchPage";
 import FriendListPage from "scenes/mobilePages/FriendListPage";
 import FeedPage from "scenes/mobilePages/FeedPage";
 import UserPage from "scenes/mobilePages/UserPage";
-import MyPostPage from "scenes/mobilePages/MyPostPage";
 import Layout from "components/Layout";
 import ProtectedRoutes from "components/ProtectedRoutes";
+import PostPage from "scenes/mobilePages/PostPage";
 
 const HomePage = lazy(() => import("scenes/homePage"));
 const LoginPage = lazy(() => import("scenes/loginPage"));
 const ProfilePage = lazy(() => import("scenes/profilePage"));
+const PostPageDesktop = lazy(() => import("scenes/postPage"));
 
 function App() {
   const dispatch = useDispatch();
@@ -74,6 +75,14 @@ function App() {
                   }
                 />
                 <Route
+                  path="post/*"
+                  element={
+                    <ProtectedRoutes allowed={isAuth}>
+                      {isNonMobileScreen ? <PostPageDesktop /> : <PostPage />}
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
                   path="feed"
                   element={
                     <ProtectedRoutes allowed={isAuth}>
@@ -115,18 +124,6 @@ function App() {
                     <ProtectedRoutes allowed={isAuth}>
                       {!isNonMobileScreen ? (
                         <UserPage />
-                      ) : (
-                        <Navigate to="/" replace />
-                      )}
-                    </ProtectedRoutes>
-                  }
-                />
-                <Route
-                  path="myposts"
-                  element={
-                    <ProtectedRoutes allowed={isAuth}>
-                      {!isNonMobileScreen ? (
-                        <MyPostPage />
                       ) : (
                         <Navigate to="/" replace />
                       )}

@@ -115,17 +115,17 @@ const SocialNetworks = ({
 
   return (
     <Box p="1rem 0 0">
-      <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
+      <Typography fontSize="1rem" color={main} fontWeight="500">
         Social Profiles
       </Typography>
-      {userProfiles.length === 0 && (
-        <Typography textAlign="center" marginBottom="1rem">
+      {userProfiles.length === 0 && !isUserLoading && (
+        <Typography textAlign="center" marginBottom="1rem" mt="1rem">
           Profiles not found...
         </Typography>
       )}
-      <SkeletonLoad loading={isUserLoading} height="2rem">
+      <SkeletonLoad loading={isUserLoading} height="1.75rem">
         {userProfiles.map((profile) => (
-          <FlexBetween key={profile.title} gap="1rem" marginBottom="1rem">
+          <FlexBetween key={profile.title} gap="1rem" margin="1rem 0">
             <a
               href={profile.link}
               target="_blank"
