@@ -1,4 +1,6 @@
 /help-files
 /server/node_modules
-/server/public/assets
+server/public/assets/*
+!server/public/assets/advertisement.jpg
+!server/public/assets/advertisement-placeholder.jpg
 .env

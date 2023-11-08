@@ -19,8 +19,8 @@ const AdvertWidget = () => {
       </FlexBetween>
       <LazyImage
         image={{
-          src: `${process.env.REACT_APP_API_URL}assets/info4.jpg`,
-          placeholderSrc: `${process.env.REACT_APP_API_URL}assets/info4-placeholder.jpg`,
+          src: `${process.env.REACT_APP_API_URL}assets/advertisement.jpg`,
+          placeholderSrc: `${process.env.REACT_APP_API_URL}assets/advertisement-placeholder.jpg`,
           alt: "advertisement picture",
           width: "100%",
           height: "auto",
