@@ -35,6 +35,7 @@ const Layout = () => {
             justifyContent: "center",
             alignItems: "center",
             width: "100vw",
+            zIndex: "100",
           }}
         >
           <TransitionGroup>
