@@ -29,7 +29,6 @@ const Layout = () => {
           sx={{
             position: "fixed",
             bottom: 0,
-            marginBottom: "2rem",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",

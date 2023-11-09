@@ -56,9 +56,10 @@ const SearchBar = ({ width, style }) => {
       }, 1000);
       return () => clearTimeout(timeOutId);
     } else {
+      setIsComponentVisible(false);
       setFoundUser([]);
     }
-  }, [handleSearch, searchQuery.length]);
+  }, [handleSearch, searchQuery.length, setIsComponentVisible]);
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">

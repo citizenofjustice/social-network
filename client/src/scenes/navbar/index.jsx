@@ -109,7 +109,7 @@ const Navbar = () => {
             />
           )}
           {isAuth && (
-            <StyledLink path="/user">
+            <StyledLink path={`/profile/${user._id}`}>
               <IconButton style={{ backgroundColor: "transparent" }}>
                 <UserImage
                   loading={isUserLoading}
