@@ -5,8 +5,12 @@ export const registerUser = async (formData) => {
     method: "POST",
     body: formData,
   });
-  const registeredUser = await response.json();
-  return registeredUser;
+  if (response.error) {
+    return response;
+  } else {
+    const registeredUser = await response.json();
+    return registeredUser;
+  }
 };
 
 export const loginUser = async (values) => {

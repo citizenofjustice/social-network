@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import Dropzone from "react-dropzone";
@@ -15,8 +15,9 @@ import {
 } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import FlexBetween from "components/FlexBetween";
-import { setFriends, setIsUserLoading, setLogin } from "state/authSlice";
 import { fetchFriends, loginUser, registerUser } from "API";
+import { setFriends, setIsUserLoading, setLogin } from "state/authSlice";
+import { addErrors, dropError } from "state/uiSlice";
 
 // schema validation for registration
 const registerSchema = yup.object().shape({
@@ -60,6 +61,7 @@ const initialValuesLogin = {
 const Form = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { duration } = useSelector((state) => state.ui.errors);
   const { palette } = useTheme();
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const [pageType, setPageType] = useState("login");
@@ -83,14 +85,27 @@ const Form = () => {
       const savedUser = await registerUser(formData);
       setIsRequestPending(false);
       // reset inputs to initial values
-      onSubmitProps.resetForm();
 
-      // if registration was successful show login form
-      if (savedUser) {
+      if (savedUser.error) {
+        const errorId = crypto.randomUUID();
+        dispatch(
+          addErrors({
+            error: {
+              id: errorId,
+              text: savedUser.error,
+            },
+          })
+        );
+        setTimeout(() => {
+          dispatch(dropError({ errorId }));
+        }, duration);
+      } else {
+        // if registration was successful show login form
         setPageType("login");
+        onSubmitProps.resetForm();
       }
     } catch (err) {
-      console.log(err);
+      console.log("err: ", err);
     }
   };
 

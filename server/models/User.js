@@ -53,5 +53,14 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+UserSchema.post("save", function (error, doc, next) {
+  if (error.name === "MongoServerError" && error.code === 11000) {
+    const { keyValue } = error;
+    next(new Error(`User with email "${keyValue.email}" already exists.`));
+  } else {
+    next(error);
+  }
+});
+
 const User = mongoose.model("User", UserSchema);
 export default User;
