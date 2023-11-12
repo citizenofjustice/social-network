@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import UserImage from "components/UserImage";
 import { addCommentToPost, removeCommentFromPost } from "API";
 import StyledLink from "./StyledLink";
+import DefaultUserIcon from "./DefaultUserIcon";
 
 const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
   const [commentText, setCommentText] = useState("");
@@ -62,9 +63,21 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
                   justifyContent="flex-start"
                   alignItems="flex-start"
                 >
-                  <UserImage image={comment.author.picturePath} size="45px" />
-                  <Box display="flex" flexDirection="column" ml="0.5rem">
+                  <Box display="flex" flexDirection="column">
                     <StyledLink path={`/profile/${comment.author._id}`}>
+                      {comment.author.picturePath ? (
+                        <UserImage
+                          image={comment.author.picturePath}
+                          size="45px"
+                        />
+                      ) : (
+                        <DefaultUserIcon
+                          firstNameInitial={comment.author.firstName[0]}
+                          lastNameInitial={comment.author.lastName[0]}
+                          size="45px"
+                          fontSize="1.25rem"
+                        />
+                      )}
                       <Box
                         display="flex"
                         flexDirection="column"
@@ -74,6 +87,7 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
                         borderRadius="10px"
                         width="fit-content"
                         height="45px"
+                        ml="0.5rem"
                       >
                         <Typography fontSize="0.8rem">
                           {`${comment.author.firstName} ${comment.author.lastName}`}

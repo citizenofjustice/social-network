@@ -28,6 +28,7 @@ import SearchBar from "components/SearchBar";
 import useComponentVisible from "hooks/useComponentVisible";
 import NavbarDropdown from "components/NavbarDropdown";
 import StyledLink from "components/StyledLink";
+import DefaultUserIcon from "components/DefaultUserIcon";
 
 const Navbar = () => {
   const isAuth = Boolean(useSelector((state) => state.auth.token));
@@ -111,11 +112,20 @@ const Navbar = () => {
           {isAuth && (
             <StyledLink path={`/profile/${user._id}`}>
               <IconButton style={{ backgroundColor: "transparent" }}>
-                <UserImage
-                  loading={isUserLoading}
-                  image={user.picturePath}
-                  size="30px"
-                />
+                {user.picturePath ? (
+                  <UserImage
+                    loading={isUserLoading}
+                    image={user.picturePath}
+                    size="30px"
+                  />
+                ) : (
+                  <DefaultUserIcon
+                    firstNameInitial={user.firstName[0]}
+                    lastNameInitial={user.lastName[0]}
+                    size="30px"
+                    fontSize="0.75rem"
+                  />
+                )}
               </IconButton>
             </StyledLink>
           )}
@@ -173,11 +183,19 @@ const Navbar = () => {
               <>
                 <StyledLink path="/user">
                   <IconButton style={{ backgroundColor: "transparent" }}>
-                    <UserImage
-                      loading={isUserLoading}
-                      image={user.picturePath}
-                      size="40px"
-                    />
+                    {user.picturePath ? (
+                      <UserImage
+                        loading={isUserLoading}
+                        image={user.picturePath}
+                        size="40px"
+                      />
+                    ) : (
+                      <DefaultUserIcon
+                        firstNameInitial={user.firstName[0]}
+                        lastNameInitial={user.lastName[0]}
+                        size="40px"
+                      />
+                    )}
                   </IconButton>
                 </StyledLink>
                 <StyledLink path="feed">

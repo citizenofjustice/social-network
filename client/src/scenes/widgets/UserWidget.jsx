@@ -29,6 +29,7 @@ import { triggerReloadToggle } from "state/postsSlice";
 import { patchFriend } from "API";
 import { setFriends } from "state/authSlice";
 import StyledLink from "components/StyledLink";
+import DefaultUserIcon from "components/DefaultUserIcon";
 
 const UserWidget = ({ viewedUserData }) => {
   const { palette } = useTheme();
@@ -169,7 +170,17 @@ const UserWidget = ({ viewedUserData }) => {
         ) : (
           <StyledLink path={`/profile/${_id}`}>
             <FlexBetween gap="1rem" sx={{ width: "100%" }}>
-              <UserImage image={picturePath} loading={isUserLoading} />
+              <Box>
+                {picturePath ? (
+                  <UserImage image={picturePath} loading={isUserLoading} />
+                ) : (
+                  <DefaultUserIcon
+                    firstNameInitial={firstName[0]}
+                    lastNameInitial={lastName[0]}
+                    fontSize="1.5rem"
+                  />
+                )}
+              </Box>
               <Box sx={{ width: "100%", padding: "0.5rem" }}>
                 <SkeletonLoad loading={isUserLoading} count={2}>
                   <Typography

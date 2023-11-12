@@ -43,7 +43,8 @@ const PostPage = () => {
         postUserId={postData.user._id}
         createdAt={postData.createdAt}
         updatedAt={postData.updatedAt}
-        name={`${postData.user.firstName} ${postData.user.lastName}`}
+        firstName={postData.user.firstName}
+        lastName={postData.user.lastName}
         description={postData.description}
         location={postData.user.location}
         picturePath={postData.picturePath}

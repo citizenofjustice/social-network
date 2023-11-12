@@ -14,6 +14,7 @@ import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import StyledLink from "./StyledLink";
 import { addErrors, dropError } from "state/uiSlice";
+import DefaultUserIcon from "./DefaultUserIcon";
 
 const SearchBar = ({ width, style }) => {
   const [foundUsers, setFoundUser] = useState([]);
@@ -32,6 +33,7 @@ const SearchBar = ({ width, style }) => {
     try {
       const data = await findUsersLike(searchQuery, loggedInUserId, token);
       setFoundUser(data);
+      console.log(data);
       setIsComponentVisible(true);
     } catch (err) {
       const errorId = crypto.randomUUID();
@@ -104,8 +106,16 @@ const SearchBar = ({ width, style }) => {
                 }}
               >
                 <StyledLink path={`/profile/${user._id}`}>
-                  <UserImage image={user.picturePath} size="30px" />
-                  <Typography p="0 2rem">{user.name}</Typography>
+                  {user.picturePath ? (
+                    <UserImage image={user.picturePath} size="30px" />
+                  ) : (
+                    <DefaultUserIcon
+                      firstNameInitial={user.firstName[0]}
+                      lastNameInitial={user.lastName[0]}
+                      size="30px"
+                    />
+                  )}
+                  <Typography p="0 2rem">{`${user.firstName} ${user.lastName}`}</Typography>
                 </StyledLink>
               </Box>
             ))}

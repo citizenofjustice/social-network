@@ -25,8 +25,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendPost, editSelectedPost } from "API";
 import { setEditablePost, triggerReloadToggle } from "state/postsSlice";
 import "./MyPostWidget.module.css";
+import DefaultUserIcon from "components/DefaultUserIcon";
 
-const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
+const MyPostWidget = ({
+  firstName,
+  lastName,
+  picturePath,
+  isNonMobileScreens,
+}) => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
@@ -119,7 +125,17 @@ const MyPostWidget = ({ picturePath, isNonMobileScreens }) => {
   return (
     <WidgetWrapper /*mb="2rem"*/>
       <FlexBetween gap="1.5rem">
-        <UserImage image={picturePath} loading={isUserLoading} />
+        <Box>
+          {picturePath ? (
+            <UserImage image={picturePath} loading={isUserLoading} />
+          ) : (
+            <DefaultUserIcon
+              firstNameInitial={firstName[0]}
+              lastNameInitial={lastName[0]}
+              fontSize="1.5rem"
+            />
+          )}
+        </Box>
         <InputBase
           placeholder="What's on your mind..."
           inputProps={{

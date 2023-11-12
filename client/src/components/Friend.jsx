@@ -7,11 +7,13 @@ import UserImage from "./UserImage";
 import SkeletonLoad from "components/SkeletonLoad";
 import { patchFriend } from "API";
 import StyledLink from "./StyledLink";
+import DefaultUserIcon from "./DefaultUserIcon";
 
 const Friend = ({
   className,
   friendId,
-  name,
+  firstName,
+  lastName,
   subtitle,
   userPicturePath,
   isContentLoading,
@@ -40,11 +42,19 @@ const Friend = ({
     <FlexBetween className={className} sx={style}>
       <Box gap="1rem" display="flex" alignItems="center">
         <StyledLink path={`/profile/${friendId}`}>
-          <UserImage
-            image={userPicturePath}
-            size="55px"
-            loading={isContentLoading}
-          />
+          {userPicturePath ? (
+            <UserImage
+              image={userPicturePath}
+              size="55px"
+              loading={isContentLoading}
+            />
+          ) : (
+            <DefaultUserIcon
+              firstNameInitial={firstName[0]}
+              lastNameInitial={lastName[0]}
+              size="55px"
+            />
+          )}
         </StyledLink>
         <Box
           sx={{
@@ -64,7 +74,9 @@ const Friend = ({
                 },
               }}
             >
-              <SkeletonLoad loading={isContentLoading}>{name}</SkeletonLoad>
+              <SkeletonLoad
+                loading={isContentLoading}
+              >{`${firstName} ${lastName}`}</SkeletonLoad>
             </Typography>
           </StyledLink>
           <Typography color={medium} fontSize="0.75rem">

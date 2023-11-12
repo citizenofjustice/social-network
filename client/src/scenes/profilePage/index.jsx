@@ -74,7 +74,11 @@ const ProfilePage = () => {
               backgroundColor: background,
             }}
           >
-            <MyPostWidget picturePath={user.picturePath} />
+            <MyPostWidget
+              firstName={user.firstName}
+              lastName={user.lastName}
+              picturePath={user.picturePath}
+            />
             <Divider sx={{ margin: "1rem 0" }} />
           </Box>
         )}

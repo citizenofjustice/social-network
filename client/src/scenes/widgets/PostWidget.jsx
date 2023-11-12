@@ -26,7 +26,8 @@ const PostWidget = ({
   postUserId,
   createdAt,
   updatedAt,
-  name,
+  firstName,
+  lastName,
   description,
   location,
   picturePath,
@@ -99,7 +100,8 @@ const PostWidget = ({
       <Box display="flex">
         <Friend
           friendId={postUserId}
-          name={name}
+          firstName={firstName}
+          lastName={lastName}
           subtitle={location}
           userPicturePath={userPicturePath}
           style={{ flexBasis: "100%", marginRight: "1rem" }}
