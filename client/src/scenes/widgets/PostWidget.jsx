@@ -128,10 +128,10 @@ const PostWidget = ({
           ref={ref}
           width="fit-content"
           sx={{
-            position: "relative",
+            position: "absolute",
             zIndex: "5",
-            top: "-3.25rem",
-            float: "right",
+            top: "1.5rem",
+            right: "1rem",
           }}
         >
           <CopyLink link={shareLink} onCopy={handleCopyIconClick} />

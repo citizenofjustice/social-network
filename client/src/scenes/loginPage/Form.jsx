@@ -18,6 +18,7 @@ import FlexBetween from "components/FlexBetween";
 import { fetchFriends, loginUser, registerUser } from "API";
 import { setFriends, setIsUserLoading, setLogin } from "state/authSlice";
 import { addErrors, dropError } from "state/uiSlice";
+import PasswordTextField from "components/PasswordTextField";
 
 // schema validation for registration
 const registerSchema = yup.object().shape({
@@ -283,14 +284,12 @@ const Form = () => {
                   helperText={touched.email && errors.email}
                   sx={{ gridColumn: "span 4" }}
                 />
-                <TextField
+                <PasswordTextField
                   label="Password"
-                  type="password"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
+                  handleBlur={handleBlur}
+                  handleChange={handleChange}
                   value={values.password}
                   name="password"
-                  autoComplete="off"
                   error={Boolean(touched.password) && Boolean(errors.password)}
                   helperText={touched.password && errors.password}
                   sx={{ gridColumn: "span 4" }}

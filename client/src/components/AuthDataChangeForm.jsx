@@ -32,6 +32,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   };
 
   const emailYup = yup.string().email("invalid email").required("required");
+  const oldPasswordYup = yup.string().required("required");
   const passwordYup = yup
     .string()
     .required("required")
@@ -50,6 +51,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   const valSchema = yup.object().shape({
     ...(isEmailChecked && { email: emailYup }),
     ...(isPasswordChecked && {
+      oldPassword: oldPasswordYup,
       password: passwordYup,
       confirmPassword: confirmPasswordYup,
     }),
