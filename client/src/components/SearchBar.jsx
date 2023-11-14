@@ -29,34 +29,46 @@ const SearchBar = ({ width, style }) => {
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
 
-  const handleSearch = useCallback(async () => {
-    try {
-      const data = await findUsersLike(searchQuery, loggedInUserId, token);
-      setFoundUser(data);
-      console.log(data);
-      setIsComponentVisible(true);
-    } catch (err) {
-      const errorId = crypto.randomUUID();
-      dispatch(
-        addErrors({
-          error: {
-            id: errorId,
-            text: "There are some errors in search querry. Try to correct it.",
-          },
-        })
-      );
-      setTimeout(() => {
-        dispatch(dropError({ errorId }));
-      }, duration);
-    }
-  }, [searchQuery, loggedInUserId, token, setIsComponentVisible, duration]);
+  const handleSearch = useCallback(
+    async (signal) => {
+      try {
+        const data = await findUsersLike(
+          searchQuery,
+          loggedInUserId,
+          token,
+          signal
+        );
+        setFoundUser(data);
+        console.log(data);
+        setIsComponentVisible(true);
+      } catch (err) {
+        const errorId = crypto.randomUUID();
+        dispatch(
+          addErrors({
+            error: {
+              id: errorId,
+              text: "There are some errors in search querry. Try to correct it.",
+            },
+          })
+        );
+        setTimeout(() => {
+          dispatch(dropError({ errorId }));
+        }, duration);
+      }
+    },
+    [searchQuery, loggedInUserId, token, setIsComponentVisible, duration]
+  );
 
   useEffect(() => {
     if (searchQuery.length > 0) {
+      const abortController = new AbortController();
       const timeOutId = setTimeout(async () => {
-        handleSearch();
+        handleSearch(abortController.signal);
       }, 1000);
-      return () => clearTimeout(timeOutId);
+      return () => {
+        abortController.abort();
+        clearTimeout(timeOutId);
+      };
     } else {
       setIsComponentVisible(false);
       setFoundUser([]);

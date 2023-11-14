@@ -20,13 +20,20 @@ const ProfilePage = () => {
   const { palette } = useTheme();
   const background = palette.background.default;
 
-  const getUserData = useCallback(async () => {
-    const data = await fetchUser(userId, token);
-    setUser(data);
-  }, [userId, token]);
+  const getUserData = useCallback(
+    async (signal) => {
+      const data = await fetchUser(userId, token, signal);
+      setUser(data);
+    },
+    [userId, token]
+  );
 
   useEffect(() => {
-    getUserData();
+    const abortController = new AbortController();
+    getUserData(abortController.signal);
+    return () => {
+      abortController.abort();
+    };
   }, [getUserData, userFriends]);
 
   if (!user) return null;

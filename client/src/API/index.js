@@ -23,46 +23,56 @@ export const loginUser = async (values) => {
   return loggedInUserData;
 };
 
-export const fetchUser = async (userId, token) => {
+export const fetchUser = async (userId, token, signal) => {
   const response = await fetch(URL + `users/${userId}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    signal: signal,
   });
   const data = await response.json();
   return data;
 };
 
-export const fetchFriends = async (loggedInUserId, token) => {
+export const fetchFriends = async (loggedInUserId, token, signal) => {
   const response = await fetch(URL + `users/${loggedInUserId}/friends`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    signal: signal,
   });
   const friendsData = await response.json();
   return friendsData;
 };
 
-export const fetchAllPosts = async (loggedInUserId, token, limit, pageNum) => {
+export const fetchAllPosts = async (
+  loggedInUserId,
+  token,
+  limit,
+  pageNum,
+  signal
+) => {
   const response = await fetch(
     URL + `posts/${loggedInUserId}/feed/${limit}/${pageNum}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
+      signal: signal,
     }
   );
   const data = await response.json();
   return data;
 };
 
-export const fetchUserPosts = async (userId, token, limit, pageNum) => {
+export const fetchUserPosts = async (userId, token, limit, pageNum, signal) => {
   const response = await fetch(
     URL + `posts/user/${userId}/limit/${limit}/page/${pageNum}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
+      signal: signal,
     }
   );
   const data = await response.json();
@@ -185,12 +195,13 @@ export const removeSelectedPost = async (postId, token, loggedInUserId) => {
   return response;
 };
 
-export const findUsersLike = async (query, loggedInUserId, token) => {
+export const findUsersLike = async (query, loggedInUserId, token, signal) => {
   const response = await fetch(
     URL + `users/like/${query}/not/${loggedInUserId}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
+      signal: signal,
     }
   );
   const foundUsers = await response.json();
@@ -217,10 +228,11 @@ export const changeAuthData = async (formData, userId, token) => {
   return updatedData;
 };
 
-export const fetchСertainPost = async (postId, token) => {
+export const fetchСertainPost = async (postId, token, signal) => {
   const response = await fetch(URL + `posts/view/${postId}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
+    signal: signal,
   });
   if (response.ok) {
     const data = await response.json();

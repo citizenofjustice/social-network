@@ -27,9 +27,12 @@ function App() {
   const isNonMobileScreen = useMediaQuery("(min-width: 1000px");
 
   useEffect(() => {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const locale = Intl.DateTimeFormat().resolvedOptions().locale;
-    dispatch(setDateTimeFormat({ timezone, locale }));
+    const interval = setInterval(() => {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+      dispatch(setDateTimeFormat({ timezone, locale }));
+    }, 1000);
+    return () => clearInterval(interval);
   }, [dispatch]);
 
   return (

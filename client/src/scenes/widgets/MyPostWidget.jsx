@@ -104,8 +104,11 @@ const MyPostWidget = ({
   };
 
   useEffect(() => {
+    const abortController = new AbortController();
     const loadImgIntoThumbnail = async () => {
-      const imgBlob = fetch(editablePost.picturePath.sourceUrl)
+      const imgBlob = fetch(editablePost.picturePath.sourceUrl, {
+        signal: abortController.signal,
+      })
         .then((response) => response.blob())
         .then((blob) => {
           return URL.createObjectURL(blob);
@@ -120,10 +123,14 @@ const MyPostWidget = ({
         loadImgIntoThumbnail();
       }
     }
+
+    return () => {
+      abortController.abort();
+    };
   }, [editablePost]);
 
   return (
-    <WidgetWrapper /*mb="2rem"*/>
+    <WidgetWrapper>
       <FlexBetween gap="1.5rem">
         <Box>
           {picturePath ? (

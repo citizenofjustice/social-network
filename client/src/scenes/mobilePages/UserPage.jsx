@@ -16,17 +16,24 @@ const UserPage = () => {
     useComponentVisible(false, true);
   const { palette } = useTheme();
 
-  const getUserData = useCallback(async () => {
-    const data = await fetchUser(userId, token);
-    setUser(data);
-  }, [userId, token]);
+  const getUserData = useCallback(
+    async (signal) => {
+      const data = await fetchUser(userId, token, signal);
+      setUser(data);
+    },
+    [userId, token]
+  );
 
   const handleModalClosing = (changeSuccess) => {
     if (changeSuccess) setIsComponentVisible(false);
   };
 
   useEffect(() => {
-    getUserData();
+    const abortController = new AbortController();
+    getUserData(abortController.signal);
+    return () => {
+      abortController.abort();
+    };
   }, [getUserData, userFriends]);
 
   if (!user) return null;

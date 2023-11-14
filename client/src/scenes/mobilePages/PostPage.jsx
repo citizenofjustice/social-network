@@ -11,15 +11,22 @@ const PostPage = () => {
   const [postData, setPostData] = useState();
   const location = useLocation();
 
-  const getPostData = useCallback(async () => {
-    const query = new URLSearchParams(location.search);
-    const postId = query.get("id");
-    const result = await fetchСertainPost(postId, token);
-    if (result) setPostData(result);
-  }, [token, location]);
+  const getPostData = useCallback(
+    async (signal) => {
+      const query = new URLSearchParams(location.search);
+      const postId = query.get("id");
+      const result = await fetchСertainPost(postId, token, signal);
+      if (result) setPostData(result);
+    },
+    [token, location]
+  );
 
   useEffect(() => {
-    getPostData();
+    const abortController = new AbortController();
+    getPostData(abortController.signal);
+    return () => {
+      abortController.abort();
+    };
   }, [getPostData]);
 
   if (!postData) return <CircularProgress />;
