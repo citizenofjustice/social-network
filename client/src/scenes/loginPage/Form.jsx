@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import Dropzone from "react-dropzone";
@@ -17,8 +17,9 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import FlexBetween from "components/FlexBetween";
 import { fetchFriends, loginUser, registerUser } from "API";
 import { setFriends, setIsUserLoading, setLogin } from "state/authSlice";
-import { addErrors, dropError } from "state/uiSlice";
+
 import PasswordTextField from "components/PasswordTextField";
+import useErrorShow from "hooks/useErrorShow";
 
 // schema validation for registration
 const registerSchema = yup.object().shape({
@@ -42,7 +43,7 @@ const loginSchema = yup.object().shape({
 });
 
 // initial values for registration
-const initialValuesRegister = {
+const initialValues = {
   firstName: "",
   lastName: "",
   email: "",
@@ -52,26 +53,16 @@ const initialValuesRegister = {
   avatar: "",
 };
 
-// initial values for login
-const initialValuesLogin = {
-  email: "",
-  password: "",
-};
-
 /* Form component used for authentication */
 const Form = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { duration } = useSelector((state) => state.ui.errors);
+  const { showError } = useErrorShow();
   const { palette } = useTheme();
   const isNonMobile = useMediaQuery("(min-width: 600px)");
-  const [pageType, setPageType] = useState("login");
+  const [isLogin, setIsLogin] = useState(true);
   const [isRequestPending, setIsRequestPending] = useState(false);
 
-  const isLogin = pageType === "login";
-  const isRegister = pageType === "register";
-
-  //
   const register = async (values, onSubmitProps) => {
     try {
       // this allows us to send form info with image
@@ -88,21 +79,10 @@ const Form = () => {
       // reset inputs to initial values
 
       if (savedUser.error) {
-        const errorId = crypto.randomUUID();
-        dispatch(
-          addErrors({
-            error: {
-              id: errorId,
-              text: savedUser.error,
-            },
-          })
-        );
-        setTimeout(() => {
-          dispatch(dropError({ errorId }));
-        }, duration);
+        showError(savedUser.error);
       } else {
         // if registration was successful show login form
-        setPageType("login");
+        setIsLogin(true);
         onSubmitProps.resetForm();
       }
     } catch (err) {
@@ -111,38 +91,49 @@ const Form = () => {
   };
 
   const login = async (values, onSubmitProps) => {
-    dispatch(setIsUserLoading());
-    const loggedIn = await loginUser(values);
-    onSubmitProps.resetForm();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        })
-      );
+    try {
       dispatch(setIsUserLoading());
-      const friendsData = await fetchFriends(loggedIn.user._id, loggedIn.token);
-      dispatch(
-        setFriends({
-          friends: friendsData,
-        })
-      );
-      navigate("/");
-    } else {
-      dispatch(setIsUserLoading());
+      const loggedIn = await loginUser(values);
+      if (!loggedIn.error) {
+        onSubmitProps.resetForm();
+        dispatch(
+          setLogin({
+            user: loggedIn.user,
+            token: loggedIn.token,
+          })
+        );
+        dispatch(setIsUserLoading());
+        const friendsData = await fetchFriends(
+          loggedIn.user._id,
+          loggedIn.token
+        );
+        dispatch(
+          setFriends({
+            friends: friendsData,
+          })
+        );
+        navigate("/");
+      } else {
+        showError(loggedIn.error);
+        dispatch(setIsUserLoading());
+      }
+    } catch (err) {
+      showError(err.message);
     }
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
-    if (isLogin) await login(values, onSubmitProps);
-    if (isRegister) await register(values, onSubmitProps);
+    if (isLogin) {
+      await login(values, onSubmitProps);
+    } else {
+      await register(values, onSubmitProps);
+    }
   };
 
   return (
     <Formik
       onSubmit={handleFormSubmit}
-      initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
+      initialValues={initialValues}
       validationSchema={isLogin ? loginSchema : registerSchema}
     >
       {({
@@ -178,7 +169,7 @@ const Form = () => {
                   "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                 }}
               >
-                {isRegister && (
+                {!isLogin && (
                   <>
                     <TextField
                       label="First Name"
@@ -313,7 +304,7 @@ const Form = () => {
                 </Button>
                 <Typography
                   onClick={() => {
-                    setPageType(isLogin ? "register" : "login");
+                    setIsLogin((prevState) => !prevState);
                     resetForm();
                   }}
                   sx={{

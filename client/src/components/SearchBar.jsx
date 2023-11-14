@@ -2,7 +2,7 @@ import { Search } from "@mui/icons-material";
 import { useState, useEffect, useCallback } from "react";
 import useComponentVisible from "hooks/useComponentVisible";
 import { findUsersLike } from "API";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Box,
   IconButton,
@@ -13,19 +13,18 @@ import {
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import StyledLink from "./StyledLink";
-import { addErrors, dropError } from "state/uiSlice";
 import DefaultUserIcon from "./DefaultUserIcon";
+import useErrorShow from "hooks/useErrorShow";
 
 const SearchBar = ({ width, style }) => {
   const [foundUsers, setFoundUser] = useState([]);
-  const { duration } = useSelector((state) => state.ui.errors);
+  const { showError } = useErrorShow();
   const [searchQuery, setSearchQuery] = useState("");
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
   const token = useSelector((state) => state.auth.token);
 
-  const dispatch = useDispatch();
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
 
@@ -42,21 +41,10 @@ const SearchBar = ({ width, style }) => {
         console.log(data);
         setIsComponentVisible(true);
       } catch (err) {
-        const errorId = crypto.randomUUID();
-        dispatch(
-          addErrors({
-            error: {
-              id: errorId,
-              text: "There are some errors in search querry. Try to correct it.",
-            },
-          })
-        );
-        setTimeout(() => {
-          dispatch(dropError({ errorId }));
-        }, duration);
+        showError("There are some errors in search querry. Try to correct it.");
       }
     },
-    [searchQuery, loggedInUserId, token, setIsComponentVisible, duration]
+    [searchQuery, loggedInUserId, token, setIsComponentVisible]
   );
 
   useEffect(() => {

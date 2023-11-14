@@ -19,8 +19,12 @@ export const loginUser = async (values) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(values),
   });
-  const loggedInUserData = await response.json();
-  return loggedInUserData;
+  if (!response.ok) {
+    return response.json();
+  } else {
+    const loggedInUserData = await response.json();
+    return loggedInUserData;
+  }
 };
 
 export const fetchUser = async (userId, token, signal) => {

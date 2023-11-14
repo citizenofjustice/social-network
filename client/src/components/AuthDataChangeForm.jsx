@@ -14,6 +14,7 @@ import { useState } from "react";
 import { changeAuthData } from "API";
 import { useSelector } from "react-redux";
 import PasswordTextField from "./PasswordTextField";
+import useErrorShow from "hooks/useErrorShow";
 
 const initialValues = {
   email: "",
@@ -26,6 +27,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isPasswordChecked, setIsPasswordChecked] = useState(false);
   const { palette } = useTheme();
+  const { showError } = useErrorShow();
 
   const getCharacterValidationError = (str) => {
     return `Your password must have at least 1 ${str} character`;
@@ -66,19 +68,12 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
     }
     const result = await changeAuthData(formData, loggedInUserId, token);
     if (result.errors.length > 0) {
-      const errorsText = result.errors
-        .map((e) => {
-          const error = `- ${e}`;
-          return error;
-        })
-        .join("\n");
-      alert(errorsText.trim());
+      result.errors.forEach((error) => {
+        showError(error);
+      });
     } else {
       onChangeSuccess(true);
-      const changed = `You succesfuly changed:\n ${
-        result.email ? "- email" : ""
-      }\n ${result.password ? "- password" : ""}`;
-      alert(changed.trim());
+      showError("Credentials were succesfully changed");
     }
     onSubmitProps.resetForm();
   };

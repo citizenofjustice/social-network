@@ -50,10 +50,16 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
-    if (!user) return res.status(400).json({ msg: "User does not exist. " });
+    if (!user)
+      return res
+        .status(400)
+        .json({ error: "You have entered an invalid email or password" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " });
+    if (!isMatch)
+      return res
+        .status(400)
+        .json({ error: "You have entered an invalid email or password" });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     delete user.password;
@@ -78,7 +84,6 @@ export const updateAuthData = async (req, res) => {
         result.errors.push("The selected email address is already taken.");
       } else {
         user.email = email;
-        result.email = true;
       }
     }
 
@@ -86,18 +91,20 @@ export const updateAuthData = async (req, res) => {
       const isMatch = await bcrypt.compare(oldPassword, user.password);
       if (!isMatch) {
         result.errors.push(
-          "Current password is not correct. Check old password input for typos."
+          "Old password is not correct. Check old password for typos."
         );
       } else {
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
         user.password = passwordHash;
-        result.password = true;
       }
     }
-    if (result.errors.length > 0) res.status(422).json(result);
-    await user.save();
-    res.status(200).json(result);
+    if (result.errors.length > 0) {
+      res.status(422).json(result);
+    } else {
+      await user.save();
+      res.status(200).json(result);
+    }
   } catch (err) {
     res.status(403).json({ message: err.message });
   }

@@ -37,14 +37,14 @@ const Layout = () => {
             zIndex: "100",
           }}
         >
-          <TransitionGroup>
+          <TransitionGroup style={{ marginBottom: "1rem" }}>
             {items.length > 0 &&
               items.map((error) => (
                 <Collapse key={error.id}>
                   <Alert
                     variant="filled"
                     severity="error"
-                    sx={{ margin: "0.25rem 0 2rem 0" }}
+                    sx={{ margin: "0.25rem 0 0.25rem 0" }}
                   >
                     {error.text}
                   </Alert>
