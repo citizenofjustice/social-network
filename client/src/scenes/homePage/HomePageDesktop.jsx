@@ -3,8 +3,11 @@ import UserWidget from "scenes/widgets/UserWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
+import { useSelector } from "react-redux";
 
-const HomePageDesktop = ({ user, isNonMobileScreens }) => {
+const HomePageDesktop = ({ isNonMobileScreens }) => {
+  const { user } = useSelector((state) => state.auth);
+
   return (
     <>
       <Box
