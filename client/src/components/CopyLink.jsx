@@ -1,9 +1,12 @@
 import { useTheme } from "@emotion/react";
 import { ContentCopy } from "@mui/icons-material";
 import { Box, IconButton, InputBase } from "@mui/material";
+import { showMessage } from "state/uiSlice";
+import { useDispatch } from "react-redux";
 
 const CopyLink = ({ link, onCopy }) => {
   const { palette } = useTheme();
+  const dispatch = useDispatch();
 
   const light = palette.neutral.light;
   const alt = palette.background.alt;
@@ -13,10 +16,22 @@ const CopyLink = ({ link, onCopy }) => {
       () => {
         /* clipboard successfully set */
         onCopy(false);
+        dispatch(
+          showMessage({
+            isShown: true,
+            text: "Link copied to clipboard",
+            type: "success",
+          })
+        );
       },
       () => {
         /* clipboard write failed */
-        console.log("clipboard write failed");
+        dispatch(
+          showMessage({
+            text: "Failed to copy link to clipboard",
+            type: "error",
+          })
+        );
       }
     );
   };

@@ -16,13 +16,20 @@ const FriendListWidget = ({ userId, isOneself = true }) => {
   const { palette } = useTheme();
   const dark = palette.neutral.dark;
 
-  const getFriends = useCallback(async () => {
-    const friendsData = await fetchFriends(userId, token);
-    setFriendsList(friendsData);
-  }, [userId, token]);
+  const getFriends = useCallback(
+    async (signal) => {
+      const friendsData = await fetchFriends(userId, token, signal);
+      setFriendsList(friendsData);
+    },
+    [userId, token]
+  );
 
   useEffect(() => {
-    getFriends();
+    const abortController = new AbortController();
+    getFriends(abortController.signal);
+    return () => {
+      abortController.abort();
+    };
   }, [getFriends, friends]);
 
   return (

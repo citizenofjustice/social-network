@@ -23,31 +23,39 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
   const { posts, reloadToggle } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
 
-  const getAllPosts = useCallback(async () => {
-    setIsPostsLoading(true);
-    const { pagesCount, postsPage } = await fetchAllPosts(
-      loggedInUserId,
-      token,
-      limit,
-      pageNum
-    );
-    setTotalPageCount(pagesCount);
-    if (postsPage) dispatch(setPosts({ posts: postsPage }));
-    setIsPostsLoading(false);
-  }, [loggedInUserId, token, pageNum, limit, dispatch]);
+  const getAllPosts = useCallback(
+    async (signal) => {
+      setIsPostsLoading(true);
+      const { pagesCount, postsPage } = await fetchAllPosts(
+        loggedInUserId,
+        token,
+        limit,
+        pageNum,
+        signal
+      );
+      setTotalPageCount(pagesCount);
+      if (postsPage) dispatch(setPosts({ posts: postsPage }));
+      setIsPostsLoading(false);
+    },
+    [loggedInUserId, token, pageNum, limit, dispatch]
+  );
 
-  const getUserPosts = useCallback(async () => {
-    setIsPostsLoading(true);
-    const { pagesCount, postsPage } = await fetchUserPosts(
-      userId,
-      token,
-      limit,
-      pageNum
-    );
-    setTotalPageCount(pagesCount);
-    if (postsPage) dispatch(setPosts({ posts: postsPage }));
-    setIsPostsLoading(false);
-  }, [userId, token, pageNum, limit, dispatch, reloadToggle]);
+  const getUserPosts = useCallback(
+    async (signal) => {
+      setIsPostsLoading(true);
+      const { pagesCount, postsPage } = await fetchUserPosts(
+        userId,
+        token,
+        limit,
+        pageNum,
+        signal
+      );
+      setTotalPageCount(pagesCount);
+      if (postsPage) dispatch(setPosts({ posts: postsPage }));
+      setIsPostsLoading(false);
+    },
+    [userId, token, pageNum, limit, dispatch, reloadToggle]
+  );
 
   useEffect(() => {
     dispatch(clearPosts());
@@ -55,11 +63,15 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
   }, [dispatch, location.pathname, reloadToggle]);
 
   useEffect(() => {
+    const abortController = new AbortController();
     if (isProfile) {
-      getUserPosts();
+      getUserPosts(abortController.signal);
     } else {
-      getAllPosts();
+      getAllPosts(abortController.signal);
     }
+    return () => {
+      abortController.abort();
+    };
   }, [getAllPosts, getUserPosts, isProfile]);
 
   useEffect(() => {
@@ -105,7 +117,8 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
             postUserId={user._id}
             createdAt={createdAt}
             updatedAt={updatedAt}
-            name={`${user.firstName} ${user.lastName}`}
+            firstName={user.firstName}
+            lastName={user.lastName}
             description={description}
             location={user.location}
             picturePath={picturePath}

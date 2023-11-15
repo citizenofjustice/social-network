@@ -6,9 +6,10 @@ const initialState = {
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     locale: Intl.DateTimeFormat().resolvedOptions().locale,
   },
-  errors: {
-    duration: 3000,
-    items: [],
+  message: {
+    isShown: false,
+    text: "",
+    type: "",
   },
 };
 
@@ -23,20 +24,19 @@ export const uiSlice = createSlice({
       state.dateTimeFormat.timezone = action.payload.timezone;
       state.dateTimeFormat.locale = action.payload.locale;
     },
-    addErrors: (state, action) => {
-      state.errors.items.push(action.payload.error);
+    showMessage: (state, action) => {
+      state.message = action.payload;
     },
-    dropError: (state, action) => {
-      const filteredErrors = state.errors.items.filter(
-        (error) => error.id !== action.payload.errorId
-      );
-      state.errors.items = filteredErrors;
+    closeMessage: (state) => {
+      state.message.isShown = false;
+      state.message.text = "";
+      state.message.type = "";
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setMode, setDateTimeFormat, addErrors, dropError } =
+export const { setMode, setDateTimeFormat, showMessage, closeMessage } =
   uiSlice.actions;
 
 export default uiSlice.reducer;

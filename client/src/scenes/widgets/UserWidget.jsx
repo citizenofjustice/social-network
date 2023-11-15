@@ -14,6 +14,7 @@ import {
   useTheme,
   IconButton,
   InputBase,
+  Button,
 } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
@@ -29,6 +30,7 @@ import { triggerReloadToggle } from "state/postsSlice";
 import { patchFriend } from "API";
 import { setFriends } from "state/authSlice";
 import StyledLink from "components/StyledLink";
+import DefaultUserIcon from "components/DefaultUserIcon";
 
 const UserWidget = ({ viewedUserData }) => {
   const { palette } = useTheme();
@@ -86,7 +88,8 @@ const UserWidget = ({ viewedUserData }) => {
   } = viewedUserData;
   const isOneself = authUser._id === _id;
 
-  const handleProfileUpdate = async () => {
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
     if (isProfileBeingEdited) {
       const changedUserState = {
         ...currentUserData,
@@ -108,8 +111,6 @@ const UserWidget = ({ viewedUserData }) => {
         );
       dispatch(triggerReloadToggle());
       setIsProfileBeingEdited(false);
-    } else {
-      setIsProfileBeingEdited(true);
     }
   };
 
@@ -139,225 +140,268 @@ const UserWidget = ({ viewedUserData }) => {
 
   return (
     <WidgetWrapper>
-      {/* FIRST ROW */}
-      <FlexBetween gap="0.5rem" pb="1.1rem">
-        {isProfileBeingEdited ? (
-          <>
-            <InputBase
-              sx={{
-                width: "100%",
-                backgroundColor: light,
-                padding: "0.25rem 0.5rem",
-                borderRadius: "0.5rem",
-              }}
-              placeholder="Set first name"
-              value={firstNameChange}
-              onChange={(e) => setFirstNameChange(e.target.value)}
-            />
-            <InputBase
-              sx={{
-                width: "100%",
-                backgroundColor: light,
-                padding: "0.25rem 0.5rem",
-                borderRadius: "0.5rem",
-              }}
-              placeholder="Set last name"
-              value={lastNameChange}
-              onChange={(e) => setLastNameChange(e.target.value)}
-            />
-          </>
-        ) : (
-          <StyledLink path={`/profile/${_id}`}>
-            <FlexBetween gap="1rem" sx={{ width: "100%" }}>
-              <UserImage image={picturePath} loading={isUserLoading} />
-              <Box sx={{ width: "100%", padding: "0.5rem" }}>
-                <SkeletonLoad loading={isUserLoading} count={2}>
-                  <Typography
-                    variant="h4"
-                    color={dark}
-                    fontWeight="500"
-                    sx={{
-                      "&:hover": {
-                        color: primaryDark,
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
-                    {firstName} {lastName}
-                  </Typography>
-                  <Typography color={medium}>
-                    {`${friends.length} ${
-                      friends.length === 1 ? "friend" : "friends"
-                    }`}
-                  </Typography>
-                </SkeletonLoad>
-              </Box>
-            </FlexBetween>
-          </StyledLink>
-        )}
-        {isProfilePage && (
-          <>
-            {isOneself ? (
-              <>
-                {isProfileBeingEdited && (
-                  <IconButton onClick={handleProfileEditCancelation}>
-                    <BackspaceOutlined />
-                  </IconButton>
+      <form onSubmit={handleProfileUpdate}>
+        {/* FIRST ROW */}
+        <FlexBetween gap="0.5rem" pb="1.1rem">
+          {isProfileBeingEdited ? (
+            <>
+              <Box>
+                {picturePath ? (
+                  <UserImage image={picturePath} loading={isUserLoading} />
+                ) : (
+                  <DefaultUserIcon
+                    firstNameInitial={firstName[0]}
+                    lastNameInitial={lastName[0]}
+                    fontSize="1.5rem"
+                  />
                 )}
-                <IconButton onClick={handleProfileUpdate}>
-                  {isProfileBeingEdited ? (
-                    <SaveOutlined />
+              </Box>
+              <Box
+                display="grid"
+                gridTemplateColumns="1fr"
+                rowGap="0.5rem"
+                width="100%"
+                padding="0.5rem"
+              >
+                <InputBase
+                  sx={{
+                    backgroundColor: light,
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: "0.5rem",
+                  }}
+                  required={true}
+                  placeholder="Set first name"
+                  value={firstNameChange}
+                  onChange={(e) => setFirstNameChange(e.target.value)}
+                />
+                <InputBase
+                  sx={{
+                    backgroundColor: light,
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: "0.5rem",
+                  }}
+                  required={true}
+                  placeholder="Set last name"
+                  value={lastNameChange}
+                  onChange={(e) => setLastNameChange(e.target.value)}
+                />
+              </Box>
+            </>
+          ) : (
+            <StyledLink path={`/profile/${_id}`}>
+              <FlexBetween gap="1rem" sx={{ width: "100%" }}>
+                <Box>
+                  {picturePath ? (
+                    <UserImage image={picturePath} loading={isUserLoading} />
                   ) : (
-                    <ManageAccountsOutlined />
+                    <DefaultUserIcon
+                      firstNameInitial={firstName[0]}
+                      lastNameInitial={lastName[0]}
+                      fontSize="1.5rem"
+                    />
+                  )}
+                </Box>
+                <Box sx={{ width: "100%", padding: "0.5rem" }}>
+                  <SkeletonLoad loading={isUserLoading} count={2}>
+                    <Typography
+                      variant="h4"
+                      color={dark}
+                      fontWeight="500"
+                      sx={{
+                        "&:hover": {
+                          color: primaryDark,
+                          cursor: "pointer",
+                        },
+                      }}
+                    >
+                      {firstName} {lastName}
+                    </Typography>
+                    <Typography color={medium}>
+                      {`${friends.length} ${
+                        friends.length === 1 ? "friend" : "friends"
+                      }`}
+                    </Typography>
+                  </SkeletonLoad>
+                </Box>
+              </FlexBetween>
+            </StyledLink>
+          )}
+          {isProfilePage && (
+            <>
+              {isOneself ? (
+                <Box display="grid" gridTemplateColumns="1fr" rowGap="0.5rem">
+                  {isProfileBeingEdited && (
+                    <IconButton onClick={handleProfileEditCancelation}>
+                      <BackspaceOutlined />
+                    </IconButton>
+                  )}
+                  {isProfileBeingEdited ? (
+                    <Button
+                      variant="string"
+                      type="submit"
+                      sx={{
+                        borderRadius: "50%",
+                        padding: "0.5rem",
+                        minWidth: "fit-content",
+                      }}
+                    >
+                      <SaveOutlined />
+                    </Button>
+                  ) : (
+                    <IconButton onClick={() => setIsProfileBeingEdited(true)}>
+                      <ManageAccountsOutlined />
+                    </IconButton>
+                  )}
+                </Box>
+              ) : (
+                <IconButton
+                  onClick={() => updateFriend()}
+                  sx={{
+                    backgroundColor: primaryLight,
+                    p: "0.6rem",
+                  }}
+                >
+                  {isFriend ? (
+                    <PersonRemoveOutlined sx={{ color: primaryDark }} />
+                  ) : (
+                    <PersonAddOutlined sx={{ color: primaryDark }} />
                   )}
                 </IconButton>
-              </>
-            ) : (
-              <IconButton
-                onClick={() => updateFriend()}
-                sx={{
-                  backgroundColor: primaryLight,
-                  p: "0.6rem",
-                }}
-              >
-                {isFriend ? (
-                  <PersonRemoveOutlined sx={{ color: primaryDark }} />
-                ) : (
-                  <PersonAddOutlined sx={{ color: primaryDark }} />
-                )}
-              </IconButton>
-            )}
-          </>
-        )}
-      </FlexBetween>
+              )}
+            </>
+          )}
+        </FlexBetween>
 
-      <Divider />
+        <Divider />
 
-      {/* SECOND ROW */}
-      <Box
-        display="flex"
-        flexWrap="wrap"
-        justifyContent="space-evenly"
-        p="0.25rem 0"
-        mb="0.5rem"
-        sx={{ width: "100%" }}
-      >
+        {/* SECOND ROW */}
         <Box
           display="flex"
-          alignItems="center"
-          gap="1rem"
-          paddingRight="1rem"
-          marginTop="0.5rem"
+          flexWrap="wrap"
+          justifyContent="space-evenly"
+          p="0.25rem 0"
+          mb="0.5rem"
+          sx={{ width: "100%" }}
         >
-          <LocationOnOutlined fontSize="large" sx={{ color: main }} />
-          {isProfileBeingEdited ? (
-            <InputBase
-              sx={{
-                width: "100%",
-                backgroundColor: light,
-                padding: "0.25rem 0.5rem",
-                borderRadius: "0.5rem",
-              }}
-              placeholder="Set location"
-              value={locationChange}
-              onChange={(e) => setLocationChange(e.target.value)}
-            />
-          ) : (
-            <Typography
-              color={medium}
-              textAlign="center"
-              sx={{ width: "100%" }}
-            >
-              <SkeletonLoad loading={isUserLoading} width="5rem" count={1}>
-                {location}
-              </SkeletonLoad>
-            </Typography>
-          )}
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          gap="1rem"
-          marginTop="0.5rem"
-          paddingRight="1rem"
-        >
-          <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
-          {isProfileBeingEdited ? (
-            <InputBase
-              sx={{
-                width: "100%",
-                backgroundColor: light,
-                padding: "0.25rem 0.5rem",
-                borderRadius: "0.5rem",
-              }}
-              placeholder="Set occupation"
-              value={occupationChange}
-              onChange={(e) => setOccupationChange(e.target.value)}
-            />
-          ) : (
-            <Typography
-              color={medium}
-              textAlign="center"
-              sx={{ width: "100%" }}
-            >
-              <SkeletonLoad loading={isUserLoading} width="5rem" count={1}>
-                {occupation}
-              </SkeletonLoad>
-            </Typography>
-          )}
-        </Box>
-      </Box>
-
-      <Divider />
-
-      {isOneself && (
-        <>
-          {/* THIRD ROW */}
           <Box
             display="flex"
-            flexWrap="wrap"
-            justifyContent="space-evenly"
-            p="0.5rem 0"
+            alignItems="center"
+            gap="1rem"
+            paddingRight="1rem"
+            marginTop="0.5rem"
           >
-            <FlexBetween padding="0.5rem">
-              <Typography color={medium} mr="0.5rem">
-                Who's viewed your profile
-              </Typography>
+            <LocationOnOutlined fontSize="large" sx={{ color: main }} />
+            {isProfileBeingEdited ? (
+              <InputBase
+                sx={{
+                  width: "100%",
+                  backgroundColor: light,
+                  padding: "0.25rem 0.5rem",
+                  borderRadius: "0.5rem",
+                }}
+                required={true}
+                placeholder="Set location"
+                value={locationChange}
+                onChange={(e) => setLocationChange(e.target.value)}
+              />
+            ) : (
               <Typography
-                color={main}
-                fontWeight="500"
-                width="2rem"
-                textAlign="right"
+                color={medium}
+                textAlign="center"
+                sx={{ width: "100%" }}
               >
-                <SkeletonLoad loading={isUserLoading} count={1}>
-                  {viewedProfile}
+                <SkeletonLoad loading={isUserLoading} width="5rem" count={1}>
+                  {location}
                 </SkeletonLoad>
               </Typography>
-            </FlexBetween>
-            <FlexBetween padding="0.5rem">
-              <Typography color={medium} mr="0.5rem">
-                Impressions of your post
-              </Typography>
-              <Typography color={main} fontWeight="500" textAlign="right">
-                <SkeletonLoad loading={isUserLoading} width="2rem" count={1}>
-                  {impressions}
-                </SkeletonLoad>
-              </Typography>
-            </FlexBetween>
+            )}
           </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap="1rem"
+            marginTop="0.5rem"
+            paddingRight="1rem"
+          >
+            <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
+            {isProfileBeingEdited ? (
+              <InputBase
+                sx={{
+                  width: "100%",
+                  backgroundColor: light,
+                  padding: "0.25rem 0.5rem",
+                  borderRadius: "0.5rem",
+                }}
+                required={true}
+                placeholder="Set occupation"
+                value={occupationChange}
+                onChange={(e) => setOccupationChange(e.target.value)}
+              />
+            ) : (
+              <Typography
+                color={medium}
+                textAlign="center"
+                sx={{ width: "100%" }}
+              >
+                <SkeletonLoad loading={isUserLoading} width="5rem" count={1}>
+                  {occupation}
+                </SkeletonLoad>
+              </Typography>
+            )}
+          </Box>
+        </Box>
 
-          <Divider />
-        </>
-      )}
+        <Divider />
 
-      {/* FOURTH ROW */}
-      <SocialNetworks
-        isOneself={isOneself}
-        isUserLoading={isUserLoading}
-        isProfileBeingEdited={isProfileBeingEdited}
-        socials={socials}
-        onProfilesChange={handleProfilesChange}
-      />
+        {isOneself && (
+          <>
+            {/* THIRD ROW */}
+            <Box
+              display="flex"
+              flexWrap="wrap"
+              justifyContent="space-evenly"
+              p="0.5rem 0"
+            >
+              <FlexBetween padding="0.5rem">
+                <Typography color={medium} mr="0.5rem">
+                  Who's viewed your profile
+                </Typography>
+                <Typography
+                  color={main}
+                  fontWeight="500"
+                  width="2rem"
+                  textAlign="right"
+                >
+                  <SkeletonLoad loading={isUserLoading} count={1}>
+                    {viewedProfile}
+                  </SkeletonLoad>
+                </Typography>
+              </FlexBetween>
+              <FlexBetween padding="0.5rem">
+                <Typography color={medium} mr="0.5rem">
+                  Impressions of your post
+                </Typography>
+                <Typography color={main} fontWeight="500" textAlign="right">
+                  <SkeletonLoad loading={isUserLoading} width="2rem" count={1}>
+                    {impressions}
+                  </SkeletonLoad>
+                </Typography>
+              </FlexBetween>
+            </Box>
+
+            <Divider />
+          </>
+        )}
+
+        {/* FOURTH ROW */}
+        <SocialNetworks
+          isOneself={isOneself}
+          isUserLoading={isUserLoading}
+          isProfileBeingEdited={isProfileBeingEdited}
+          socials={socials}
+          onProfilesChange={handleProfilesChange}
+        />
+      </form>
     </WidgetWrapper>
   );
 };

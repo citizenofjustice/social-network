@@ -12,8 +12,9 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useState } from "react";
 import { changeAuthData } from "API";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PasswordTextField from "./PasswordTextField";
+import { showMessage } from "state/uiSlice";
 
 const initialValues = {
   email: "",
@@ -26,12 +27,14 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isPasswordChecked, setIsPasswordChecked] = useState(false);
   const { palette } = useTheme();
+  const dispatch = useDispatch();
 
   const getCharacterValidationError = (str) => {
     return `Your password must have at least 1 ${str} character`;
   };
 
   const emailYup = yup.string().email("invalid email").required("required");
+  const oldPasswordYup = yup.string().required("required");
   const passwordYup = yup
     .string()
     .required("required")
@@ -50,6 +53,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   const valSchema = yup.object().shape({
     ...(isEmailChecked && { email: emailYup }),
     ...(isPasswordChecked && {
+      oldPassword: oldPasswordYup,
       password: passwordYup,
       confirmPassword: confirmPasswordYup,
     }),
@@ -64,19 +68,18 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
     }
     const result = await changeAuthData(formData, loggedInUserId, token);
     if (result.errors.length > 0) {
-      const errorsText = result.errors
-        .map((e) => {
-          const error = `- ${e}`;
-          return error;
-        })
-        .join("\n");
-      alert(errorsText.trim());
+      result.errors.forEach((error) => {
+        dispatch(showMessage({ isShown: true, text: error, type: "error" }));
+      });
     } else {
       onChangeSuccess(true);
-      const changed = `You succesfuly changed:\n ${
-        result.email ? "- email" : ""
-      }\n ${result.password ? "- password" : ""}`;
-      alert(changed.trim());
+      dispatch(
+        showMessage({
+          isShown: true,
+          text: "Credentials were succesfully changed",
+          type: "success",
+        })
+      );
     }
     onSubmitProps.resetForm();
   };

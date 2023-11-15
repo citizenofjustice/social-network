@@ -29,7 +29,7 @@ const uiPersistConfig = {
   key: "ui",
   storage: storage,
   whitelist: ["mode", "dateTimeFormat"],
-  blacklist: ["errors"],
+  blacklist: ["message"],
 };
 
 const rootReducer = combineReducers({

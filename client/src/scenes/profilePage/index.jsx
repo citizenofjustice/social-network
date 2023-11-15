@@ -20,13 +20,20 @@ const ProfilePage = () => {
   const { palette } = useTheme();
   const background = palette.background.default;
 
-  const getUserData = useCallback(async () => {
-    const data = await fetchUser(userId, token);
-    setUser(data);
-  }, [userId, token]);
+  const getUserData = useCallback(
+    async (signal) => {
+      const data = await fetchUser(userId, token, signal);
+      setUser(data);
+    },
+    [userId, token]
+  );
 
   useEffect(() => {
-    getUserData();
+    const abortController = new AbortController();
+    getUserData(abortController.signal);
+    return () => {
+      abortController.abort();
+    };
   }, [getUserData, userFriends]);
 
   if (!user) return null;
@@ -51,6 +58,7 @@ const ProfilePage = () => {
             paddingTop: "2rem",
             marginBottom: "2rem",
           }}
+          minWidth="300px"
         >
           <UserWidget viewedUserData={user} />
           <Box m="2rem 0" />
@@ -61,7 +69,7 @@ const ProfilePage = () => {
         </Box>
       )}
       <Box
-        flexBasis={isNonMobileScreens ? "42%" : undefined}
+        flexBasis={isNonMobileScreens ? "48%" : undefined}
         sx={{ position: "relative" }}
       >
         {isOneself && (
@@ -74,7 +82,11 @@ const ProfilePage = () => {
               backgroundColor: background,
             }}
           >
-            <MyPostWidget picturePath={user.picturePath} />
+            <MyPostWidget
+              firstName={user.firstName}
+              lastName={user.lastName}
+              picturePath={user.picturePath}
+            />
             <Divider sx={{ margin: "1rem 0" }} />
           </Box>
         )}

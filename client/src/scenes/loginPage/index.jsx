@@ -1,9 +1,12 @@
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import Form from "./Form";
 
+/* Authentication page component */
 const LoginPage = () => {
   const theme = useTheme();
+  // query of screen width for adaptive layout
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+
   return (
     <Box>
       <Box
@@ -18,6 +21,7 @@ const LoginPage = () => {
           variant="h5"
           sx={{
             mb: "1.5rem",
+            textAlign: "center",
           }}
         >
           Welcome to StayInTouch, the Social Media for You!

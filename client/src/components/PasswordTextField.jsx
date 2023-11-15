@@ -17,6 +17,7 @@ const PasswordTextField = ({
   name,
   error,
   helperText,
+  sx,
 }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
 
@@ -25,7 +26,7 @@ const PasswordTextField = ({
   };
 
   return (
-    <FormControl variant="outlined">
+    <FormControl variant="outlined" sx={sx} error={error}>
       <InputLabel htmlFor={`outlined-adornment-${label}`}>{label}</InputLabel>
       <OutlinedInput
         id={`outlined-adornment-${label}`}

@@ -100,7 +100,8 @@ const findUsersByNameOrEmail = async (query, id) => {
     {
       $project: {
         _id: { $toString: "$_id" },
-        name: { $concat: ["$firstName", " ", "$lastName"] },
+        firstName: "$firstName",
+        lastName: "$lastName",
         email: "$email",
         picturePath: "$picturePath",
       },
@@ -119,7 +120,7 @@ const findUsersByNameOrEmail = async (query, id) => {
         ],
       },
     }, //stage2
-    { $sort: { name: 1 } },
+    { $sort: { firstName: 1 } },
   ]);
   return users;
 };

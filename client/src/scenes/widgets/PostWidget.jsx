@@ -26,7 +26,8 @@ const PostWidget = ({
   postUserId,
   createdAt,
   updatedAt,
-  name,
+  firstName,
+  lastName,
   description,
   location,
   picturePath,
@@ -95,11 +96,12 @@ const PostWidget = ({
   };
 
   return (
-    <WidgetWrapper mb="2rem">
+    <WidgetWrapper mb="2rem" position="relative">
       <Box display="flex">
         <Friend
           friendId={postUserId}
-          name={name}
+          firstName={firstName}
+          lastName={lastName}
           subtitle={location}
           userPicturePath={userPicturePath}
           style={{ flexBasis: "100%", marginRight: "1rem" }}
@@ -124,12 +126,14 @@ const PostWidget = ({
       {isComponentVisible && (
         <Box
           ref={ref}
-          width="fit-content"
+          width="100%"
           sx={{
-            position: "relative",
+            position: "absolute",
             zIndex: "5",
-            top: "-3.25rem",
-            float: "right",
+            top: "1.5rem",
+            right: "1rem",
+            display: "flex",
+            justifyContent: "flex-end",
           }}
         >
           <CopyLink link={shareLink} onCopy={handleCopyIconClick} />

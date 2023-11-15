@@ -90,7 +90,8 @@ const Slider = ({ list, chunkSize, isContentLoading }) => {
               >
                 <Friend
                   friendId={friend._id}
-                  name={`${friend.firstName} ${friend.lastName}`}
+                  firstName={friend.firstName}
+                  lastName={friend.lastName}
                   subtitle={friend.occupation}
                   userPicturePath={friend.picturePath}
                   className="friend"
