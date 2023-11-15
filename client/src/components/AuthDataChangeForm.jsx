@@ -12,9 +12,9 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useState } from "react";
 import { changeAuthData } from "API";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PasswordTextField from "./PasswordTextField";
-import useErrorShow from "hooks/useErrorShow";
+import { showMessage } from "state/uiSlice";
 
 const initialValues = {
   email: "",
@@ -27,7 +27,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isPasswordChecked, setIsPasswordChecked] = useState(false);
   const { palette } = useTheme();
-  const { showError } = useErrorShow();
+  const dispatch = useDispatch();
 
   const getCharacterValidationError = (str) => {
     return `Your password must have at least 1 ${str} character`;
@@ -69,11 +69,17 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
     const result = await changeAuthData(formData, loggedInUserId, token);
     if (result.errors.length > 0) {
       result.errors.forEach((error) => {
-        showError(error);
+        dispatch(showMessage({ isShown: true, text: error, type: "error" }));
       });
     } else {
       onChangeSuccess(true);
-      showError("Credentials were succesfully changed");
+      dispatch(
+        showMessage({
+          isShown: true,
+          text: "Credentials were succesfully changed",
+          type: "success",
+        })
+      );
     }
     onSubmitProps.resetForm();
   };

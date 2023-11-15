@@ -96,7 +96,7 @@ const PostWidget = ({
   };
 
   return (
-    <WidgetWrapper mb="2rem">
+    <WidgetWrapper mb="2rem" position="relative">
       <Box display="flex">
         <Friend
           friendId={postUserId}
@@ -126,12 +126,14 @@ const PostWidget = ({
       {isComponentVisible && (
         <Box
           ref={ref}
-          width="fit-content"
+          width="100%"
           sx={{
             position: "absolute",
             zIndex: "5",
             top: "1.5rem",
             right: "1rem",
+            display: "flex",
+            justifyContent: "flex-end",
           }}
         >
           <CopyLink link={shareLink} onCopy={handleCopyIconClick} />

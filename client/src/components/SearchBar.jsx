@@ -2,7 +2,7 @@ import { Search } from "@mui/icons-material";
 import { useState, useEffect, useCallback } from "react";
 import useComponentVisible from "hooks/useComponentVisible";
 import { findUsersLike } from "API";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   IconButton,
@@ -14,11 +14,11 @@ import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import StyledLink from "./StyledLink";
 import DefaultUserIcon from "./DefaultUserIcon";
-import useErrorShow from "hooks/useErrorShow";
+import { showMessage } from "state/uiSlice";
 
 const SearchBar = ({ width, style }) => {
   const [foundUsers, setFoundUser] = useState([]);
-  const { showError } = useErrorShow();
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const { ref, isComponentVisible, setIsComponentVisible } =
@@ -38,10 +38,15 @@ const SearchBar = ({ width, style }) => {
           signal
         );
         setFoundUser(data);
-        console.log(data);
         setIsComponentVisible(true);
       } catch (err) {
-        showError("There are some errors in search querry. Try to correct it.");
+        dispatch(
+          showMessage({
+            isShown: true,
+            text: "There are some errors in search querry. Try to correct it.",
+            type: "error",
+          })
+        );
       }
     },
     [searchQuery, loggedInUserId, token, setIsComponentVisible]

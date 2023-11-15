@@ -144,35 +144,49 @@ const UserWidget = ({ viewedUserData }) => {
         {/* FIRST ROW */}
         <FlexBetween gap="0.5rem" pb="1.1rem">
           {isProfileBeingEdited ? (
-            <Box
-              display="grid"
-              gridTemplateColumns="1fr"
-              rowGap="0.5rem"
-              width="100%"
-            >
-              <InputBase
-                sx={{
-                  backgroundColor: light,
-                  padding: "0.25rem 0.5rem",
-                  borderRadius: "0.5rem",
-                }}
-                required="true"
-                placeholder="Set first name"
-                value={firstNameChange}
-                onChange={(e) => setFirstNameChange(e.target.value)}
-              />
-              <InputBase
-                sx={{
-                  backgroundColor: light,
-                  padding: "0.25rem 0.5rem",
-                  borderRadius: "0.5rem",
-                }}
-                required="true"
-                placeholder="Set last name"
-                value={lastNameChange}
-                onChange={(e) => setLastNameChange(e.target.value)}
-              />
-            </Box>
+            <>
+              <Box>
+                {picturePath ? (
+                  <UserImage image={picturePath} loading={isUserLoading} />
+                ) : (
+                  <DefaultUserIcon
+                    firstNameInitial={firstName[0]}
+                    lastNameInitial={lastName[0]}
+                    fontSize="1.5rem"
+                  />
+                )}
+              </Box>
+              <Box
+                display="grid"
+                gridTemplateColumns="1fr"
+                rowGap="0.5rem"
+                width="100%"
+                padding="0.5rem"
+              >
+                <InputBase
+                  sx={{
+                    backgroundColor: light,
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: "0.5rem",
+                  }}
+                  required={true}
+                  placeholder="Set first name"
+                  value={firstNameChange}
+                  onChange={(e) => setFirstNameChange(e.target.value)}
+                />
+                <InputBase
+                  sx={{
+                    backgroundColor: light,
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: "0.5rem",
+                  }}
+                  required={true}
+                  placeholder="Set last name"
+                  value={lastNameChange}
+                  onChange={(e) => setLastNameChange(e.target.value)}
+                />
+              </Box>
+            </>
           ) : (
             <StyledLink path={`/profile/${_id}`}>
               <FlexBetween gap="1rem" sx={{ width: "100%" }}>
@@ -285,7 +299,7 @@ const UserWidget = ({ viewedUserData }) => {
                   padding: "0.25rem 0.5rem",
                   borderRadius: "0.5rem",
                 }}
-                required="true"
+                required={true}
                 placeholder="Set location"
                 value={locationChange}
                 onChange={(e) => setLocationChange(e.target.value)}
@@ -318,7 +332,7 @@ const UserWidget = ({ viewedUserData }) => {
                   padding: "0.25rem 0.5rem",
                   borderRadius: "0.5rem",
                 }}
-                required="true"
+                required={true}
                 placeholder="Set occupation"
                 value={occupationChange}
                 onChange={(e) => setOccupationChange(e.target.value)}

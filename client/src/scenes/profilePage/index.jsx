@@ -58,6 +58,7 @@ const ProfilePage = () => {
             paddingTop: "2rem",
             marginBottom: "2rem",
           }}
+          minWidth="300px"
         >
           <UserWidget viewedUserData={user} />
           <Box m="2rem 0" />
@@ -68,7 +69,7 @@ const ProfilePage = () => {
         </Box>
       )}
       <Box
-        flexBasis={isNonMobileScreens ? "42%" : undefined}
+        flexBasis={isNonMobileScreens ? "48%" : undefined}
         sx={{ position: "relative" }}
       >
         {isOneself && (

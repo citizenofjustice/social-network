@@ -19,7 +19,7 @@ import { fetchFriends, loginUser, registerUser } from "API";
 import { setFriends, setIsUserLoading, setLogin } from "state/authSlice";
 
 import PasswordTextField from "components/PasswordTextField";
-import useErrorShow from "hooks/useErrorShow";
+import { showMessage } from "state/uiSlice";
 
 // schema validation for registration
 const registerSchema = yup.object().shape({
@@ -57,7 +57,6 @@ const initialValues = {
 const Form = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { showError } = useErrorShow();
   const { palette } = useTheme();
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const [isLogin, setIsLogin] = useState(true);
@@ -79,14 +78,18 @@ const Form = () => {
       // reset inputs to initial values
 
       if (savedUser.error) {
-        showError(savedUser.error);
+        dispatch(
+          showMessage({ isShown: true, text: savedUser.error, type: "error" })
+        );
       } else {
         // if registration was successful show login form
         setIsLogin(true);
         onSubmitProps.resetForm();
       }
     } catch (err) {
-      console.log("err: ", err);
+      dispatch(
+        showMessage({ isShown: true, text: err.message, type: "error" })
+      );
     }
   };
 
@@ -114,11 +117,15 @@ const Form = () => {
         );
         navigate("/");
       } else {
-        showError(loggedIn.error);
+        dispatch(
+          showMessage({ isShown: true, text: loggedIn.error, type: "error" })
+        );
         dispatch(setIsUserLoading());
       }
     } catch (err) {
-      showError(err.message);
+      dispatch(
+        showMessage({ isShown: true, text: err.message, type: "error" })
+      );
     }
   };
 
