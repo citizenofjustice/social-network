@@ -1,8 +1,8 @@
 import { Search } from "@mui/icons-material";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useRef } from "react";
 import useComponentVisible from "hooks/useComponentVisible";
 import { findUsersLike } from "API";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Box,
   IconButton,
@@ -14,59 +14,37 @@ import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import StyledLink from "./StyledLink";
 import DefaultUserIcon from "./DefaultUserIcon";
-import { showMessage } from "state/uiSlice";
+import { useQuery } from "react-query";
 
 const SearchBar = ({ width, style }) => {
-  const [foundUsers, setFoundUser] = useState([]);
-  const dispatch = useDispatch();
+  let timeOutId;
+
   const [searchQuery, setSearchQuery] = useState("");
-  const loggedInUserId = useSelector((state) => state.auth.user._id);
+  const searchField = useRef();
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
-  const token = useSelector((state) => state.auth.token);
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
 
-  const handleSearch = useCallback(
-    async (signal) => {
-      try {
-        const data = await findUsersLike(
-          searchQuery,
-          loggedInUserId,
-          token,
-          signal
-        );
-        setFoundUser(data);
-        setIsComponentVisible(true);
-      } catch (err) {
-        dispatch(
-          showMessage({
-            isShown: true,
-            text: "There are some errors in search querry. Try to correct it.",
-            type: "error",
-          })
-        );
-      }
-    },
-    [searchQuery, loggedInUserId, token, setIsComponentVisible]
-  );
+  const handleInstantSearch = () => {
+    if (timeOutId) clearTimeout(timeOutId);
+    setIsComponentVisible(true);
+    setSearchQuery(searchField.current.value);
+  };
 
-  useEffect(() => {
-    if (searchQuery.length > 0) {
-      const abortController = new AbortController();
-      const timeOutId = setTimeout(async () => {
-        handleSearch(abortController.signal);
-      }, 1000);
-      return () => {
-        abortController.abort();
-        clearTimeout(timeOutId);
-      };
-    } else {
-      setIsComponentVisible(false);
-      setFoundUser([]);
-    }
-  }, [handleSearch, searchQuery.length, setIsComponentVisible]);
+  const handleDelayedSearch = () => {
+    if (timeOutId) clearTimeout(timeOutId);
+    timeOutId = setTimeout(async () => {
+      handleInstantSearch();
+    }, 1200);
+  };
+
+  const handleFoundUserClick = () => {
+    setIsComponentVisible(false);
+    searchField.current.value = "";
+    setSearchQuery("");
+  };
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
@@ -79,10 +57,13 @@ const SearchBar = ({ width, style }) => {
         <InputBase
           sx={{ width: "100%" }}
           placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          inputRef={searchField}
+          onChange={handleDelayedSearch}
+          onKeyUp={(e) => {
+            e.key === "Enter" && handleInstantSearch();
+          }}
         />
-        <IconButton onClick={handleSearch}>
+        <IconButton onClick={handleInstantSearch}>
           <Search />
         </IconButton>
       </FlexBetween>
@@ -101,35 +82,61 @@ const SearchBar = ({ width, style }) => {
           }}
           ref={ref}
         >
-          {foundUsers.length > 0 &&
-            foundUsers.map((user) => (
-              <Box
-                key={user._id}
-                onClick={() => {
-                  setIsComponentVisible(false);
-                  setSearchQuery("");
-                }}
-              >
-                <StyledLink path={`/profile/${user._id}`}>
-                  {user.picturePath ? (
-                    <UserImage image={user.picturePath} size="30px" />
-                  ) : (
-                    <DefaultUserIcon
-                      firstNameInitial={user.firstName[0]}
-                      lastNameInitial={user.lastName[0]}
-                      size="30px"
-                    />
-                  )}
-                  <Typography p="0 2rem">{`${user.firstName} ${user.lastName}`}</Typography>
-                </StyledLink>
-              </Box>
-            ))}
-          {foundUsers.length === 0 && searchQuery.length !== 0 && (
-            <Typography p="0 2rem">User not found...</Typography>
-          )}
+          <FoundUsers searchQuery={searchQuery} onLink={handleFoundUserClick} />
         </FlexBetween>
       )}
     </Box>
+  );
+};
+
+const FoundUsers = ({ searchQuery, onLink }) => {
+  const loggedInUserId = useSelector((state) => state.auth.user._id);
+  const token = useSelector((state) => state.auth.token);
+
+  const abortController = new AbortController();
+  const signal = abortController.signal;
+
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["search", searchQuery],
+    queryFn: () => findUsersLike(searchQuery, loggedInUserId, token, signal),
+    enabled: searchQuery.length > 0,
+  });
+
+  if (searchQuery.length === 0)
+    return <Typography p="0 2rem">Search query is empty</Typography>;
+
+  if (isLoading) return <Typography p="0 2rem">Loading...</Typography>;
+
+  if (isError) {
+    return (
+      <Typography p="0 2rem">
+        There are some errors in search querry. Try to correct it.
+      </Typography>
+    );
+  }
+
+  return (
+    <>
+      {data.map((user) => (
+        <Box key={user._id} onClick={() => onLink()}>
+          <StyledLink path={`/profile/${user._id}`}>
+            {user.picturePath ? (
+              <UserImage image={user.picturePath} size="30px" />
+            ) : (
+              <DefaultUserIcon
+                firstNameInitial={user.firstName[0]}
+                lastNameInitial={user.lastName[0]}
+                size="30px"
+              />
+            )}
+            <Typography p="0 2rem">{`${user.firstName} ${user.lastName}`}</Typography>
+          </StyledLink>
+        </Box>
+      ))}
+      {data.length === 0 && searchQuery.length !== 0 && (
+        <Typography p="0 2rem">User not found...</Typography>
+      )}
+    </>
   );
 };
 
