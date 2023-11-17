@@ -1,38 +1,32 @@
-import { Search } from "@mui/icons-material";
 import { useState, useRef } from "react";
+import { Search } from "@mui/icons-material";
+import { Box, IconButton, InputBase, useTheme } from "@mui/material";
+
 import useComponentVisible from "hooks/useComponentVisible";
-import { findUsersLike } from "API";
-import { useSelector } from "react-redux";
-import {
-  Box,
-  IconButton,
-  InputBase,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import FoundUsersList from "./FoundUsersList";
 import FlexBetween from "components/FlexBetween";
-import UserImage from "components/UserImage";
-import StyledLink from "./StyledLink";
-import DefaultUserIcon from "./DefaultUserIcon";
-import { useQuery } from "react-query";
 
+/* Searchbar component for finding user by name or an email */
 const SearchBar = ({ width, style }) => {
-  let timeOutId;
+  let timeOutId; // variable for storing timeoutId that needs clearing
 
-  const [searchQuery, setSearchQuery] = useState("");
   const searchField = useRef();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [placeholderText, setPlaceholderText] = useState("Search...");
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
 
+  // handle search without delay (on enter key or search icon press)
   const handleInstantSearch = () => {
     if (timeOutId) clearTimeout(timeOutId);
     setIsComponentVisible(true);
     setSearchQuery(searchField.current.value);
   };
 
+  // handle search with delay (on input value change)
   const handleDelayedSearch = () => {
     if (timeOutId) clearTimeout(timeOutId);
     timeOutId = setTimeout(async () => {
@@ -40,6 +34,7 @@ const SearchBar = ({ width, style }) => {
     }, 1200);
   };
 
+  // clearing states & input field value after opening found user page
   const handleFoundUserClick = () => {
     setIsComponentVisible(false);
     searchField.current.value = "";
@@ -56,12 +51,14 @@ const SearchBar = ({ width, style }) => {
       >
         <InputBase
           sx={{ width: "100%" }}
-          placeholder="Search..."
+          placeholder={placeholderText}
           inputRef={searchField}
           onChange={handleDelayedSearch}
           onKeyUp={(e) => {
-            e.key === "Enter" && handleInstantSearch();
+            e.key === "Enter" && handleInstantSearch(); // trigger search on enter key press
           }}
+          onFocus={() => setPlaceholderText("Enter name or email...")} // displaying search tip for user
+          onBlur={() => setPlaceholderText("Search...")}
         />
         <IconButton onClick={handleInstantSearch}>
           <Search />
@@ -82,61 +79,13 @@ const SearchBar = ({ width, style }) => {
           }}
           ref={ref}
         >
-          <FoundUsers searchQuery={searchQuery} onLink={handleFoundUserClick} />
+          <FoundUsersList
+            searchQuery={searchQuery}
+            onLink={handleFoundUserClick}
+          />
         </FlexBetween>
       )}
     </Box>
-  );
-};
-
-const FoundUsers = ({ searchQuery, onLink }) => {
-  const loggedInUserId = useSelector((state) => state.auth.user._id);
-  const token = useSelector((state) => state.auth.token);
-
-  const abortController = new AbortController();
-  const signal = abortController.signal;
-
-  const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["search", searchQuery],
-    queryFn: () => findUsersLike(searchQuery, loggedInUserId, token, signal),
-    enabled: searchQuery.length > 0,
-  });
-
-  if (searchQuery.length === 0)
-    return <Typography p="0 2rem">Search query is empty</Typography>;
-
-  if (isLoading) return <Typography p="0 2rem">Loading...</Typography>;
-
-  if (isError) {
-    return (
-      <Typography p="0 2rem">
-        There are some errors in search querry. Try to correct it.
-      </Typography>
-    );
-  }
-
-  return (
-    <>
-      {data.map((user) => (
-        <Box key={user._id} onClick={() => onLink()}>
-          <StyledLink path={`/profile/${user._id}`}>
-            {user.picturePath ? (
-              <UserImage image={user.picturePath} size="30px" />
-            ) : (
-              <DefaultUserIcon
-                firstNameInitial={user.firstName[0]}
-                lastNameInitial={user.lastName[0]}
-                size="30px"
-              />
-            )}
-            <Typography p="0 2rem">{`${user.firstName} ${user.lastName}`}</Typography>
-          </StyledLink>
-        </Box>
-      ))}
-      {data.length === 0 && searchQuery.length !== 0 && (
-        <Typography p="0 2rem">User not found...</Typography>
-      )}
-    </>
   );
 };
 
