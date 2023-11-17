@@ -29,6 +29,10 @@ const AdvertWidget = () => {
             margin: "0.75rem 0",
             aspectRatio: "150/100",
           },
+          alignStyle: {
+            margin: "0 auto",
+            width: "80%",
+          },
         }}
       />
       <FlexBetween>

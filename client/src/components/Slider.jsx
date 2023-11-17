@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
-import { Box, IconButton } from "@mui/material";
+import { Box, Typography, IconButton, useTheme } from "@mui/material";
 
-import "./Slider.module.css";
+import "./Slider.css";
 import Friend from "./Friend";
 import FlexBetween from "./FlexBetween";
 
@@ -14,6 +14,9 @@ const Slider = ({ list, chunkSize, isContentLoading }) => {
   const outRef = useRef(null);
   const inRef = useRef(null);
   const nodeRef = state ? outRef : inRef;
+
+  const { palette } = useTheme();
+  const dark = palette.neutral.dark;
 
   // dividing list of friends into chunks
   const slides = list.reduce((resultArray, item, index) => {
@@ -55,6 +58,9 @@ const Slider = ({ list, chunkSize, isContentLoading }) => {
   return (
     <>
       <FlexBetween>
+        <Typography color={dark} variant="h5" fontWeight="500">
+          Friend List
+        </Typography>
         {slides.length > 1 && (
           <Box>
             <IconButton
@@ -74,6 +80,7 @@ const Slider = ({ list, chunkSize, isContentLoading }) => {
         <CSSTransition
           key={state}
           nodeRef={nodeRef}
+          timeout={400}
           addEndListener={(done) => {
             nodeRef.current.addEventListener("transitionend", done, false);
           }}
