@@ -39,16 +39,15 @@ export const fetchUser = async (userId, token, signal) => {
   return data;
 };
 
-export const fetchFriends = async (loggedInUserId, token, signal) => {
-  const response = await fetch(URL + `users/${loggedInUserId}/friends`, {
+export const fetchFriends = async (userId, token, signal) => {
+  const response = await fetch(URL + `users/${userId}/friends`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
     signal: signal,
   });
-  const friendsData = await response.json();
-  return friendsData;
+  return response;
 };
 
 export const fetchAllPosts = async (

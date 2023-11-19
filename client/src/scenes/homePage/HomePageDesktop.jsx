@@ -1,11 +1,14 @@
 import { Box } from "@mui/material";
+import { useSelector } from "react-redux";
+
 import UserWidget from "scenes/widgets/UserWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
-import { useSelector } from "react-redux";
 
+/* Component for desktop version of homepage */
 const HomePageDesktop = ({ isNonMobileScreens }) => {
+  // getting userData for passing it down to child components
   const { user } = useSelector((state) => state.auth);
 
   return (
@@ -26,7 +29,7 @@ const HomePageDesktop = ({ isNonMobileScreens }) => {
         <Box flexBasis="26%" sx={{ position: "sticky", top: "2rem" }}>
           <AdvertWidget />
           <Box m="2rem 0" />
-          <FriendListWidget userId={user._id} />
+          <FriendListWidget />
         </Box>
       )}
     </>

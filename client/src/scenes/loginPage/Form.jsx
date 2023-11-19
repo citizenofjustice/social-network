@@ -106,10 +106,8 @@ const Form = () => {
           })
         );
         dispatch(setIsUserLoading());
-        const friendsData = await fetchFriends(
-          loggedIn.user._id,
-          loggedIn.token
-        );
+        const response = await fetchFriends(loggedIn.user._id, loggedIn.token);
+        const friendsData = await response.json();
         dispatch(
           setFriends({
             friends: friendsData,
