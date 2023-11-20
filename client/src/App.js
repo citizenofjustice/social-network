@@ -5,7 +5,6 @@ import { CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "theme";
 import { setDateTimeFormat } from "state/uiSlice";
-import { Box, CircularProgress } from "@mui/material";
 import SearchPage from "scenes/mobilePages/SearchPage";
 import FriendListPage from "scenes/mobilePages/FriendListPage";
 import FeedPage from "scenes/mobilePages/FeedPage";
@@ -14,9 +13,10 @@ import Layout from "components/Layout";
 import ProtectedRoutes from "components/ProtectedRoutes";
 import PostPage from "scenes/mobilePages/PostPage";
 import { QueryClient, QueryClientProvider } from "react-query";
+import CustomCircularLoading from "components/CustomCircularLoading";
 
 const HomePage = lazy(() => import("scenes/homePage"));
-const LoginPage = lazy(() => import("scenes/loginPage"));
+const AuthPage = lazy(() => import("scenes/AuthPage"));
 const ProfilePage = lazy(() => import("scenes/profilePage"));
 const PostPageDesktop = lazy(() => import("scenes/postPage"));
 
@@ -43,20 +43,14 @@ function App() {
         <BrowserRouter>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Suspense
-              fallback={
-                <Box display="flex" justifyContent="center" alignItems="center">
-                  <CircularProgress sx={{ marginTop: "4rem" }} />
-                </Box>
-              }
-            >
+            <Suspense fallback={<CustomCircularLoading margin="4rem 0 0 0" />}>
               <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route
                     path="login"
                     element={
                       <ProtectedRoutes allowed={!isAuth} path="/">
-                        <LoginPage />
+                        <AuthPage />
                       </ProtectedRoutes>
                     }
                   />

@@ -5,12 +5,7 @@ export const registerUser = async (formData) => {
     method: "POST",
     body: formData,
   });
-  if (response.error) {
-    return response;
-  } else {
-    const registeredUser = await response.json();
-    return registeredUser;
-  }
+  return response;
 };
 
 export const loginUser = async (values) => {
@@ -19,12 +14,7 @@ export const loginUser = async (values) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(values),
   });
-  if (!response.ok) {
-    return response.json();
-  } else {
-    const loggedInUserData = await response.json();
-    return loggedInUserData;
-  }
+  return response;
 };
 
 export const fetchUser = async (userId, token, signal) => {

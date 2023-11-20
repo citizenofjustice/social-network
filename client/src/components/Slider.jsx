@@ -74,7 +74,12 @@ const Slider = ({
           }}
           classNames={isLeftToRight ? "left-to-rigth" : "rigth-to-left"}
         >
-          <Box m="0.5rem 0" ref={nodeRef} className="slide-container">
+          <Box
+            m="0.5rem 0"
+            ref={nodeRef}
+            className="slide-container"
+            overflow="hidden"
+          >
             {children}
           </Box>
         </CSSTransition>

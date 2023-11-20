@@ -2,13 +2,14 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 
 import { fetchFriends } from "API";
 import { showMessage } from "state/uiSlice";
 import Slider from "components/Slider";
 import WidgetWrapper from "components/WidgetWrapper";
 import FriendListSlide from "components/FriendListSlide";
+import CustomCircularLoading from "components/CustomCircularLoading";
 
 const FriendListWidget = () => {
   const dispatch = useDispatch();
@@ -68,7 +69,7 @@ const FriendListWidget = () => {
 
   return (
     <WidgetWrapper>
-      {!isLoading && !isError && (
+      {!isLoading && !isError ? (
         <>
           {data.length !== 0 ? (
             <Slider
@@ -96,23 +97,13 @@ const FriendListWidget = () => {
             </Box>
           )}
         </>
-      )}
-      {isLoading && (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection="column"
-        >
-          <CircularProgress />
-        </Box>
-      )}
-      {isError && (
+      ) : (
         <>
           <Typography color={dark} variant="h5" fontWeight="500">
             {widgetTitle}
           </Typography>
-          <Typography>Failed to fetch friends</Typography>
+          {isLoading && <CustomCircularLoading />}
+          {isError && <Typography>Failed to fetch friends</Typography>}
         </>
       )}
     </WidgetWrapper>
