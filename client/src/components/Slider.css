@@ -33,5 +33,5 @@
 }
 .rigth-to-left-enter-active .friend,
 .rigth-to-left-exit-active .friend {
-  transition: opacity 500ms, transform 500ms;
+  transition: opacity 400ms, transform 400ms;
 }

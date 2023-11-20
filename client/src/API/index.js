@@ -5,12 +5,7 @@ export const registerUser = async (formData) => {
     method: "POST",
     body: formData,
   });
-  if (response.error) {
-    return response;
-  } else {
-    const registeredUser = await response.json();
-    return registeredUser;
-  }
+  return response;
 };
 
 export const loginUser = async (values) => {
@@ -19,12 +14,7 @@ export const loginUser = async (values) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(values),
   });
-  if (!response.ok) {
-    return response.json();
-  } else {
-    const loggedInUserData = await response.json();
-    return loggedInUserData;
-  }
+  return response;
 };
 
 export const fetchUser = async (userId, token, signal) => {
@@ -39,16 +29,15 @@ export const fetchUser = async (userId, token, signal) => {
   return data;
 };
 
-export const fetchFriends = async (loggedInUserId, token, signal) => {
-  const response = await fetch(URL + `users/${loggedInUserId}/friends`, {
+export const fetchFriends = async (userId, token, signal) => {
+  const response = await fetch(URL + `users/${userId}/friends`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
     signal: signal,
   });
-  const friendsData = await response.json();
-  return friendsData;
+  return response;
 };
 
 export const fetchAllPosts = async (

@@ -16,10 +16,11 @@ export const getUserFriends = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
-    const friends = await Promise.all(
+    const unsortedFriends = await Promise.all(
       user.friends.map((id) => User.findById(id))
     );
-    const formattedFriends = friends.map(
+    const sortedFriends = sortByName(unsortedFriends);
+    const formattedFriends = sortedFriends.map(
       ({ _id, firstName, lastName, occupation, location, picturePath }) => {
         return {
           _id,
@@ -33,7 +34,7 @@ export const getUserFriends = async (req, res) => {
     );
     res.status(200).json(formattedFriends);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(404).json({ error: err });
   }
 };
 
@@ -144,4 +145,20 @@ export const updateUserProfile = async (req, res) => {
   } catch (err) {
     res.status(403).json({ message: err.message });
   }
+};
+
+const sortByName = (arrayOfUsers) => {
+  arrayOfUsers.sort((a, b) => {
+    let fa = a.firstName.toLowerCase(),
+      fb = b.firstName.toLowerCase();
+
+    if (fa < fb) {
+      return -1;
+    }
+    if (fa > fb) {
+      return 1;
+    }
+    return 0;
+  });
+  return arrayOfUsers;
 };

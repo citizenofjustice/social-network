@@ -4,10 +4,11 @@ import { fetchAllPosts, fetchUserPosts } from "API";
 import PostWidget from "./PostWidget";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { setPosts, clearPosts } from "state/postsSlice";
 import WidgetWrapper from "components/WidgetWrapper";
+import CustomCircularLoading from "components/CustomCircularLoading";
 
 const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
   const loggedInUserId = useSelector((state) => state.auth.user._id);
@@ -129,9 +130,7 @@ const PostsWidget = ({ userId, isProfile = false, limit = 10 }) => {
           />
         )
       )}
-      <Box display="flex" justifyContent="center">
-        {isPostsLoading && <CircularProgress sx={{ marginTop: "2rem" }} />}
-      </Box>
+      {isPostsLoading && <CustomCircularLoading margin="2rem 0 0 0" />}
       {posts && <div ref={ref}></div>}
     </>
   );

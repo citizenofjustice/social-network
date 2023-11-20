@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   Box,
   IconButton,
@@ -20,7 +19,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "state/authSlice";
 import { setMode } from "state/uiSlice";
-import { useLocation } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 
@@ -35,7 +33,6 @@ const Navbar = () => {
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
   const dispatch = useDispatch();
-  const location = useLocation();
   const user = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const isNonMobileScreen = useMediaQuery("(min-width: 1000px");
@@ -47,10 +44,10 @@ const Navbar = () => {
   const primaryDark = theme.palette.primary.dark;
   const alt = theme.palette.background.alt;
 
-  useEffect(() => {
-    // toggle menu when location.pathname changed
+  const handleLogout = () => {
     setIsComponentVisible(false);
-  }, [location.pathname, setIsComponentVisible]);
+    dispatch(setLogout());
+  };
 
   return (
     <FlexBetween
@@ -182,7 +179,10 @@ const Navbar = () => {
             {isAuth && (
               <>
                 <StyledLink path="/user">
-                  <IconButton style={{ backgroundColor: "transparent" }}>
+                  <IconButton
+                    onClick={() => setIsComponentVisible(false)}
+                    style={{ backgroundColor: "transparent" }}
+                  >
                     {user.picturePath ? (
                       <UserImage
                         loading={isUserLoading}
@@ -199,26 +199,26 @@ const Navbar = () => {
                   </IconButton>
                 </StyledLink>
                 <StyledLink path="feed">
-                  <IconButton>
+                  <IconButton onClick={() => setIsComponentVisible(false)}>
                     <DynamicFeedOutlined
                       sx={{ color: dark, fontSize: "25px" }}
                     />
                   </IconButton>
                 </StyledLink>
                 <StyledLink path={`/profile/${user._id}`}>
-                  <IconButton>
+                  <IconButton onClick={() => setIsComponentVisible(false)}>
                     <PostAdd sx={{ color: dark, fontSize: "25px" }} />
                   </IconButton>
                 </StyledLink>
                 <StyledLink path="/friends">
-                  <IconButton>
+                  <IconButton onClick={() => setIsComponentVisible(false)}>
                     <PeopleOutlineOutlined
                       sx={{ color: dark, fontSize: "25px" }}
                     />
                   </IconButton>
                 </StyledLink>
                 <StyledLink path="/search">
-                  <IconButton>
+                  <IconButton onClick={() => setIsComponentVisible(false)}>
                     <PersonSearchOutlined
                       sx={{ color: dark, fontSize: "25px" }}
                     />
@@ -237,7 +237,7 @@ const Navbar = () => {
               )}
             </IconButton>
             {isAuth && (
-              <IconButton onClick={() => dispatch(setLogout())}>
+              <IconButton onClick={handleLogout}>
                 <LogoutOutlined sx={{ color: dark, fontSize: "25px" }} />
               </IconButton>
             )}

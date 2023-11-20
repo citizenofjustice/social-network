@@ -62,10 +62,7 @@ const ProfilePage = () => {
         >
           <UserWidget viewedUserData={user} />
           <Box m="2rem 0" />
-          <FriendListWidget
-            userId={userId}
-            isOneself={isOneself ? true : false}
-          />
+          <FriendListWidget />
         </Box>
       )}
       <Box
