@@ -55,8 +55,9 @@ export const fetchAllPosts = async (
       signal: signal,
     }
   );
-  const data = await response.json();
-  return data;
+  // const data = await response.json();
+  // return data;
+  return response;
 };
 
 export const fetchUserPosts = async (userId, token, limit, pageNum, signal) => {
