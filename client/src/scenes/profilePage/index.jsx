@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
-import PostsWidget from "scenes/widgets/PostsWidget";
+import UserPostsWidget from "scenes/widgets/UserPostsWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
 import UserWidget from "scenes/widgets/UserWidget";
 import { fetchUser } from "API";
@@ -94,7 +94,7 @@ const ProfilePage = () => {
             marginTop: isOneself ? 0 : "2rem",
           }}
         >
-          <PostsWidget userId={userId} isProfile />
+          <UserPostsWidget userId={userId} isProfile />
         </Box>
       </Box>
     </Box>

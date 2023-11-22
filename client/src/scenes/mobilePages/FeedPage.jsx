@@ -1,6 +1,6 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
-import PostsWidget from "scenes/widgets/PostsWidget";
+import FeedWidget from "scenes/widgets/FeedWidget";
 
 const FeedPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -18,7 +18,7 @@ const FeedPage = () => {
         flexBasis={isNonMobileScreens ? "42%" : undefined}
         mt={isNonMobileScreens ? undefined : "2rem"}
       >
-        <PostsWidget userId={userId} />
+        <FeedWidget userId={userId} />
       </Box>
     </Box>
   );

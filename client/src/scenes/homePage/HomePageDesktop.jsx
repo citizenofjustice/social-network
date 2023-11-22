@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import UserWidget from "scenes/widgets/UserWidget";
-import PostsWidget from "scenes/widgets/PostsWidget";
+import FeedWidget from "scenes/widgets/FeedWidget";
 import AdvertWidget from "scenes/widgets/AdvertWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 
@@ -23,7 +23,7 @@ const HomePageDesktop = ({ isNonMobileScreens }) => {
         flexBasis={isNonMobileScreens ? "42%" : undefined}
         mt={isNonMobileScreens ? undefined : "2rem"}
       >
-        <PostsWidget userId={user._id} />
+        <FeedWidget userId={user._id} />
       </Box>
       {isNonMobileScreens && (
         <Box flexBasis="26%" sx={{ position: "sticky", top: "2rem" }}>
