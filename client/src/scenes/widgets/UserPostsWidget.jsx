@@ -2,23 +2,22 @@ import { useEffect, useMemo, useState } from "react";
 import PostWidget from "./PostWidget";
 import WidgetWrapper from "components/WidgetWrapper";
 import { Box, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useInView } from "react-intersection-observer";
+import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import { fetchUserPosts } from "API";
 import CustomCircularLoading from "components/CustomCircularLoading";
 import { useLocation } from "react-router-dom";
+import useLoadNextBatch from "hooks/useLoadNextBatch";
+import { showMessage } from "state/uiSlice";
 
 const UserPostsWidget = ({ userId, limit = 10 }) => {
   const [posts, setPosts] = useState([]);
+  const dispatch = useDispatch();
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const token = useSelector((state) => state.auth.token);
-  const [pageNum, setPageNum] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(0);
-  const { ref, inView } = useInView({
-    threshold: 0.5,
-  });
-  const feedIsNotFull = pageNum < totalPageCount;
+  const { ref, pageNum } = useLoadNextBatch(totalPageCount);
+
   const location = useLocation();
 
   const currentTimestamp = useMemo(() => {
@@ -26,7 +25,7 @@ const UserPostsWidget = ({ userId, limit = 10 }) => {
     return timestamp;
   }, []);
 
-  const { isLoading, isError } = useQuery({
+  const { isLoading, isError, error } = useQuery({
     queryKey: ["posts", pageNum],
     queryFn: async ({ signal }) => {
       const response = await fetchUserPosts(
@@ -38,9 +37,8 @@ const UserPostsWidget = ({ userId, limit = 10 }) => {
         signal
       );
       if (!response.ok) {
-        const { error } = await response.json();
-        if (error.message) throw new Error(error.message);
-        throw new Error(error); // if request failed throw error
+        const error = await response.json();
+        throw new Error(error.message); // if request failed throw error
       }
       const fetchedPosts = await response.json();
       const { pagesCount, postsPage } = fetchedPosts;
@@ -52,22 +50,18 @@ const UserPostsWidget = ({ userId, limit = 10 }) => {
   });
 
   useEffect(() => {
-    if (!inView) return () => {};
-
-    const interval = setInterval(() => {
-      if (inView && feedIsNotFull) {
-        setPageNum((prev) => (prev += 1));
-      }
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, [inView, feedIsNotFull]);
-
-  useEffect(() => {
     setPosts([]);
   }, [location.pathname]);
 
-  if (isError) return <Typography>ERROR</Typography>;
+  if (isError) {
+    dispatch(
+      showMessage({
+        isShown: true,
+        text: error.message,
+        type: "error",
+      })
+    );
+  }
 
   if (posts.length === 0 && !isLoading && !isError)
     return (

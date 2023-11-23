@@ -71,7 +71,7 @@ export const getFeedPosts = async (req, res) => {
       .limit(limit);
     res.status(200).json({ pagesCount, postsPage });
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(404).json(err);
   }
 };
 
@@ -95,7 +95,7 @@ export const getUserPosts = async (req, res) => {
       .limit(limit);
     res.status(200).json({ pagesCount, postsPage });
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(404).json(err);
   }
 };
 

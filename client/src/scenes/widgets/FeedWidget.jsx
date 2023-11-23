@@ -1,31 +1,29 @@
-import { useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchAllPosts } from "API";
 import PostWidget from "./PostWidget";
 import { useState } from "react";
-import { useInView } from "react-intersection-observer";
 import { Box, Typography } from "@mui/material";
 import WidgetWrapper from "components/WidgetWrapper";
 import CustomCircularLoading from "components/CustomCircularLoading";
 import { useQuery } from "react-query";
+import useLoadNextBatch from "hooks/useLoadNextBatch";
+import { showMessage } from "state/uiSlice";
 
 const FeedWidget = ({ limit = 10 }) => {
+  const [posts, setPosts] = useState([]);
+  const dispatch = useDispatch();
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const token = useSelector((state) => state.auth.token);
-  const [pageNum, setPageNum] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(0);
-  const { ref, inView } = useInView({
-    threshold: 0.5,
-  });
-  const feedIsNotFull = pageNum < totalPageCount;
-  const [posts, setPosts] = useState([]);
+  const { ref, pageNum } = useLoadNextBatch(totalPageCount);
 
   const currentTimestamp = useMemo(() => {
     const timestamp = Date.now();
     return timestamp;
   }, []);
 
-  const { isLoading, isError } = useQuery({
+  const { isLoading, isError, error } = useQuery({
     queryKey: ["posts", pageNum],
     queryFn: async ({ signal }) => {
       const response = await fetchAllPosts(
@@ -37,9 +35,8 @@ const FeedWidget = ({ limit = 10 }) => {
         signal
       );
       if (!response.ok) {
-        const { error } = await response.json();
-        if (error.message) throw new Error(error.message);
-        throw new Error(error); // if request failed throw error
+        const error = await response.json();
+        throw new Error(error.message); // if request failed throw error
       }
       const fetchedPosts = await response.json();
       const { pagesCount, postsPage } = fetchedPosts;
@@ -50,19 +47,15 @@ const FeedWidget = ({ limit = 10 }) => {
     refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    if (!inView) return () => {};
-
-    const interval = setInterval(() => {
-      if (inView && feedIsNotFull) {
-        setPageNum((prev) => (prev += 1));
-      }
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, [inView, feedIsNotFull]);
-
-  if (isError) return <Typography>ERROR</Typography>;
+  if (isError) {
+    dispatch(
+      showMessage({
+        isShown: true,
+        text: error.message,
+        type: "error",
+      })
+    );
+  }
 
   if (posts.length === 0 && !isLoading && !isError)
     return (
