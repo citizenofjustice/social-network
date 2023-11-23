@@ -94,7 +94,7 @@ const ProfilePage = () => {
             marginTop: isOneself ? 0 : "2rem",
           }}
         >
-          <UserPostsWidget userId={userId} isProfile />
+          <UserPostsWidget userId={userId} />
         </Box>
       </Box>
     </Box>

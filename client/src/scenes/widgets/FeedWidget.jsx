@@ -1,18 +1,15 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchAllPosts, fetchUserPosts } from "API";
+import { useEffect, useMemo } from "react";
+import { useSelector } from "react-redux";
+import { fetchAllPosts } from "API";
 import PostWidget from "./PostWidget";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Box, Typography } from "@mui/material";
-import { useLocation } from "react-router-dom";
-import { setPosts, clearPosts } from "state/postsSlice";
 import WidgetWrapper from "components/WidgetWrapper";
 import CustomCircularLoading from "components/CustomCircularLoading";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 
-const FeedWidget = ({ userId, isProfile = false, limit = 10 }) => {
-  const dispatch = useDispatch();
+const FeedWidget = ({ limit = 10 }) => {
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const token = useSelector((state) => state.auth.token);
   const [pageNum, setPageNum] = useState(1);
@@ -28,25 +25,8 @@ const FeedWidget = ({ userId, isProfile = false, limit = 10 }) => {
     return timestamp;
   }, []);
 
-  // const getUserPosts = useCallback(
-  //   async (signal) => {
-  //     setIsPostsLoading(true);
-  //     const { pagesCount, postsPage } = await fetchUserPosts(
-  //       userId,
-  //       token,
-  //       limit,
-  //       pageNum,
-  //       signal
-  //     );
-  //     setTotalPageCount(pagesCount);
-  //     if (postsPage) dispatch(setPosts({ posts: postsPage }));
-  //     setIsPostsLoading(false);
-  //   },
-  //   [userId, token, pageNum, limit, dispatch, reloadToggle]
-  // );
-
   const { isLoading, isError } = useQuery({
-    queryKey: ["posts", loggedInUserId, pageNum],
+    queryKey: ["posts", pageNum],
     queryFn: async ({ signal }) => {
       const response = await fetchAllPosts(
         loggedInUserId,
@@ -71,26 +51,24 @@ const FeedWidget = ({ userId, isProfile = false, limit = 10 }) => {
   });
 
   useEffect(() => {
-    if (inView && feedIsNotFull) {
-      setPageNum((prev) => (prev += 1));
-    }
+    if (!inView) return () => {};
+
+    const interval = setInterval(() => {
+      if (inView && feedIsNotFull) {
+        setPageNum((prev) => (prev += 1));
+      }
+    }, 500);
+
+    return () => clearInterval(interval);
   }, [inView, feedIsNotFull]);
 
   if (isError) return <Typography>ERROR</Typography>;
 
   if (posts.length === 0 && !isLoading && !isError)
     return (
-      <WidgetWrapper marginTop={isProfile && "1rem"}>
+      <WidgetWrapper>
         <Box display="flex" justifyContent="center" pb="0.75rem">
-          <Typography fontSize="1rem">
-            {isProfile
-              ? `${
-                  loggedInUserId === userId
-                    ? "You have not made post yet, try adding one..."
-                    : "User have not made post yet..."
-                } `
-              : "Feed currently empty..."}
-          </Typography>
+          <Typography fontSize="1rem">Feed currently empty...</Typography>
         </Box>
       </WidgetWrapper>
     );

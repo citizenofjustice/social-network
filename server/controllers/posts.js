@@ -77,12 +77,18 @@ export const getFeedPosts = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
   try {
-    const { userId, limit, pageNum } = req.params;
-    const totalPostCount = await Post.find({ user: userId })
+    const { userId, timestamp, limit, pageNum } = req.params;
+    const totalPostCount = await Post.find({
+      user: userId,
+      createdAt: { $lte: timestamp },
+    })
       .sort({ createdAt: -1 })
       .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
-    const postsPage = await Post.find({ user: userId })
+    const postsPage = await Post.find({
+      user: userId,
+      createdAt: { $lte: timestamp },
+    })
       .populate(postPopulateQuery)
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)

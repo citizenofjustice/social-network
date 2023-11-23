@@ -60,17 +60,24 @@ export const fetchAllPosts = async (
   return response;
 };
 
-export const fetchUserPosts = async (userId, token, limit, pageNum, signal) => {
+export const fetchUserPosts = async (
+  userId,
+  token,
+  currentTimestamp,
+  limit,
+  pageNum,
+  signal
+) => {
   const response = await fetch(
-    URL + `posts/user/${userId}/limit/${limit}/page/${pageNum}`,
+    URL +
+      `posts/user/${userId}/${currentTimestamp}/limit/${limit}/page/${pageNum}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
       signal: signal,
     }
   );
-  const data = await response.json();
-  return data;
+  return response;
 };
 
 export const sendPost = async (formData, userId, token) => {

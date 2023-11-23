@@ -18,7 +18,7 @@ const upload = multer();
 /* READ */
 router.get("/:id/feed/:timestamp/:limit/:pageNum", verifyToken, getFeedPosts);
 router.get(
-  "/user/:userId/limit/:limit/page/:pageNum",
+  "/user/:userId/:timestamp/limit/:limit/page/:pageNum",
   verifyToken,
   getUserPosts
 );

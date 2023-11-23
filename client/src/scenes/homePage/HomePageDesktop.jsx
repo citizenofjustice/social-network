@@ -23,7 +23,7 @@ const HomePageDesktop = ({ isNonMobileScreens }) => {
         flexBasis={isNonMobileScreens ? "42%" : undefined}
         mt={isNonMobileScreens ? undefined : "2rem"}
       >
-        <FeedWidget userId={user._id} />
+        <FeedWidget />
       </Box>
       {isNonMobileScreens && (
         <Box flexBasis="26%" sx={{ position: "sticky", top: "2rem" }}>

@@ -43,6 +43,7 @@ const FriendListWidget = () => {
       const userFriends = await response.json();
       return Promise.all(userFriends);
     },
+    refetchOnWindowFocus: false,
     enabled: !!currentUserId, // disabling query in case of a lack of id parameter
   });
 
