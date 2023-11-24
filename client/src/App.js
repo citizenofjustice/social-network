@@ -37,7 +37,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="app">
+    <div className="app" style={{ backgroundColor: theme.palette.body }}>
       {/* Provide the client to your App */}
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>

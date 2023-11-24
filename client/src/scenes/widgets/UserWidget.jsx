@@ -66,12 +66,14 @@ const UserWidget = ({ viewedUserData }) => {
     /^\/profile\/.*$/.test(routerLocation.pathname) ||
     /^\/user/.test(routerLocation.pathname);
 
-  const dark = palette.neutral.dark;
-  const medium = palette.neutral.medium;
-  const light = palette.neutral.light;
-  const main = palette.neutral.main;
-  const primaryDark = palette.primary.dark;
-  const primaryLight = palette.primary.light;
+  // const dark = palette.neutral.dark;
+  // const medium = palette.neutral.medium;
+  // const light = palette.neutral.light;
+  // const main = palette.neutral.main;
+  // const primaryDark = palette.primary.dark;
+  // const primaryLight = palette.primary.light;
+
+  const { background, text, largeText, controls, controlsText } = palette;
 
   if (!viewedUserData) return null;
   const {
@@ -165,7 +167,7 @@ const UserWidget = ({ viewedUserData }) => {
               >
                 <InputBase
                   sx={{
-                    backgroundColor: light,
+                    backgroundColor: "red", //fix-color
                     padding: "0.25rem 0.5rem",
                     borderRadius: "0.5rem",
                   }}
@@ -176,7 +178,7 @@ const UserWidget = ({ viewedUserData }) => {
                 />
                 <InputBase
                   sx={{
-                    backgroundColor: light,
+                    backgroundColor: "red", //fix-color
                     padding: "0.25rem 0.5rem",
                     borderRadius: "0.5rem",
                   }}
@@ -205,18 +207,18 @@ const UserWidget = ({ viewedUserData }) => {
                   <SkeletonLoad loading={isUserLoading} count={2}>
                     <Typography
                       variant="h4"
-                      color={dark}
+                      color={largeText}
                       fontWeight="500"
                       sx={{
                         "&:hover": {
-                          color: primaryDark,
+                          color: "red", //fix-color
                           cursor: "pointer",
                         },
                       }}
                     >
                       {firstName} {lastName}
                     </Typography>
-                    <Typography color={medium}>
+                    <Typography color={text}>
                       {`${friends.length} ${
                         friends.length === 1 ? "friend" : "friends"
                       }`}
@@ -257,14 +259,14 @@ const UserWidget = ({ viewedUserData }) => {
                 <IconButton
                   onClick={() => updateFriend()}
                   sx={{
-                    backgroundColor: primaryLight,
+                    backgroundColor: controls,
                     p: "0.6rem",
                   }}
                 >
                   {isFriend ? (
-                    <PersonRemoveOutlined sx={{ color: primaryDark }} />
+                    <PersonRemoveOutlined sx={{ color: controlsText }} />
                   ) : (
-                    <PersonAddOutlined sx={{ color: primaryDark }} />
+                    <PersonAddOutlined sx={{ color: controlsText }} />
                   )}
                 </IconButton>
               )}
@@ -290,12 +292,12 @@ const UserWidget = ({ viewedUserData }) => {
             paddingRight="1rem"
             marginTop="0.5rem"
           >
-            <LocationOnOutlined fontSize="large" sx={{ color: main }} />
+            <LocationOnOutlined fontSize="large" sx={{ color: text }} />
             {isProfileBeingEdited ? (
               <InputBase
                 sx={{
                   width: "100%",
-                  backgroundColor: light,
+                  backgroundColor: "red", //fix-color
                   padding: "0.25rem 0.5rem",
                   borderRadius: "0.5rem",
                 }}
@@ -306,7 +308,7 @@ const UserWidget = ({ viewedUserData }) => {
               />
             ) : (
               <Typography
-                color={medium}
+                color={text}
                 textAlign="center"
                 sx={{ width: "100%" }}
               >
@@ -323,12 +325,12 @@ const UserWidget = ({ viewedUserData }) => {
             marginTop="0.5rem"
             paddingRight="1rem"
           >
-            <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
+            <WorkOutlineOutlined fontSize="large" sx={{ color: text }} />
             {isProfileBeingEdited ? (
               <InputBase
                 sx={{
                   width: "100%",
-                  backgroundColor: light,
+                  backgroundColor: "red", //fix-color
                   padding: "0.25rem 0.5rem",
                   borderRadius: "0.5rem",
                 }}
@@ -339,7 +341,7 @@ const UserWidget = ({ viewedUserData }) => {
               />
             ) : (
               <Typography
-                color={medium}
+                color={text}
                 textAlign="center"
                 sx={{ width: "100%" }}
               >
@@ -363,11 +365,11 @@ const UserWidget = ({ viewedUserData }) => {
               p="0.5rem 0"
             >
               <FlexBetween padding="0.5rem">
-                <Typography color={medium} mr="0.5rem">
+                <Typography color={text} mr="0.5rem">
                   Who's viewed your profile
                 </Typography>
                 <Typography
-                  color={main}
+                  color={text}
                   fontWeight="500"
                   width="2rem"
                   textAlign="right"
@@ -378,10 +380,10 @@ const UserWidget = ({ viewedUserData }) => {
                 </Typography>
               </FlexBetween>
               <FlexBetween padding="0.5rem">
-                <Typography color={medium} mr="0.5rem">
+                <Typography color={text} mr="0.5rem">
                   Impressions of your post
                 </Typography>
-                <Typography color={main} fontWeight="500" textAlign="right">
+                <Typography color={text} fontWeight="500" textAlign="right">
                   <SkeletonLoad loading={isUserLoading} width="2rem" count={1}>
                     {impressions}
                   </SkeletonLoad>
@@ -394,13 +396,13 @@ const UserWidget = ({ viewedUserData }) => {
         )}
 
         {/* FOURTH ROW */}
-        <SocialNetworks
+        {/* <SocialNetworks
           isOneself={isOneself}
           isUserLoading={isUserLoading}
           isProfileBeingEdited={isProfileBeingEdited}
           socials={socials}
           onProfilesChange={handleProfilesChange}
-        />
+        /> */}
       </form>
     </WidgetWrapper>
   );

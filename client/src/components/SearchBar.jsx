@@ -16,8 +16,9 @@ const SearchBar = ({ width, style }) => {
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
-  const theme = useTheme();
-  const neutralLight = theme.palette.neutral.light;
+  const { palette } = useTheme();
+  const { background } = palette.background;
+  // const neutralLight = theme.palette.neutral.light;
 
   // handle search without delay (on enter key or search icon press)
   const handleInstantSearch = () => {
@@ -45,7 +46,7 @@ const SearchBar = ({ width, style }) => {
     <Box display="flex" flexDirection="column" alignItems="center">
       <FlexBetween
         width={width}
-        backgroundColor={neutralLight}
+        backgroundColor={background}
         borderRadius="0.5rem"
         p="0.1rem 1.5rem"
       >
@@ -66,7 +67,7 @@ const SearchBar = ({ width, style }) => {
       </FlexBetween>
       {isComponentVisible && (
         <FlexBetween
-          backgroundColor={neutralLight}
+          backgroundColor={background}
           gap="1rem"
           p="1rem 1.5rem"
           borderRadius="0.5rem"

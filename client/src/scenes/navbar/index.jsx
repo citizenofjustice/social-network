@@ -37,12 +37,14 @@ const Navbar = () => {
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const isNonMobileScreen = useMediaQuery("(min-width: 1000px");
 
-  const theme = useTheme();
-  const neutralLight = theme.palette.neutral.light;
-  const dark = theme.palette.neutral.dark;
-  const background = theme.palette.background.default;
-  const primaryDark = theme.palette.primary.dark;
-  const alt = theme.palette.background.alt;
+  const { palette } = useTheme();
+  const { background, text, largeText, controls, controlsText } = palette;
+
+  // const neutralLight = theme.palette.neutral.light;
+  // const dark = theme.palette.neutral.dark;
+  // const background = theme.palette.background.default;
+  // const primaryDark = theme.palette.primary.dark;
+  // const alt = theme.palette.background.alt;
 
   const handleLogout = () => {
     setIsComponentVisible(false);
@@ -52,12 +54,12 @@ const Navbar = () => {
   return (
     <FlexBetween
       p="1rem 6%"
-      backgroundColor={alt}
+      backgroundColor={background}
       sx={{
         position: "sticky",
         top: 0,
         zIndex: 50,
-        boxShadow: `0 0.25rem 0.125rem -0.125rem ${neutralLight}`,
+        boxShadow: `0 0.25rem 0.125rem -0.125rem ${"red"}`, //fix-color
       }}
       height="5rem"
     >
@@ -66,7 +68,7 @@ const Navbar = () => {
           <Typography
             sx={{
               "&:hover": {
-                color: primaryDark,
+                color: "red", //fix-color
                 cursor: "pointer",
               },
             }}
@@ -81,7 +83,7 @@ const Navbar = () => {
           <SearchBar
             width="20vw"
             style={{
-              boxShadow: `1px 1px 2px ${dark}`,
+              boxShadow: `1px 1px 2px ${"yellow"}`, //fix-color
               position: "absolute",
               top: "5.5rem",
             }}
@@ -93,16 +95,18 @@ const Navbar = () => {
       {isNonMobileScreen ? (
         <FlexBetween gap="1.25rem">
           <IconButton onClick={() => dispatch(setMode())}>
-            {theme.palette.mode === "dark" ? (
+            {palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
             ) : (
-              <LightMode sx={{ color: dark, fontSize: "25px" }} />
+              <LightMode
+                sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
+              />
             )}
           </IconButton>
           {isAuth && (
             <NavbarDropdown
               name={`${user.firstName} ${user.lastName}`}
-              color={neutralLight}
+              color={"red"} //fix-color
               loadingState={isUserLoading}
             />
           )}
@@ -135,7 +139,7 @@ const Navbar = () => {
               setIsComponentVisible(!isComponentVisible);
             }}
           >
-            <Menu sx={{ color: dark }} />
+            <Menu sx={{ color: "red" }} /* //fix-color */ />
           </IconButton>
         </Box>
       )}
@@ -162,7 +166,9 @@ const Navbar = () => {
                   setIsComponentVisible(!isComponentVisible);
                 }}
               >
-                <Close sx={{ color: dark, fontSize: "25px" }} />
+                <Close
+                  sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
+                />
               </IconButton>
             </Box>
           }
@@ -201,26 +207,28 @@ const Navbar = () => {
                 <StyledLink path="feed">
                   <IconButton onClick={() => setIsComponentVisible(false)}>
                     <DynamicFeedOutlined
-                      sx={{ color: dark, fontSize: "25px" }}
+                      sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
                     />
                   </IconButton>
                 </StyledLink>
                 <StyledLink path={`/profile/${user._id}`}>
                   <IconButton onClick={() => setIsComponentVisible(false)}>
-                    <PostAdd sx={{ color: dark, fontSize: "25px" }} />
+                    <PostAdd
+                      sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
+                    />
                   </IconButton>
                 </StyledLink>
                 <StyledLink path="/friends">
                   <IconButton onClick={() => setIsComponentVisible(false)}>
                     <PeopleOutlineOutlined
-                      sx={{ color: dark, fontSize: "25px" }}
+                      sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
                     />
                   </IconButton>
                 </StyledLink>
                 <StyledLink path="/search">
                   <IconButton onClick={() => setIsComponentVisible(false)}>
                     <PersonSearchOutlined
-                      sx={{ color: dark, fontSize: "25px" }}
+                      sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
                     />
                   </IconButton>
                 </StyledLink>
@@ -230,15 +238,19 @@ const Navbar = () => {
               onClick={() => dispatch(setMode())}
               sx={{ fontSize: "25px" }}
             >
-              {theme.palette.mode === "dark" ? (
+              {palette.mode === "dark" ? (
                 <DarkMode sx={{ fontSize: "25px" }} />
               ) : (
-                <LightMode sx={{ color: dark, fontSize: "25px" }} />
+                <LightMode
+                  sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
+                />
               )}
             </IconButton>
             {isAuth && (
               <IconButton onClick={handleLogout}>
-                <LogoutOutlined sx={{ color: dark, fontSize: "25px" }} />
+                <LogoutOutlined
+                  sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
+                />
               </IconButton>
             )}
           </FlexBetween>
