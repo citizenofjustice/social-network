@@ -37,9 +37,11 @@ const LoginForm = ({ onAuthModeChange }) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
 
   const { palette } = useTheme();
-  const primary = palette.primary.main;
-  const alt = palette.background.alt;
-  const light = palette.primary.light;
+  // const primary = palette.primary.main;
+  // const alt = palette.background.alt;
+  // const light = palette.primary.light;
+  const { background, text, controls, controlsText, hoveredControls } =
+    palette.custom;
 
   // calling useMutation hook for logging in user
   const mutation = useMutation({
@@ -141,9 +143,9 @@ const LoginForm = ({ onAuthModeChange }) => {
               sx={{
                 width: "10rem",
                 height: "2.5rem",
-                backgroundColor: primary,
-                color: alt,
-                "&:hover": { color: primary },
+                backgroundColor: controls,
+                color: controlsText,
+                "&:hover": { backgroundColor: hoveredControls },
               }}
               onClick={handleButtonDisable}
             >
@@ -151,7 +153,7 @@ const LoginForm = ({ onAuthModeChange }) => {
                 <CustomCircularLoading
                   margin="0"
                   size="1rem"
-                  color={alt}
+                  color={controls}
                   promptText="Signing in..."
                   promptDirectionColumn={false}
                 />
@@ -166,12 +168,12 @@ const LoginForm = ({ onAuthModeChange }) => {
               resetForm();
             }}
             sx={{
-              textDecoration: "underline",
+              textDecoration: "none",
               textAlign: "center",
-              color: primary,
+              color: controls,
               "&:hover": {
                 cursor: "pointer",
-                color: light,
+                color: hoveredControls,
               },
             }}
           >

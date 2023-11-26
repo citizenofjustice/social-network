@@ -26,7 +26,7 @@ const queryClient = new QueryClient();
 function App() {
   const dispatch = useDispatch();
   const mode = useSelector((state) => state.ui.mode);
-  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  let theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const isAuth = Boolean(useSelector((state) => state.auth.token));
   const isNonMobileScreen = useMediaQuery("(min-width: 1000px");
 
@@ -37,7 +37,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="app" style={{ backgroundColor: theme.palette.body }}>
+    <div className="app" style={{ backgroundColor: theme.palette.custom.body }}>
       {/* Provide the client to your App */}
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>

@@ -1,9 +1,12 @@
 // color design tokens export
-// export const colorTokens = {
-//   primary: {
-
-//   },
-// };
+export const colorTokens = {
+  // primary: {
+  //   // main: "#81ACD6",
+  //   ligth: "#e3f2fd",
+  //   main: "#90caf9",
+  //   dark: "#42a5f5",
+  // },
+};
 
 // mui theme settings
 export const themeSettings = (mode) => {
@@ -12,26 +15,30 @@ export const themeSettings = (mode) => {
       mode: mode,
       ...(mode === "dark"
         ? {
-            // palette values for dark mode
-            body: "#252525",
-            background: "#4B4B4B",
-            text: "#E9E9E9",
-            largeText: "#FFFFFF",
-            controls: "#50A4A9",
-            controlsText: "#FFFFFF",
-            hoveredControls: "#158288",
-            placeholderBackground: "#087F87",
+            custom: {
+              // palette values for dark mode
+              body: "#252525",
+              background: "#4B4B4B",
+              text: "#E9E9E9",
+              largeText: "#FFFFFF",
+              controls: "#50A4A9",
+              controlsText: "#FFFFFF",
+              hoveredControls: "#158288",
+              placeholderBackground: "#087F87",
+            },
           }
         : {
-            // palette values for light mode
-            body: "#C0C0C0",
-            background: "#F8F8F8",
-            text: "#595959",
-            largeText: "#333333",
-            controls: "#50A4A9",
-            controlsText: "#FFFFFF",
-            hoveredControls: "#158288",
-            placeholderBackground: "#087F87",
+            custom: {
+              // palette values for light mode
+              body: "#C0C0C0",
+              background: "#F8F8F8",
+              text: "#595959",
+              largeText: "#333333",
+              controls: "#50A4A9",
+              controlsText: "#FFFFFF",
+              hoveredControls: "#158288",
+              placeholderBackground: "#087F87",
+            },
           }),
     },
     typography: {

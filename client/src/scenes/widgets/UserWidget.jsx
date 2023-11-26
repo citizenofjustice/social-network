@@ -73,7 +73,8 @@ const UserWidget = ({ viewedUserData }) => {
   // const primaryDark = palette.primary.dark;
   // const primaryLight = palette.primary.light;
 
-  const { background, text, largeText, controls, controlsText } = palette;
+  const { background, text, largeText, controls, controlsText } =
+    palette.custom;
 
   if (!viewedUserData) return null;
   const {
@@ -396,13 +397,13 @@ const UserWidget = ({ viewedUserData }) => {
         )}
 
         {/* FOURTH ROW */}
-        {/* <SocialNetworks
+        <SocialNetworks
           isOneself={isOneself}
           isUserLoading={isUserLoading}
           isProfileBeingEdited={isProfileBeingEdited}
           socials={socials}
           onProfilesChange={handleProfilesChange}
-        /> */}
+        />
       </form>
     </WidgetWrapper>
   );

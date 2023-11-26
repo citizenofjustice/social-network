@@ -18,7 +18,7 @@ const ProfilePage = () => {
   const isOneself = userId === _id;
 
   const { palette } = useTheme();
-  const background = palette.background.default;
+  const { background } = palette.custom;
 
   const getUserData = useCallback(
     async (signal) => {
@@ -62,7 +62,7 @@ const ProfilePage = () => {
         >
           <UserWidget viewedUserData={user} />
           <Box m="2rem 0" />
-          <FriendListWidget />
+          {/* <FriendListWidget /> */}
         </Box>
       )}
       <Box
@@ -79,11 +79,11 @@ const ProfilePage = () => {
               backgroundColor: background,
             }}
           >
-            <MyPostWidget
+            {/* <MyPostWidget
               firstName={user.firstName}
               lastName={user.lastName}
               picturePath={user.picturePath}
-            />
+            /> */}
             <Divider sx={{ margin: "1rem 0" }} />
           </Box>
         )}
@@ -94,7 +94,7 @@ const ProfilePage = () => {
             marginTop: isOneself ? 0 : "2rem",
           }}
         >
-          <UserPostsWidget userId={userId} />
+          {/* <UserPostsWidget userId={userId} /> */}
         </Box>
       </Box>
     </Box>
