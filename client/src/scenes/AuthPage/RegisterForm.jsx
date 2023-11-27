@@ -1,13 +1,9 @@
 import {
   Box,
-  Button,
   TextField,
   useMediaQuery,
   Typography,
   useTheme,
-  Input,
-  FormControl,
-  InputAdornment,
 } from "@mui/material";
 import { Formik } from "formik";
 import { useMutation } from "react-query";
@@ -17,8 +13,8 @@ import { registerUser } from "API";
 import PasswordTextField from "components/PasswordTextField";
 import { showMessage } from "state/uiSlice";
 import { useDispatch } from "react-redux";
-import CustomCircularLoading from "components/CustomCircularLoading";
-import { useRef } from "react";
+import CustomButton from "components/CustomButton";
+import FileInputField from "components/FileInputField";
 
 // schema validation for registration
 const registerSchema = yup.object().shape({
@@ -58,13 +54,11 @@ const initialValues = {
 };
 
 const RegisterForm = ({ onAuthModeChange }) => {
-  const ref = useRef();
   const dispatch = useDispatch();
   const isNonMobile = useMediaQuery("(min-width: 600px)");
 
   const { palette } = useTheme();
-  const { background, text, controls, controlsText, hoveredControls } =
-    palette.custom;
+  const { controls, controlsText, hoveredControls } = palette.custom;
 
   // calling useMutation hook for registering user
   const mutation = useMutation({
@@ -111,22 +105,6 @@ const RegisterForm = ({ onAuthModeChange }) => {
     onAuthModeChange();
   };
 
-  // handle button click event while request already pending
-  const handleButtonDisable = (e) => {
-    if (mutation.isLoading) {
-      e.preventDefault();
-      return;
-    }
-  };
-
-  const handleFileAddition = (e, setFieldValue) => {
-    const files = Array.from(e.target.files);
-    const [file] = files;
-    if (!file) return;
-    setFieldValue("filename", file.name);
-    setFieldValue("avatar", file);
-  };
-
   return (
     <Formik
       onSubmit={handleFormSubmit}
@@ -141,6 +119,7 @@ const RegisterForm = ({ onAuthModeChange }) => {
         handleChange,
         handleSubmit,
         setFieldValue,
+        setFieldTouched,
         resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
@@ -196,54 +175,19 @@ const RegisterForm = ({ onAuthModeChange }) => {
               helperText={touched.occupation && errors.occupation}
               sx={{ gridColumn: "span 4" }}
             />
-            <FormControl sx={{ gridColumn: "span 4" }}>
-              <Input
-                id="my-input"
-                aria-describedby="my-helper-text"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.avatar}
-                name="avatar"
-                style={{ display: "none" }}
-              />
-              <TextField
-                label="Profile picture"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.filename}
-                error={Boolean(errors.filename)}
-                helperText={errors.filename}
-                name="filename"
-                autoComplete="off"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Button
-                        onClick={() => ref.current?.click()}
-                        sx={{
-                          zIndex: 2,
-                          padding: "0 1rem",
-                          height: "2.5rem",
-                          backgroundColor: controls,
-                          color: controlsText,
-                          "&:hover": { backgroundColor: hoveredControls },
-                        }}
-                      >
-                        ADD
-                        <input
-                          ref={ref}
-                          type="file"
-                          accept="image/*"
-                          hidden
-                          onChange={(e) => handleFileAddition(e, setFieldValue)}
-                        />
-                      </Button>
-                    </InputAdornment>
-                  ),
-                  readOnly: true,
-                }}
-              />
-            </FormControl>
+            <FileInputField
+              wrapperStyle={{ gridColumn: "span 4" }}
+              fileFieldName="avatar"
+              fileValues={values.avatar}
+              filenameValues={values.filename}
+              errors={errors.filename}
+              formikProps={{
+                handleBlur,
+                handleChange,
+                setFieldValue,
+                setFieldTouched,
+              }}
+            />
             <TextField
               label="Email"
               onBlur={handleBlur}
@@ -267,31 +211,16 @@ const RegisterForm = ({ onAuthModeChange }) => {
             />
           </Box>
           <Box m="1.5rem 0" display="flex" justifyContent="center">
-            <Button
-              type="submit"
-              sx={{
-                width: "10rem",
-                height: "2.5rem",
-                backgroundColor: controls,
-                color: controlsText,
-                "&:hover": {
-                  backgroundColor: hoveredControls,
-                },
-              }}
-              onClick={handleButtonDisable}
+            <CustomButton
+              buttonType="submit"
+              backgroundColor={controls}
+              hoveredBackgroundColor={hoveredControls}
+              textColor={controlsText}
+              inAction={mutation.isLoading}
+              actionPrompt="Registration..."
             >
-              {mutation.isLoading ? (
-                <CustomCircularLoading
-                  margin="0"
-                  size="1rem"
-                  color={mutation.isLoading ? hoveredControls : controls}
-                  promptText="Registration..."
-                  promptDirectionColumn={false}
-                />
-              ) : (
-                "REGISTER"
-              )}
-            </Button>
+              REGISTER
+            </CustomButton>
           </Box>
           <Typography
             onClick={() => {

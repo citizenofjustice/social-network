@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   TextField,
   useMediaQuery,
   Typography,
@@ -16,7 +15,7 @@ import { loginUser } from "API";
 import { setLogin } from "state/authSlice";
 import { showMessage } from "state/uiSlice";
 import PasswordTextField from "components/PasswordTextField";
-import CustomCircularLoading from "components/CustomCircularLoading";
+import CustomButton from "components/CustomButton";
 
 // validation schema for login form
 const loginSchema = yup.object().shape({
@@ -37,11 +36,7 @@ const LoginForm = ({ onAuthModeChange }) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
 
   const { palette } = useTheme();
-  // const primary = palette.primary.main;
-  // const alt = palette.background.alt;
-  // const light = palette.primary.light;
-  const { background, text, controls, controlsText, hoveredControls } =
-    palette.custom;
+  const { controls, controlsText, hoveredControls } = palette.custom;
 
   // calling useMutation hook for logging in user
   const mutation = useMutation({
@@ -81,14 +76,6 @@ const LoginForm = ({ onAuthModeChange }) => {
   // lifting the state up (change of auth page mode)
   const handleAuthModeChange = () => {
     onAuthModeChange();
-  };
-
-  // handle button click event while request already pending
-  const handleButtonDisable = (e) => {
-    if (mutation.isLoading) {
-      e.preventDefault();
-      return;
-    }
   };
 
   return (
@@ -138,29 +125,16 @@ const LoginForm = ({ onAuthModeChange }) => {
             />
           </Box>
           <Box m="1.5rem 0" display="flex" justifyContent="center">
-            <Button
-              type="submit"
-              sx={{
-                width: "10rem",
-                height: "2.5rem",
-                backgroundColor: controls,
-                color: controlsText,
-                "&:hover": { backgroundColor: hoveredControls },
-              }}
-              onClick={handleButtonDisable}
+            <CustomButton
+              buttonType="submit"
+              backgroundColor={controls}
+              hoveredBackgroundColor={hoveredControls}
+              textColor={controlsText}
+              inAction={mutation.isLoading}
+              actionPrompt="Signing in..."
             >
-              {mutation.isLoading ? (
-                <CustomCircularLoading
-                  margin="0"
-                  size="1rem"
-                  color={controls}
-                  promptText="Signing in..."
-                  promptDirectionColumn={false}
-                />
-              ) : (
-                "LOGIN"
-              )}
-            </Button>
+              LOGIN
+            </CustomButton>
           </Box>
           <Typography
             onClick={() => {
