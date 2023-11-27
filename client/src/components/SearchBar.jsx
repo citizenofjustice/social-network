@@ -17,8 +17,7 @@ const SearchBar = ({ width, style }) => {
     useComponentVisible(false);
 
   const { palette } = useTheme();
-  const { background } = palette.background;
-  // const neutralLight = theme.palette.neutral.light;
+  const { background, inputsBackground } = palette.custom;
 
   // handle search without delay (on enter key or search icon press)
   const handleInstantSearch = () => {
@@ -46,7 +45,7 @@ const SearchBar = ({ width, style }) => {
     <Box display="flex" flexDirection="column" alignItems="center">
       <FlexBetween
         width={width}
-        backgroundColor={background}
+        backgroundColor={inputsBackground}
         borderRadius="0.5rem"
         p="0.1rem 1.5rem"
       >

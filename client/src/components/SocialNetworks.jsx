@@ -48,14 +48,12 @@ const SocialNetworks = ({
   socials,
   onProfilesChange,
 }) => {
-  const { palette } = useTheme();
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [profileLink, setProfileLink] = useState("");
   const [isProfileInputsActive, setIsProfileInputsActive] = useState(false);
   const [userProfiles, setUserProfiles] = useState([]);
 
-  // const main = palette.neutral.main;
-  // const medium = palette.neutral.medium;
+  const { palette } = useTheme();
   const { text } = palette.custom;
 
   const handleProfileInputsActivation = () => {
@@ -176,8 +174,15 @@ const SocialNetworks = ({
                 >
                   {allowedNetworks.map((network, index) => (
                     <MenuItem key={index} value={network.title}>
-                      <FontAwesomeIcon icon={network.icon} size="xl" />
-                      <Typography p="0 0.5rem">{network.title}</Typography>
+                      <FontAwesomeIcon
+                        color={text}
+                        icon={network.icon}
+                        size="xl"
+                        width="2.5rem"
+                      />
+                      <Typography color={text} p="0 0.5rem">
+                        {network.title}
+                      </Typography>
                     </MenuItem>
                   ))}
                 </Select>
@@ -197,18 +202,24 @@ const SocialNetworks = ({
           )}
           <Box paddingTop="0.5rem" display="flex" justifyContent="center">
             {isProfileInputsActive && (
-              <IconButton onClick={clearProfileInputs}>
+              <IconButton sx={{ color: text }} onClick={clearProfileInputs}>
                 <CancelOutlined />
               </IconButton>
             )}
             {isProfileInputsActive ? (
               <>
-                <IconButton onClick={handleProfileAddition}>
+                <IconButton
+                  sx={{ color: text }}
+                  onClick={handleProfileAddition}
+                >
                   <BookmarkBorderOutlined />
                 </IconButton>
               </>
             ) : (
-              <IconButton onClick={handleProfileInputsActivation}>
+              <IconButton
+                sx={{ color: text }}
+                onClick={handleProfileInputsActivation}
+              >
                 <AddCircleOutline />
               </IconButton>
             )}

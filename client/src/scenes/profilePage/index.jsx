@@ -62,7 +62,7 @@ const ProfilePage = () => {
         >
           <UserWidget viewedUserData={user} />
           <Box m="2rem 0" />
-          {/* <FriendListWidget /> */}
+          <FriendListWidget />
         </Box>
       )}
       <Box
@@ -94,7 +94,7 @@ const ProfilePage = () => {
             marginTop: isOneself ? 0 : "2rem",
           }}
         >
-          {/* <UserPostsWidget userId={userId} /> */}
+          <UserPostsWidget userId={userId} />
         </Box>
       </Box>
     </Box>

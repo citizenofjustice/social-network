@@ -66,15 +66,14 @@ const UserWidget = ({ viewedUserData }) => {
     /^\/profile\/.*$/.test(routerLocation.pathname) ||
     /^\/user/.test(routerLocation.pathname);
 
-  // const dark = palette.neutral.dark;
-  // const medium = palette.neutral.medium;
-  // const light = palette.neutral.light;
-  // const main = palette.neutral.main;
-  // const primaryDark = palette.primary.dark;
-  // const primaryLight = palette.primary.light;
-
-  const { background, text, largeText, controls, controlsText } =
-    palette.custom;
+  const {
+    text,
+    largeText,
+    controls,
+    controlsText,
+    hoveredControls,
+    inputsBackground,
+  } = palette.custom;
 
   if (!viewedUserData) return null;
   const {
@@ -168,7 +167,7 @@ const UserWidget = ({ viewedUserData }) => {
               >
                 <InputBase
                   sx={{
-                    backgroundColor: "red", //fix-color
+                    backgroundColor: inputsBackground,
                     padding: "0.25rem 0.5rem",
                     borderRadius: "0.5rem",
                   }}
@@ -179,7 +178,7 @@ const UserWidget = ({ viewedUserData }) => {
                 />
                 <InputBase
                   sx={{
-                    backgroundColor: "red", //fix-color
+                    backgroundColor: inputsBackground,
                     padding: "0.25rem 0.5rem",
                     borderRadius: "0.5rem",
                   }}
@@ -212,7 +211,7 @@ const UserWidget = ({ viewedUserData }) => {
                       fontWeight="500"
                       sx={{
                         "&:hover": {
-                          color: "red", //fix-color
+                          color: controls,
                           cursor: "pointer",
                         },
                       }}
@@ -234,7 +233,10 @@ const UserWidget = ({ viewedUserData }) => {
               {isOneself ? (
                 <Box display="grid" gridTemplateColumns="1fr" rowGap="0.5rem">
                   {isProfileBeingEdited && (
-                    <IconButton onClick={handleProfileEditCancelation}>
+                    <IconButton
+                      sx={{ color: text }}
+                      onClick={handleProfileEditCancelation}
+                    >
                       <BackspaceOutlined />
                     </IconButton>
                   )}
@@ -246,12 +248,16 @@ const UserWidget = ({ viewedUserData }) => {
                         borderRadius: "50%",
                         padding: "0.5rem",
                         minWidth: "fit-content",
+                        color: text,
                       }}
                     >
                       <SaveOutlined />
                     </Button>
                   ) : (
-                    <IconButton onClick={() => setIsProfileBeingEdited(true)}>
+                    <IconButton
+                      sx={{ color: text }}
+                      onClick={() => setIsProfileBeingEdited(true)}
+                    >
                       <ManageAccountsOutlined />
                     </IconButton>
                   )}
@@ -260,8 +266,11 @@ const UserWidget = ({ viewedUserData }) => {
                 <IconButton
                   onClick={() => updateFriend()}
                   sx={{
-                    backgroundColor: controls,
                     p: "0.6rem",
+                    backgroundColor: controls,
+                    "&:hover": {
+                      backgroundColor: hoveredControls,
+                    },
                   }}
                 >
                   {isFriend ? (
@@ -298,7 +307,7 @@ const UserWidget = ({ viewedUserData }) => {
               <InputBase
                 sx={{
                   width: "100%",
-                  backgroundColor: "red", //fix-color
+                  backgroundColor: inputsBackground,
                   padding: "0.25rem 0.5rem",
                   borderRadius: "0.5rem",
                 }}
@@ -331,7 +340,7 @@ const UserWidget = ({ viewedUserData }) => {
               <InputBase
                 sx={{
                   width: "100%",
-                  backgroundColor: "red", //fix-color
+                  backgroundColor: inputsBackground,
                   padding: "0.25rem 0.5rem",
                   borderRadius: "0.5rem",
                 }}

@@ -24,7 +24,7 @@ const FriendListWidget = () => {
   const widgetTitle = "Friend List";
 
   const { palette } = useTheme();
-  const dark = palette.neutral.dark;
+  const { largeText } = palette.custom;
 
   // using query hook for fetching friends of user & getting loading and error states
   const { isLoading, isError, data } = useQuery({
@@ -89,7 +89,7 @@ const FriendListWidget = () => {
             </Slider>
           ) : (
             <Box>
-              <Typography color={dark} variant="h5" fontWeight="500">
+              <Typography color={largeText} variant="h5" fontWeight="500">
                 {widgetTitle}
               </Typography>
               {`${isOneself ? "You" : "User"} haven't added any friends.`}
@@ -100,7 +100,7 @@ const FriendListWidget = () => {
         </>
       ) : (
         <>
-          <Typography color={dark} variant="h5" fontWeight="500">
+          <Typography color={largeText} variant="h5" fontWeight="500">
             {widgetTitle}
           </Typography>
           {isLoading && <CustomCircularLoading />}

@@ -56,9 +56,7 @@ const PostWidget = ({
   });
 
   const { palette } = useTheme();
-  const main = palette.neutral.main;
-  const primary = palette.primary.main;
-  const medium = palette.neutral.medium;
+  const { text } = palette.custom;
 
   const postDropdownMenuItems = [
     {
@@ -139,7 +137,7 @@ const PostWidget = ({
           <CopyLink link={shareLink} onCopy={handleCopyIconClick} />
         </Box>
       )}
-      <Typography color={main} sx={{ m: "0.5rem 0", whiteSpace: "pre-line" }}>
+      <Typography color={text} sx={{ m: "0.5rem 0", whiteSpace: "pre-line" }}>
         <SkeletonLoad>{description}</SkeletonLoad>
       </Typography>
       {picturePath && (
@@ -161,12 +159,8 @@ const PostWidget = ({
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={patchLike}>
-              {isLiked ? (
-                <FavoriteOutlined sx={{ color: primary }} />
-              ) : (
-                <FavoriteBorderOutlined />
-              )}
+            <IconButton sx={{ color: text }} onClick={patchLike}>
+              {isLiked ? <FavoriteOutlined /> : <FavoriteBorderOutlined />}
             </IconButton>
             <Typography>{likesCount}</Typography>
           </FlexBetween>
@@ -180,12 +174,13 @@ const PostWidget = ({
         </FlexBetween>
 
         <FlexBetween>
-          {isEdited && (
-            <EditOutlined sx={{ color: medium }} fontSize="0.4rem" />
-          )}
+          {isEdited && <EditOutlined sx={{ color: text }} fontSize="0.4rem" />}
           <Typography
-            color={main}
-            sx={{ fontSize: "0.65rem", color: medium, pl: "0.25rem" }}
+            sx={{
+              fontSize: "0.65rem",
+              color: text /* fix-color */,
+              pl: "0.25rem",
+            }}
           >
             {postCreateDate}
           </Typography>

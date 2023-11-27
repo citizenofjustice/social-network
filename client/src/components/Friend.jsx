@@ -26,10 +26,8 @@ const Friend = ({
   const isOneself = _id === friendId;
 
   const { palette } = useTheme();
-  const primaryLight = palette.primary.light;
-  const primaryDark = palette.primary.dark;
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
+  const { text, largeText, controls, controlsText, hoveredControls } =
+    palette.custom;
 
   const isFriend = friends.find((friend) => friend._id === friendId);
 
@@ -64,12 +62,12 @@ const Friend = ({
         >
           <StyledLink path={`/profile/${friendId}`}>
             <Typography
-              color={main}
+              color={largeText}
               variant="h5"
               fontWeight="500"
               sx={{
                 "&:hover": {
-                  color: primaryDark,
+                  color: controls,
                   cursor: "pointer",
                 },
               }}
@@ -79,7 +77,7 @@ const Friend = ({
               >{`${firstName} ${lastName}`}</SkeletonLoad>
             </Typography>
           </StyledLink>
-          <Typography color={medium} fontSize="0.75rem">
+          <Typography color={text} fontSize="0.75rem">
             <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
           </Typography>
         </Box>
@@ -88,14 +86,17 @@ const Friend = ({
         <IconButton
           onClick={() => updateFriend()}
           sx={{
-            backgroundColor: primaryLight,
             p: "0.6rem",
+            backgroundColor: controls,
+            "&:hover": {
+              backgroundColor: hoveredControls,
+            },
           }}
         >
           {isFriend ? (
-            <PersonRemoveOutlined sx={{ color: primaryDark }} />
+            <PersonRemoveOutlined sx={{ color: controlsText }} />
           ) : (
-            <PersonAddOutlined sx={{ color: primaryDark }} />
+            <PersonAddOutlined sx={{ color: controlsText }} />
           )}
         </IconButton>
       )}

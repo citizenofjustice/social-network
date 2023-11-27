@@ -38,14 +38,14 @@ const Navbar = () => {
   const isNonMobileScreen = useMediaQuery("(min-width: 1000px");
 
   const { palette } = useTheme();
-  const { background, text, largeText, controls, controlsText } =
-    palette.custom;
-
-  // const neutralLight = theme.palette.neutral.light;
-  // const dark = theme.palette.neutral.dark;
-  // const background = theme.palette.background.default;
-  // const primaryDark = theme.palette.primary.dark;
-  // const alt = theme.palette.background.alt;
+  const {
+    background,
+    text,
+    shadow,
+    themedLargeText,
+    hoveredThemedLargeText,
+    inputsBackground,
+  } = palette.custom;
 
   const handleLogout = () => {
     setIsComponentVisible(false);
@@ -60,7 +60,7 @@ const Navbar = () => {
         position: "sticky",
         top: 0,
         zIndex: 50,
-        boxShadow: `0 0.25rem 0.125rem -0.125rem ${"red"}`, //fix-color
+        boxShadow: `0 0.125rem 0.125rem -0.125rem ${shadow}`,
       }}
       height="5rem"
     >
@@ -69,13 +69,13 @@ const Navbar = () => {
           <Typography
             sx={{
               "&:hover": {
-                color: "red", //fix-color
+                color: hoveredThemedLargeText,
                 cursor: "pointer",
               },
             }}
             fontWeight="bold"
             fontSize="clamp(1rem, 2rem, 2.25rem)"
-            color="primary"
+            color={themedLargeText}
           >
             StayInTouch
           </Typography>
@@ -84,7 +84,7 @@ const Navbar = () => {
           <SearchBar
             width="20vw"
             style={{
-              boxShadow: `1px 1px 2px ${"yellow"}`, //fix-color
+              boxShadow: `1px 1px 2px ${shadow}`,
               position: "absolute",
               top: "5.5rem",
             }}
@@ -97,17 +97,15 @@ const Navbar = () => {
         <FlexBetween gap="1.25rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {palette.mode === "dark" ? (
-              <DarkMode sx={{ fontSize: "25px" }} />
+              <DarkMode sx={{ color: text, fontSize: "25px" }} />
             ) : (
-              <LightMode
-                sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
-              />
+              <LightMode sx={{ color: text, fontSize: "25px" }} />
             )}
           </IconButton>
           {isAuth && (
             <NavbarDropdown
               name={`${user.firstName} ${user.lastName}`}
-              color={"red"} //fix-color
+              color={inputsBackground}
               loadingState={isUserLoading}
             />
           )}
