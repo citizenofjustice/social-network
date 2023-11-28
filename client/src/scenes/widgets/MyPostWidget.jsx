@@ -13,7 +13,6 @@ import {
   Typography,
   InputBase,
   useTheme,
-  Button,
   IconButton,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
@@ -26,6 +25,7 @@ import { sendPost, editSelectedPost } from "API";
 import { setEditablePost, triggerReloadToggle } from "state/postsSlice";
 import "./MyPostWidget.module.css";
 import DefaultUserIcon from "components/DefaultUserIcon";
+import CustomButton from "components/CustomButton";
 
 const MyPostWidget = ({
   firstName,
@@ -37,14 +37,14 @@ const MyPostWidget = ({
   const [image, setImage] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
   const [postText, setPostText] = useState("");
-  const { palette } = useTheme();
   const { _id } = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-  const mediumMain = palette.neutral.mediumMain;
-  const medium = palette.neutral.medium;
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const editablePost = useSelector((state) => state.posts.editablePost);
   const dispatch = useDispatch();
+
+  const { palette } = useTheme();
+  const { controls, text, inputsBackground } = palette.custom;
 
   const handlePost = async () => {
     if (editablePost._id) {
@@ -154,7 +154,7 @@ const MyPostWidget = ({
           maxRows={5}
           sx={{
             width: "100%",
-            backgroundColor: palette.neutral.light,
+            backgroundColor: inputsBackground,
             borderRadius: "1rem",
             padding: "1rem",
           }}
@@ -162,7 +162,7 @@ const MyPostWidget = ({
       </FlexBetween>
       {isImage && (
         <Box
-          border={`1px solid ${medium}`}
+          border={`1px solid ${inputsBackground}`}
           borderRadius="5px"
           mt="1rem"
           p="1rem"
@@ -176,7 +176,7 @@ const MyPostWidget = ({
               <FlexBetween>
                 <Box
                   {...getRootProps()}
-                  border={`2px dashed ${palette.primary.main}`}
+                  border={`2px dashed ${controls}`}
                   p="1rem"
                   width="100%"
                   sx={{ "&:hover": { cursor: "pointer" } }}
@@ -219,14 +219,22 @@ const MyPostWidget = ({
         </Box>
       )}
 
-      <Divider sx={{ margin: "1.25rem 0" }} />
+      <Divider sx={{ margin: "1.25rem 0 0.5rem 0" }} />
 
       <FlexBetween padding="0 1rem">
-        <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
-          <ImageOutlined sx={{ color: mediumMain }} />
+        <FlexBetween
+          sx={{
+            padding: "0.5rem",
+            "&:hover": { cursor: "pointer" },
+          }}
+          gap="0.25rem"
+          onClick={() => setIsImage(!isImage)}
+        >
+          <ImageOutlined sx={{ color: text }} />
           <Typography
-            color={mediumMain}
-            sx={{ "&:hover": { cursor: "pointer", color: medium } }}
+            sx={{
+              color: text,
+            }}
           >
             Image
           </Typography>
@@ -234,54 +242,40 @@ const MyPostWidget = ({
         {isNonMobileScreens ? (
           <>
             <FlexBetween gap="0.25rem">
-              <GifBoxOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Clip</Typography>
+              <GifBoxOutlined sx={{ color: text }} />
+              <Typography color={text}>Clip</Typography>
             </FlexBetween>
 
             <FlexBetween gap="0.25rem">
-              <AttachFileOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Attachment</Typography>
+              <AttachFileOutlined sx={{ color: text }} />
+              <Typography color={text}>Attachment</Typography>
             </FlexBetween>
 
             <FlexBetween gap="0.25rem">
-              <MicOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Audio</Typography>
+              <MicOutlined sx={{ color: text }} />
+              <Typography color={text}>Audio</Typography>
             </FlexBetween>
           </>
         ) : (
           <>
             <FlexBetween gap="0.25px">
-              <MoreHorizOutlined sx={{ color: mediumMain }} />
+              <MoreHorizOutlined sx={{ color: text }} />
             </FlexBetween>
           </>
         )}
         <Box>
           {editablePost._id && (
-            <Button
-              onClick={handleEditCancelation}
-              sx={{
-                color: palette.background.alt,
-                backgroundColor: palette.primary.main,
-                borderRadius: "3rem",
-                marginRight: "0.5rem",
-                "&:hover": { color: palette.primary.main },
-              }}
-            >
+            <CustomButton onClick={handleEditCancelation} margin="0 0.5rem 0 0">
               Cancel
-            </Button>
+            </CustomButton>
           )}
-          <Button
+          <CustomButton
             disabled={!postText}
             onClick={handlePost}
-            sx={{
-              color: palette.background.alt,
-              backgroundColor: palette.primary.main,
-              borderRadius: "3rem",
-              "&:hover": { color: palette.primary.main },
-            }}
+            width="fit-content"
           >
             POST
-          </Button>
+          </CustomButton>
         </Box>
       </FlexBetween>
     </WidgetWrapper>

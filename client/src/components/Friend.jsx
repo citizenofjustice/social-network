@@ -26,7 +26,7 @@ const Friend = ({
   const isOneself = _id === friendId;
 
   const { palette } = useTheme();
-  const { text, largeText, controls, controlsText, hoveredControls } =
+  const { lightText, largeText, controls, controlsText, hoveredControls } =
     palette.custom;
 
   const isFriend = friends.find((friend) => friend._id === friendId);
@@ -77,7 +77,7 @@ const Friend = ({
               >{`${firstName} ${lastName}`}</SkeletonLoad>
             </Typography>
           </StyledLink>
-          <Typography color={text} fontSize="0.75rem">
+          <Typography color={lightText} fontSize="0.75rem">
             <SkeletonLoad loading={isContentLoading}>{subtitle}</SkeletonLoad>
           </Typography>
         </Box>

@@ -29,6 +29,10 @@ export const themeSettings = (mode) => {
               placeholderBackground: "#087F87",
               shadow: "#C8C8C8",
               inputsBackground: "#676767",
+              lightText: "#B2B2B2",
+            },
+            primary: {
+              main: "#50A4A9",
             },
           }
         : {
@@ -46,6 +50,10 @@ export const themeSettings = (mode) => {
               placeholderBackground: "#087F87",
               shadow: "#9B9B9B",
               inputsBackground: "#DBDBDB",
+              lightText: "#989898",
+            },
+            primary: {
+              main: "#50A4A9",
             },
           }),
     },

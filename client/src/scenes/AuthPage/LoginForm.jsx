@@ -36,7 +36,7 @@ const LoginForm = ({ onAuthModeChange }) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
 
   const { palette } = useTheme();
-  const { controls, controlsText, hoveredControls } = palette.custom;
+  const { controls, hoveredControls } = palette.custom;
 
   // calling useMutation hook for logging in user
   const mutation = useMutation({
@@ -127,9 +127,7 @@ const LoginForm = ({ onAuthModeChange }) => {
           <Box m="1.5rem 0" display="flex" justifyContent="center">
             <CustomButton
               buttonType="submit"
-              backgroundColor={controls}
-              hoveredBackgroundColor={hoveredControls}
-              textColor={controlsText}
+              width="10rem"
               inAction={mutation.isLoading}
               actionPrompt="Signing in..."
             >

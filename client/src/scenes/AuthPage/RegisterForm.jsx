@@ -58,7 +58,7 @@ const RegisterForm = ({ onAuthModeChange }) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
 
   const { palette } = useTheme();
-  const { controls, controlsText, hoveredControls } = palette.custom;
+  const { controls, hoveredControls } = palette.custom;
 
   // calling useMutation hook for registering user
   const mutation = useMutation({
@@ -213,9 +213,7 @@ const RegisterForm = ({ onAuthModeChange }) => {
           <Box m="1.5rem 0" display="flex" justifyContent="center">
             <CustomButton
               buttonType="submit"
-              backgroundColor={controls}
-              hoveredBackgroundColor={hoveredControls}
-              textColor={controlsText}
+              width="10rem"
               inAction={mutation.isLoading}
               actionPrompt="Registration..."
             >

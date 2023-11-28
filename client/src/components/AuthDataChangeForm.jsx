@@ -15,6 +15,8 @@ import { changeAuthData } from "API";
 import { useDispatch, useSelector } from "react-redux";
 import PasswordTextField from "./PasswordTextField";
 import { showMessage } from "state/uiSlice";
+import WidgetWrapper from "./WidgetWrapper";
+import CustomButton from "./CustomButton";
 
 const initialValues = {
   email: "",
@@ -26,8 +28,10 @@ const initialValues = {
 const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isPasswordChecked, setIsPasswordChecked] = useState(false);
-  const { palette } = useTheme();
   const dispatch = useDispatch();
+
+  const { palette } = useTheme();
+  const { controls } = palette.custom;
 
   const getCharacterValidationError = (str) => {
     return `Your password must have at least 1 ${str} character`;
@@ -92,7 +96,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   };
 
   return (
-    <Box ref={refProp}>
+    <WidgetWrapper ref={refProp}>
       <Formik
         onSubmit={handleAuthDataChange}
         initialValues={initialValues}
@@ -109,9 +113,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
           <form onSubmit={handleSubmit}>
             <Box
               sx={{
-                backgroundColor: palette.background.alt,
-                padding: "1rem 2rem",
-                borderRadius: "0.5rem",
+                padding: "0.5rem 2rem",
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
@@ -202,26 +204,15 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
                 </>
               )}
               {(isEmailChecked || isPasswordChecked) && (
-                <Box>
-                  <Button
-                    type="submit"
-                    sx={{
-                      display: "block",
-                      margin: "0 auto",
-                      backgroundColor: palette.primary.main,
-                      color: palette.background.alt,
-                      "&:hover": { color: palette.primary.main },
-                    }}
-                  >
-                    Save
-                  </Button>
+                <Box display="flex" justifyContent="center">
+                  <CustomButton buttonType="submit">Save</CustomButton>
                 </Box>
               )}
             </Box>
           </form>
         )}
       </Formik>
-    </Box>
+    </WidgetWrapper>
   );
 };
 

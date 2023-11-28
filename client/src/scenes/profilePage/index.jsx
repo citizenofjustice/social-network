@@ -18,7 +18,7 @@ const ProfilePage = () => {
   const isOneself = userId === _id;
 
   const { palette } = useTheme();
-  const { background } = palette.custom;
+  const { body } = palette.custom;
 
   const getUserData = useCallback(
     async (signal) => {
@@ -76,14 +76,14 @@ const ProfilePage = () => {
               top: "0",
               zIndex: "10",
               padding: "2rem 0 0",
-              backgroundColor: background,
+              background: body,
             }}
           >
-            {/* <MyPostWidget
+            <MyPostWidget
               firstName={user.firstName}
               lastName={user.lastName}
               picturePath={user.picturePath}
-            /> */}
+            />
             <Divider sx={{ margin: "1rem 0" }} />
           </Box>
         )}

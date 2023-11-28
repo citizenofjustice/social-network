@@ -56,7 +56,7 @@ const PostWidget = ({
   });
 
   const { palette } = useTheme();
-  const { text } = palette.custom;
+  const { text, lightText } = palette.custom;
 
   const postDropdownMenuItems = [
     {
@@ -178,7 +178,7 @@ const PostWidget = ({
           <Typography
             sx={{
               fontSize: "0.65rem",
-              color: text /* fix-color */,
+              color: lightText,
               pl: "0.25rem",
             }}
           >

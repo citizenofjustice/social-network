@@ -5,11 +5,10 @@ import { showMessage } from "state/uiSlice";
 import { useDispatch } from "react-redux";
 
 const CopyLink = ({ link, onCopy }) => {
-  const { palette } = useTheme();
   const dispatch = useDispatch();
 
-  const light = palette.neutral.light;
-  const alt = palette.background.alt;
+  const { palette } = useTheme();
+  const { inputsBackground, background } = palette.custom;
 
   const handleWriteToClipboard = () => {
     navigator.clipboard.writeText(link).then(
@@ -41,7 +40,7 @@ const CopyLink = ({ link, onCopy }) => {
       display="flex"
       alignItems="center"
       width="fit-content"
-      backgroundColor={light}
+      backgroundColor={inputsBackground}
       padding="0.5rem"
       borderRadius="0.5rem"
     >
@@ -51,7 +50,7 @@ const CopyLink = ({ link, onCopy }) => {
         defaultValue={link}
         readOnly={true}
         sx={{
-          backgroundColor: alt,
+          backgroundColor: background,
           padding: "0.25rem 0.5rem",
           borderRadius: "0.5rem",
           marginRight: "0.25rem",
