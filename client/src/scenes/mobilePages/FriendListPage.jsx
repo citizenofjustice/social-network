@@ -1,10 +1,9 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useSelector } from "react-redux";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 
 const FriendListPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-  const userId = useSelector((state) => state.auth.user._id);
+  const friendsPerPage = 7; // setting how much friends fits into one slider page
 
   return (
     <Box
@@ -15,7 +14,7 @@ const FriendListPage = () => {
       justifyContent="space-between"
     >
       <Box flexBasis="26%">
-        <FriendListWidget userId={userId} />
+        <FriendListWidget slideСapacity={friendsPerPage} />
       </Box>
     </Box>
   );

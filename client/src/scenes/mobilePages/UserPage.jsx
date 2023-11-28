@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import UserWidget from "scenes/widgets/UserWidget";
 import { fetchUser } from "API";
 import useComponentVisible from "hooks/useComponentVisible";
 import AuthDataChangeForm from "components/AuthDataChangeForm";
+import CustomButton from "components/CustomButton";
 
 const UserPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -14,7 +15,6 @@ const UserPage = () => {
   const [user, setUser] = useState(null);
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false, true);
-  const { palette } = useTheme();
 
   const getUserData = useCallback(
     async (signal) => {
@@ -73,16 +73,9 @@ const UserPage = () => {
         </Box>
       ) : (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            onClick={() => setIsComponentVisible(true)}
-            sx={{
-              backgroundColor: palette.primary.main,
-              color: palette.background.alt,
-              "&:hover": { color: palette.primary.main },
-            }}
-          >
+          <CustomButton onClick={() => setIsComponentVisible(true)}>
             Change auth data
-          </Button>
+          </CustomButton>
         </Box>
       )}
     </>

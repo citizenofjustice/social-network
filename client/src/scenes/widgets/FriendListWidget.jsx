@@ -11,7 +11,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import FriendListSlide from "components/FriendListSlide";
 import CustomCircularLoading from "components/CustomCircularLoading";
 
-const FriendListWidget = () => {
+const FriendListWidget = ({ slideСapacity = 4 }) => {
   const dispatch = useDispatch();
   const { userId } = useParams(); // getting userId form router if exist
   const [idx, setIdx] = useState(0); // declaring state for tracking slider pages
@@ -20,7 +20,6 @@ const FriendListWidget = () => {
   const loggedInUserId = useSelector((state) => state.auth.user._id); // authenticated user id
   const isOneself = loggedInUserId === userId; // checking if current page belongs to authenticated user
   const currentUserId = !!userId ? userId : loggedInUserId;
-  const slideСapacity = 4; // setting how much friends fits into one slider page
   const widgetTitle = "Friend List";
 
   const { palette } = useTheme();

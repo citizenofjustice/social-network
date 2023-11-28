@@ -133,12 +133,12 @@ const Navbar = () => {
       ) : (
         <Box display="flex">
           <IconButton
-            sx={{ marginLeft: "1rem" }}
+            sx={{ color: text, marginLeft: "1rem" }}
             onClick={() => {
               setIsComponentVisible(!isComponentVisible);
             }}
           >
-            <Menu sx={{ color: "red" }} /* //fix-color */ />
+            <Menu />
           </IconButton>
         </Box>
       )}
@@ -164,10 +164,9 @@ const Navbar = () => {
                 onClick={() => {
                   setIsComponentVisible(!isComponentVisible);
                 }}
+                sx={{ color: text }}
               >
-                <Close
-                  sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
-                />
+                <Close sx={{ fontSize: "25px" }} />
               </IconButton>
             </Box>
           }
@@ -204,52 +203,52 @@ const Navbar = () => {
                   </IconButton>
                 </StyledLink>
                 <StyledLink path="feed">
-                  <IconButton onClick={() => setIsComponentVisible(false)}>
-                    <DynamicFeedOutlined
-                      sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
-                    />
+                  <IconButton
+                    sx={{ color: text }}
+                    onClick={() => setIsComponentVisible(false)}
+                  >
+                    <DynamicFeedOutlined sx={{ fontSize: "25px" }} />
                   </IconButton>
                 </StyledLink>
                 <StyledLink path={`/profile/${user._id}`}>
-                  <IconButton onClick={() => setIsComponentVisible(false)}>
-                    <PostAdd
-                      sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
-                    />
+                  <IconButton
+                    sx={{ color: text }}
+                    onClick={() => setIsComponentVisible(false)}
+                  >
+                    <PostAdd sx={{ fontSize: "25px" }} />
                   </IconButton>
                 </StyledLink>
                 <StyledLink path="/friends">
-                  <IconButton onClick={() => setIsComponentVisible(false)}>
-                    <PeopleOutlineOutlined
-                      sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
-                    />
+                  <IconButton
+                    sx={{ color: text }}
+                    onClick={() => setIsComponentVisible(false)}
+                  >
+                    <PeopleOutlineOutlined sx={{ fontSize: "25px" }} />
                   </IconButton>
                 </StyledLink>
                 <StyledLink path="/search">
-                  <IconButton onClick={() => setIsComponentVisible(false)}>
-                    <PersonSearchOutlined
-                      sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
-                    />
+                  <IconButton
+                    sx={{ color: text }}
+                    onClick={() => setIsComponentVisible(false)}
+                  >
+                    <PersonSearchOutlined sx={{ fontSize: "25px" }} />
                   </IconButton>
                 </StyledLink>
               </>
             )}
             <IconButton
               onClick={() => dispatch(setMode())}
-              sx={{ fontSize: "25px" }}
+              sx={{ color: text, fontSize: "25px" }}
             >
               {palette.mode === "dark" ? (
                 <DarkMode sx={{ fontSize: "25px" }} />
               ) : (
-                <LightMode
-                  sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
-                />
+                <LightMode sx={{ fontSize: "25px" }} />
               )}
             </IconButton>
             {isAuth && (
-              <IconButton onClick={handleLogout}>
-                <LogoutOutlined
-                  sx={{ color: "red", /* //fix-color */ fontSize: "25px" }}
-                />
+              <IconButton sx={{ color: text }} onClick={handleLogout}>
+                <LogoutOutlined sx={{ fontSize: "25px" }} />
               </IconButton>
             )}
           </FlexBetween>

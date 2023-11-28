@@ -33,7 +33,6 @@ import StyledLink from "components/StyledLink";
 import DefaultUserIcon from "components/DefaultUserIcon";
 
 const UserWidget = ({ viewedUserData }) => {
-  const { palette } = useTheme();
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
@@ -66,6 +65,7 @@ const UserWidget = ({ viewedUserData }) => {
     /^\/profile\/.*$/.test(routerLocation.pathname) ||
     /^\/user/.test(routerLocation.pathname);
 
+  const { palette } = useTheme();
   const {
     text,
     largeText,

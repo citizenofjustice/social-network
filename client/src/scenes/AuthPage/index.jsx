@@ -6,10 +6,11 @@ import RegisterForm from "./RegisterForm";
 
 /* Authentication page component */
 const AuthPage = () => {
-  const { palette } = useTheme();
-  const { background } = palette.custom;
   const [isLogin, setIsLogin] = useState(true); // state for changing auth page mode
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)"); // query of screen width for adaptive layout
+
+  const { palette } = useTheme();
+  const { background } = palette.custom;
 
   return (
     <Box

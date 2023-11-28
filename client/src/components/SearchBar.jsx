@@ -76,6 +76,8 @@ const SearchBar = ({ width, style }) => {
             boxShadow: style.boxShadow,
             position: style.position,
             top: style.top,
+            maxHeight: "32rem",
+            overflow: "hidden",
           }}
           ref={ref}
         >

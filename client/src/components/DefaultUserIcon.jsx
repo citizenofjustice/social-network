@@ -7,11 +7,11 @@ const DefaultUserIcon = ({
   fontSize = "1rem",
 }) => {
   const { palette } = useTheme();
-  const mainColor = palette.primary.main;
+  const { controls, shadow } = palette.custom;
 
   return (
     <Box
-      backgroundColor={mainColor}
+      backgroundColor={controls}
       width={size}
       height={size}
       borderRadius="50%"
@@ -20,6 +20,7 @@ const DefaultUserIcon = ({
       alignItems="center"
       textTransform="uppercase"
       fontSize={fontSize}
+      border={`1px solid ${shadow}`}
     >
       {firstNameInitial + lastNameInitial}
     </Box>

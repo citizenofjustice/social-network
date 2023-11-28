@@ -1,12 +1,10 @@
 import {
   Box,
-  Button,
   FormControlLabel,
   FormGroup,
   Switch,
   TextField,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -29,9 +27,6 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isPasswordChecked, setIsPasswordChecked] = useState(false);
   const dispatch = useDispatch();
-
-  const { palette } = useTheme();
-  const { controls } = palette.custom;
 
   const getCharacterValidationError = (str) => {
     return `Your password must have at least 1 ${str} character`;
