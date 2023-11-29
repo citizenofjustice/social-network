@@ -30,6 +30,7 @@ export const themeSettings = (mode) => {
               shadow: "#C8C8C8",
               inputsBackground: "#676767",
               lightText: "#B2B2B2",
+              sidemenuShadow: "#2C2C2C",
             },
             primary: {
               main: "#50A4A9",
@@ -51,6 +52,7 @@ export const themeSettings = (mode) => {
               shadow: "#9B9B9B",
               inputsBackground: "#DBDBDB",
               lightText: "#989898",
+              sidemenuShadow: "#C2C2C2",
             },
             primary: {
               main: "#50A4A9",

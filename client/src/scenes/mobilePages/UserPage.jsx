@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, useMediaQuery } from "@mui/material";
+import { Box } from "@mui/material";
 import { useSelector } from "react-redux";
 import UserWidget from "scenes/widgets/UserWidget";
 import { fetchUser } from "API";
 import useComponentVisible from "hooks/useComponentVisible";
 import AuthDataChangeForm from "components/AuthDataChangeForm";
 import CustomButton from "components/CustomButton";
+import FlexCentered from "components/FlexCenterd";
 
 const UserPage = () => {
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const userId = useSelector((state) => state.auth.user._id);
   const userFriends = useSelector((state) => state.auth.user.friends);
   const token = useSelector((state) => state.auth.token);
@@ -40,16 +40,10 @@ const UserPage = () => {
 
   return (
     <>
-      <Box
-        width="100%"
-        p="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"}
-        gap="0.5rem"
-        justifyContent="space-between"
-      >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
+      <Box width="100%" p="2rem 6%" gap="0.5rem" justifyContent="space-between">
+        <FlexCentered>
           <UserWidget viewedUserData={user} />
-        </Box>
+        </FlexCentered>
       </Box>
       {isComponentVisible ? (
         <Box

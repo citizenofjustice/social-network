@@ -15,6 +15,7 @@ import {
   IconButton,
   InputBase,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
@@ -44,6 +45,7 @@ const UserWidget = ({ viewedUserData }) => {
       } else return false;
     })
   );
+  const isMobile = useMediaQuery("(max-width: 375px)");
 
   const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
   const [firstNameChange, setFirstNameChange] = useState(
@@ -191,7 +193,7 @@ const UserWidget = ({ viewedUserData }) => {
             </>
           ) : (
             <StyledLink path={`/profile/${_id}`}>
-              <FlexBetween gap="1rem" sx={{ width: "100%" }}>
+              <FlexBetween gap="0.5rem" sx={{ width: "100%" }}>
                 <Box>
                   {picturePath ? (
                     <UserImage image={picturePath} loading={isUserLoading} />
@@ -206,10 +208,11 @@ const UserWidget = ({ viewedUserData }) => {
                 <Box sx={{ width: "100%", padding: "0.5rem" }}>
                   <SkeletonLoad loading={isUserLoading} count={2}>
                     <Typography
-                      variant="h4"
+                      variant={isMobile ? "h5" : "h4"}
                       color={largeText}
                       fontWeight="500"
                       sx={{
+                        wordBreak: isMobile ? "break-word" : "normal",
                         "&:hover": {
                           color: controls,
                           cursor: "pointer",

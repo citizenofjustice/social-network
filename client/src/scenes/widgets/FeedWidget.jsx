@@ -103,7 +103,7 @@ const FeedWidget = ({ limit = 10 }) => {
         </>
       )}
       {isLoading && <CustomCircularLoading margin="2rem 0 0 0" />}
-      {!isLoading && posts && <div ref={ref}></div>}
+      {!isLoading && posts && <div style={{ height: "5px" }} ref={ref}></div>}
     </>
   );
 };

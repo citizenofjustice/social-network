@@ -45,6 +45,7 @@ const Navbar = () => {
     themedLargeText,
     hoveredThemedLargeText,
     inputsBackground,
+    sidemenuShadow,
   } = palette.custom;
 
   const handleLogout = () => {
@@ -54,7 +55,7 @@ const Navbar = () => {
 
   return (
     <FlexBetween
-      p="1rem 6%"
+      p="1rem 2rem"
       backgroundColor={background}
       sx={{
         position: "sticky",
@@ -146,112 +147,124 @@ const Navbar = () => {
       {/* MOBILE NAV */}
       {!isNonMobileScreen && isComponentVisible && (
         <Box
-          position="fixed"
-          right="0"
-          bottom="0"
-          height="100%"
-          zIndex="10"
-          maxWidth="500px"
-          minWidth="100px"
-          backgroundColor={background}
-          ref={ref}
+          sx={{
+            // for preventing actions triggered by mobile navbar outside click
+            width: "100%",
+            height: "100%",
+            position: "fixed",
+            top: "0",
+            left: "0",
+          }}
         >
-          {/* CLOSE ICON */}
-
-          {
-            <Box display="flex" justifyContent="center" p="1rem">
-              <IconButton
-                onClick={() => {
-                  setIsComponentVisible(!isComponentVisible);
-                }}
-                sx={{ color: text }}
-              >
-                <Close sx={{ fontSize: "25px" }} />
-              </IconButton>
-            </Box>
-          }
-
-          {/* MENU ITEMS */}
-          <FlexBetween
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            gap="2.5rem"
-            mt="2rem"
+          <Box
+            position="fixed"
+            right="0"
+            bottom="0"
+            height="100%"
+            zIndex="10"
+            maxWidth="150px"
+            minWidth="100px"
+            backgroundColor={background}
+            boxShadow={`-1px 0px 2px 1px ${sidemenuShadow}`}
+            ref={ref}
           >
-            {isAuth && (
-              <>
-                <StyledLink path="/user">
-                  <IconButton
-                    onClick={() => setIsComponentVisible(false)}
-                    style={{ backgroundColor: "transparent" }}
-                  >
-                    {user.picturePath ? (
-                      <UserImage
-                        loading={isUserLoading}
-                        image={user.picturePath}
-                        size="40px"
-                      />
-                    ) : (
-                      <DefaultUserIcon
-                        firstNameInitial={user.firstName[0]}
-                        lastNameInitial={user.lastName[0]}
-                        size="40px"
-                      />
-                    )}
-                  </IconButton>
-                </StyledLink>
-                <StyledLink path="feed">
-                  <IconButton
-                    sx={{ color: text }}
-                    onClick={() => setIsComponentVisible(false)}
-                  >
-                    <DynamicFeedOutlined sx={{ fontSize: "25px" }} />
-                  </IconButton>
-                </StyledLink>
-                <StyledLink path={`/profile/${user._id}`}>
-                  <IconButton
-                    sx={{ color: text }}
-                    onClick={() => setIsComponentVisible(false)}
-                  >
-                    <PostAdd sx={{ fontSize: "25px" }} />
-                  </IconButton>
-                </StyledLink>
-                <StyledLink path="/friends">
-                  <IconButton
-                    sx={{ color: text }}
-                    onClick={() => setIsComponentVisible(false)}
-                  >
-                    <PeopleOutlineOutlined sx={{ fontSize: "25px" }} />
-                  </IconButton>
-                </StyledLink>
-                <StyledLink path="/search">
-                  <IconButton
-                    sx={{ color: text }}
-                    onClick={() => setIsComponentVisible(false)}
-                  >
-                    <PersonSearchOutlined sx={{ fontSize: "25px" }} />
-                  </IconButton>
-                </StyledLink>
-              </>
-            )}
-            <IconButton
-              onClick={() => dispatch(setMode())}
-              sx={{ color: text, fontSize: "25px" }}
+            {/* CLOSE ICON */}
+
+            {
+              <Box display="flex" justifyContent="center" mt="1.4rem">
+                <IconButton
+                  onClick={() => {
+                    setIsComponentVisible(!isComponentVisible);
+                  }}
+                  sx={{ color: text }}
+                >
+                  <Close />
+                </IconButton>
+              </Box>
+            }
+
+            {/* MENU ITEMS */}
+            <FlexBetween
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              gap="2.5rem"
+              mt="2rem"
             >
-              {palette.mode === "dark" ? (
-                <DarkMode sx={{ fontSize: "25px" }} />
-              ) : (
-                <LightMode sx={{ fontSize: "25px" }} />
+              {isAuth && (
+                <>
+                  <StyledLink path="/user">
+                    <IconButton
+                      onClick={() => setIsComponentVisible(false)}
+                      style={{ backgroundColor: "transparent" }}
+                    >
+                      {user.picturePath ? (
+                        <UserImage
+                          loading={isUserLoading}
+                          image={user.picturePath}
+                          size="40px"
+                        />
+                      ) : (
+                        <DefaultUserIcon
+                          firstNameInitial={user.firstName[0]}
+                          lastNameInitial={user.lastName[0]}
+                          size="40px"
+                        />
+                      )}
+                    </IconButton>
+                  </StyledLink>
+                  <StyledLink path="feed">
+                    <IconButton
+                      sx={{ color: text }}
+                      onClick={() => setIsComponentVisible(false)}
+                    >
+                      <DynamicFeedOutlined sx={{ fontSize: "25px" }} />
+                    </IconButton>
+                  </StyledLink>
+                  <StyledLink path={`/profile/${user._id}`}>
+                    <IconButton
+                      sx={{ color: text }}
+                      onClick={() => setIsComponentVisible(false)}
+                    >
+                      <PostAdd sx={{ fontSize: "25px" }} />
+                    </IconButton>
+                  </StyledLink>
+                  <StyledLink path="/friends">
+                    <IconButton
+                      sx={{ color: text }}
+                      onClick={() => setIsComponentVisible(false)}
+                    >
+                      <PeopleOutlineOutlined sx={{ fontSize: "25px" }} />
+                    </IconButton>
+                  </StyledLink>
+                  <StyledLink path="/search">
+                    <IconButton
+                      sx={{ color: text }}
+                      onClick={() => setIsComponentVisible(false)}
+                    >
+                      <PersonSearchOutlined sx={{ fontSize: "25px" }} />
+                    </IconButton>
+                  </StyledLink>
+                </>
               )}
-            </IconButton>
-            {isAuth && (
-              <IconButton sx={{ color: text }} onClick={handleLogout}>
-                <LogoutOutlined sx={{ fontSize: "25px" }} />
+              <IconButton
+                onClick={() => dispatch(setMode())}
+                sx={{ color: text, fontSize: "25px" }}
+              >
+                {palette.mode === "dark" ? (
+                  <DarkMode sx={{ fontSize: "25px" }} />
+                ) : (
+                  <LightMode sx={{ fontSize: "25px" }} />
+                )}
               </IconButton>
-            )}
-          </FlexBetween>
+              {isAuth && (
+                <IconButton sx={{ color: text }} onClick={handleLogout}>
+                  <LogoutOutlined sx={{ fontSize: "25px" }} />
+                </IconButton>
+              )}
+            </FlexBetween>
+          </Box>
         </Box>
       )}
     </FlexBetween>

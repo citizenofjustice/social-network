@@ -51,11 +51,6 @@ const FriendListWidget = ({ slideСapacity = 4 }) => {
     setIdx((prevIdx) => prevIdx + change);
   };
 
-  // handle slider pages decreacse if user removes a friend
-  const handleSlidesDecrease = () => {
-    setIdx((prevIdx) => prevIdx - 1);
-  };
-
   // display an error message if fetching failed
   if (isError) {
     dispatch(
@@ -65,6 +60,11 @@ const FriendListWidget = ({ slideСapacity = 4 }) => {
         type: "error",
       })
     );
+  }
+
+  // if amount of slides is equal to current slide index, decrease slide index by 1
+  if (data && idx !== 0 && Math.ceil(data.length / slideСapacity) === idx) {
+    setIdx((prevIdx) => prevIdx - 1);
   }
 
   return (
@@ -83,7 +83,6 @@ const FriendListWidget = ({ slideСapacity = 4 }) => {
                 data={data}
                 chunkSize={slideСapacity}
                 idx={idx}
-                onSlidesDecrease={handleSlidesDecrease}
               />
             </Slider>
           ) : (
