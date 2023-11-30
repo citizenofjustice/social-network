@@ -13,6 +13,7 @@ import UserImage from "components/UserImage";
 import { addCommentToPost, removeCommentFromPost } from "API";
 import StyledLink from "./StyledLink";
 import DefaultUserIcon from "./DefaultUserIcon";
+import FlexBetween from "./FlexBetween";
 
 const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
   const [commentText, setCommentText] = useState("");
@@ -55,7 +56,7 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
             <Box key={comment._id}>
               <Divider sx={{ margin: "1rem 0" }} />
 
-              <Box display="flex" justifyContent="space-between">
+              <FlexBetween>
                 <Box
                   display="flex"
                   justifyContent="flex-start"
@@ -133,7 +134,7 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
                     </IconButton>
                   </Box>
                 )}
-              </Box>
+              </FlexBetween>
             </Box>
           ))}
           <Divider sx={{ margin: "0.75rem 0" }} />

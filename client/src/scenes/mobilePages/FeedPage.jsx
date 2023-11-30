@@ -1,10 +1,11 @@
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import FeedWidget from "scenes/widgets/FeedWidget";
 
 const FeedPage = () => {
+  const isMobile = useMediaQuery("(max-width: 425px)");
   return (
     <Box display="flex" justifyContent="center">
-      <Box flexBasis="80%" mt="2rem">
+      <Box flexBasis={isMobile ? "90%" : "65%"} mt="2rem">
         <FeedWidget />
       </Box>
     </Box>

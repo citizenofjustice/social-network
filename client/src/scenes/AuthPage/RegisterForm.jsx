@@ -15,6 +15,7 @@ import { showMessage } from "state/uiSlice";
 import { useDispatch } from "react-redux";
 import CustomButton from "components/CustomButton";
 import FileInputField from "components/FileInputField";
+import FlexCentered from "components/FlexCenterd";
 
 // schema validation for registration
 const registerSchema = yup.object().shape({
@@ -210,7 +211,7 @@ const RegisterForm = ({ onAuthModeChange }) => {
               sx={{ gridColumn: "span 4" }}
             />
           </Box>
-          <Box m="1.5rem 0" display="flex" justifyContent="center">
+          <FlexCentered m="1.5rem 0">
             <CustomButton
               buttonType="submit"
               width="10rem"
@@ -219,7 +220,7 @@ const RegisterForm = ({ onAuthModeChange }) => {
             >
               REGISTER
             </CustomButton>
-          </Box>
+          </FlexCentered>
           <Typography
             onClick={() => {
               handleAuthModeChange();

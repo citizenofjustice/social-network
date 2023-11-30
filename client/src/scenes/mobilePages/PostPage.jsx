@@ -5,6 +5,7 @@ import { fetchСertainPost } from "API";
 import PostWidget from "scenes/widgets/PostWidget";
 import { useLocation } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
+import FlexCentered from "components/FlexCenterd";
 
 const PostPage = () => {
   const token = useSelector((state) => state.auth.token);
@@ -32,19 +33,13 @@ const PostPage = () => {
   if (!postData) return <CircularProgress />;
   if (postData === 404)
     return (
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        height="80vh"
-        fontSize="1.75rem"
-      >
+      <FlexCentered height="80vh" fontSize="1.75rem">
         Page does not exist
-      </Box>
+      </FlexCentered>
     );
 
   return (
-    <Box width="100%" p="2rem 6%">
+    <Box width="100%" p="2rem 6% 0">
       <PostWidget
         postId={postData._id}
         postUserId={postData.user._id}

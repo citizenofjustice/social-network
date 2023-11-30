@@ -1,19 +1,17 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
+import FlexCentered from "components/FlexCenterd";
 import SearchBar from "components/SearchBar";
 import WidgetWrapper from "components/WidgetWrapper";
 
 const SearchPage = () => {
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const isMobile = useMediaQuery("(max-width: 425px)");
 
   return (
-    <Box
-      width="100%"
-      p="2rem 6%"
-      display={isNonMobileScreens ? "flex" : "block"}
-      gap="0.5rem"
-      justifyContent="space-between"
-    >
-      <WidgetWrapper sx={{ padding: "1.5rem" }}>
+    <FlexCentered pt="2rem">
+      <WidgetWrapper
+        flexBasis={isMobile ? "90%" : "60%"}
+        sx={{ padding: "1.5rem" }}
+      >
         <SearchBar
           width="100%"
           style={{
@@ -23,7 +21,7 @@ const SearchPage = () => {
           }}
         />
       </WidgetWrapper>
-    </Box>
+    </FlexCentered>
   );
 };
 

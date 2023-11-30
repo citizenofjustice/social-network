@@ -32,6 +32,8 @@ import { patchFriend } from "API";
 import { setFriends } from "state/authSlice";
 import StyledLink from "components/StyledLink";
 import DefaultUserIcon from "components/DefaultUserIcon";
+import FlexCentered from "components/FlexCenterd";
+import FlexEvenly from "components/FlexEvenly";
 
 const UserWidget = ({ viewedUserData }) => {
   const dispatch = useDispatch();
@@ -290,21 +292,8 @@ const UserWidget = ({ viewedUserData }) => {
         <Divider />
 
         {/* SECOND ROW */}
-        <Box
-          display="flex"
-          flexWrap="wrap"
-          justifyContent="space-evenly"
-          p="0.25rem 0"
-          mb="0.5rem"
-          sx={{ width: "100%" }}
-        >
-          <Box
-            display="flex"
-            alignItems="center"
-            gap="1rem"
-            paddingRight="1rem"
-            marginTop="0.5rem"
-          >
+        <FlexEvenly p="0.25rem 0" mb="0.5rem" sx={{ width: "100%" }}>
+          <FlexCentered gap="1rem" paddingRight="1rem" marginTop="0.5rem">
             <LocationOnOutlined fontSize="large" sx={{ color: text }} />
             {isProfileBeingEdited ? (
               <InputBase
@@ -330,14 +319,8 @@ const UserWidget = ({ viewedUserData }) => {
                 </SkeletonLoad>
               </Typography>
             )}
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            gap="1rem"
-            marginTop="0.5rem"
-            paddingRight="1rem"
-          >
+          </FlexCentered>
+          <FlexCentered gap="1rem" marginTop="0.5rem" paddingRight="1rem">
             <WorkOutlineOutlined fontSize="large" sx={{ color: text }} />
             {isProfileBeingEdited ? (
               <InputBase
@@ -363,20 +346,15 @@ const UserWidget = ({ viewedUserData }) => {
                 </SkeletonLoad>
               </Typography>
             )}
-          </Box>
-        </Box>
+          </FlexCentered>
+        </FlexEvenly>
 
         <Divider />
 
         {isOneself && (
           <>
             {/* THIRD ROW */}
-            <Box
-              display="flex"
-              flexWrap="wrap"
-              justifyContent="space-evenly"
-              p="0.5rem 0"
-            >
+            <FlexEvenly p="0.5rem 0">
               <FlexBetween padding="0.5rem">
                 <Typography color={text} mr="0.5rem">
                   Who's viewed your profile
@@ -402,7 +380,7 @@ const UserWidget = ({ viewedUserData }) => {
                   </SkeletonLoad>
                 </Typography>
               </FlexBetween>
-            </Box>
+            </FlexEvenly>
 
             <Divider />
           </>

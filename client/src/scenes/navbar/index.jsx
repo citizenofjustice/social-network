@@ -27,6 +27,7 @@ import useComponentVisible from "hooks/useComponentVisible";
 import NavbarDropdown from "components/NavbarDropdown";
 import StyledLink from "components/StyledLink";
 import DefaultUserIcon from "components/DefaultUserIcon";
+import FlexCentered from "components/FlexCenterd";
 
 const Navbar = () => {
   const isAuth = Boolean(useSelector((state) => state.auth.token));
@@ -184,14 +185,7 @@ const Navbar = () => {
             }
 
             {/* MENU ITEMS */}
-            <FlexBetween
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-              gap="2.5rem"
-              mt="2rem"
-            >
+            <FlexCentered flexDirection="column" gap="2.5rem" mt="2rem">
               {isAuth && (
                 <>
                   <StyledLink path="/user">
@@ -263,7 +257,7 @@ const Navbar = () => {
                   <LogoutOutlined sx={{ fontSize: "25px" }} />
                 </IconButton>
               )}
-            </FlexBetween>
+            </FlexCentered>
           </Box>
         </Box>
       )}

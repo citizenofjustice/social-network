@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 import { Search } from "@mui/icons-material";
-import { Box, IconButton, InputBase, useTheme } from "@mui/material";
+import { IconButton, InputBase, useTheme } from "@mui/material";
 
 import useComponentVisible from "hooks/useComponentVisible";
 import FoundUsersList from "./FoundUsersList";
 import FlexBetween from "components/FlexBetween";
+import FlexCentered from "./FlexCenterd";
 
 /* Searchbar component for finding user by name or an email */
 const SearchBar = ({ width, style }) => {
@@ -42,7 +43,7 @@ const SearchBar = ({ width, style }) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <FlexCentered flexDirection="column">
       <FlexBetween
         width={width}
         backgroundColor={inputsBackground}
@@ -87,7 +88,7 @@ const SearchBar = ({ width, style }) => {
           />
         </FlexBetween>
       )}
-    </Box>
+    </FlexCentered>
   );
 };
 

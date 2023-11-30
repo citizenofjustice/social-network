@@ -16,6 +16,7 @@ import { setLogin } from "state/authSlice";
 import { showMessage } from "state/uiSlice";
 import PasswordTextField from "components/PasswordTextField";
 import CustomButton from "components/CustomButton";
+import FlexCentered from "components/FlexCenterd";
 
 // validation schema for login form
 const loginSchema = yup.object().shape({
@@ -124,7 +125,7 @@ const LoginForm = ({ onAuthModeChange }) => {
               sx={{ gridColumn: "span 4" }}
             />
           </Box>
-          <Box m="1.5rem 0" display="flex" justifyContent="center">
+          <FlexCentered m="1.5rem 0">
             <CustomButton
               buttonType="submit"
               width="10rem"
@@ -133,7 +134,7 @@ const LoginForm = ({ onAuthModeChange }) => {
             >
               LOGIN
             </CustomButton>
-          </Box>
+          </FlexCentered>
           <Typography
             onClick={() => {
               handleAuthModeChange();

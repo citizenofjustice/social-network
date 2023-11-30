@@ -15,6 +15,8 @@ import PasswordTextField from "./PasswordTextField";
 import { showMessage } from "state/uiSlice";
 import WidgetWrapper from "./WidgetWrapper";
 import CustomButton from "./CustomButton";
+import FlexCentered from "./FlexCenterd";
+import FlexEvenly from "./FlexEvenly";
 
 const initialValues = {
   email: "",
@@ -124,7 +126,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
                 Choose what you want to change
               </Typography>
               <FormGroup sx={{}}>
-                <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+                <FlexEvenly>
                   <FormControlLabel
                     control={
                       <Switch
@@ -143,7 +145,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
                     }
                     label="Password"
                   />
-                </Box>
+                </FlexEvenly>
               </FormGroup>
               {isEmailChecked && (
                 <TextField
@@ -199,9 +201,9 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
                 </>
               )}
               {(isEmailChecked || isPasswordChecked) && (
-                <Box display="flex" justifyContent="center">
+                <FlexCentered>
                   <CustomButton buttonType="submit">Save</CustomButton>
-                </Box>
+                </FlexCentered>
               )}
             </Box>
           </form>

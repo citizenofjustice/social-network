@@ -1,8 +1,9 @@
 import { useTheme } from "@emotion/react";
 import { ContentCopy } from "@mui/icons-material";
-import { Box, IconButton, InputBase } from "@mui/material";
+import { IconButton, InputBase } from "@mui/material";
 import { showMessage } from "state/uiSlice";
 import { useDispatch } from "react-redux";
+import FlexCentered from "./FlexCenterd";
 
 const CopyLink = ({ link, onCopy }) => {
   const dispatch = useDispatch();
@@ -36,10 +37,7 @@ const CopyLink = ({ link, onCopy }) => {
   };
 
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-      width="fit-content"
+    <FlexCentered
       backgroundColor={inputsBackground}
       padding="0.5rem"
       borderRadius="0.5rem"
@@ -59,7 +57,7 @@ const CopyLink = ({ link, onCopy }) => {
       <IconButton onClick={handleWriteToClipboard}>
         <ContentCopy />
       </IconButton>
-    </Box>
+    </FlexCentered>
   );
 };
 

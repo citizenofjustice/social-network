@@ -40,7 +40,7 @@ const UserPage = () => {
 
   return (
     <>
-      <Box width="100%" p="2rem 6%" gap="0.5rem" justifyContent="space-between">
+      <Box width="100%" p="2rem 6%" gap="0.5rem">
         <FlexCentered>
           <UserWidget viewedUserData={user} />
         </FlexCentered>
