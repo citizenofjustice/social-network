@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllPosts } from "API";
 import PostWidget from "./PostWidget";
 import { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import WidgetWrapper from "components/WidgetWrapper";
 import CustomCircularLoading from "components/CustomCircularLoading";
 import { useQuery } from "react-query";
 import useLoadNextBatch from "hooks/useLoadNextBatch";
 import { showMessage } from "state/uiSlice";
+import FlexCentered from "components/FlexCenterd";
 
 const FeedWidget = ({ limit = 10 }) => {
   const [posts, setPosts] = useState([]);
@@ -60,9 +61,9 @@ const FeedWidget = ({ limit = 10 }) => {
   if (posts.length === 0 && !isLoading && !isError)
     return (
       <WidgetWrapper>
-        <Box display="flex" justifyContent="center" pb="0.75rem">
+        <FlexCentered pb="0.75rem">
           <Typography fontSize="1rem">Feed currently empty...</Typography>
-        </Box>
+        </FlexCentered>
       </WidgetWrapper>
     );
 
@@ -103,7 +104,7 @@ const FeedWidget = ({ limit = 10 }) => {
         </>
       )}
       {isLoading && <CustomCircularLoading margin="2rem 0 0 0" />}
-      {!isLoading && posts && <div ref={ref}></div>}
+      {!isLoading && posts && <div style={{ height: "5px" }} ref={ref}></div>}
     </>
   );
 };

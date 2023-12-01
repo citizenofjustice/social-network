@@ -7,10 +7,10 @@ const HomePage = () => {
   return (
     <Box
       width="100%"
-      p="2rem 6%"
+      p="2rem 2rem 0 "
       display="flex"
-      gap="0.5rem"
-      justifyContent="space-between"
+      gap="1.5rem"
+      justifyContent="center"
       alignItems="flex-start"
     >
       {isNonMobileScreens && (

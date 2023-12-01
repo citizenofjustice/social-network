@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   TextField,
   useMediaQuery,
   Typography,
@@ -9,15 +8,14 @@ import {
 import { Formik } from "formik";
 import { useMutation } from "react-query";
 import * as yup from "yup";
-import Dropzone from "react-dropzone";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 import { registerUser } from "API";
-import FlexBetween from "components/FlexBetween";
 import PasswordTextField from "components/PasswordTextField";
 import { showMessage } from "state/uiSlice";
 import { useDispatch } from "react-redux";
-import CustomCircularLoading from "components/CustomCircularLoading";
+import CustomButton from "components/CustomButton";
+import FileInputField from "components/FileInputField";
+import FlexCentered from "components/FlexCenterd";
 
 // schema validation for registration
 const registerSchema = yup.object().shape({
@@ -32,6 +30,16 @@ const registerSchema = yup.object().shape({
     .test("fileSize", "File size too large, max file size is 10 Mb", (file) =>
       file ? file.size <= 10485760 : true
     ), // cannot exceed 10 MB file size
+  filename: yup
+    .string()
+    .test(
+      "fileSize",
+      "File size too large, max file size is 10 Mb",
+      function () {
+        if (!this.parent.avatar) return true;
+        return this.parent.avatar.size <= 10485760;
+      }
+    ),
 });
 
 // initial values for registration
@@ -43,6 +51,7 @@ const initialValues = {
   location: "",
   occupation: "",
   avatar: "",
+  filename: "",
 };
 
 const RegisterForm = ({ onAuthModeChange }) => {
@@ -50,10 +59,7 @@ const RegisterForm = ({ onAuthModeChange }) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
 
   const { palette } = useTheme();
-  const primary = palette.primary.main;
-  const alt = palette.background.alt;
-  const medium = palette.neutral.medium;
-  const light = palette.primary.light;
+  const { controls, hoveredControls } = palette.custom;
 
   // calling useMutation hook for registering user
   const mutation = useMutation({
@@ -88,7 +94,7 @@ const RegisterForm = ({ onAuthModeChange }) => {
   // handle form submission
   const handleFormSubmit = (values) => {
     const formData = new FormData();
-    // add input data into FormData
+    // // add input data into FormData
     for (let value in values) {
       if (values[value] !== "") formData.append(value, values[value]); // exclude empty fields from formData
     }
@@ -98,14 +104,6 @@ const RegisterForm = ({ onAuthModeChange }) => {
   // lifting the state up (change of auth page mode)
   const handleAuthModeChange = () => {
     onAuthModeChange();
-  };
-
-  // handle button click event while request already pending
-  const handleButtonDisable = (e) => {
-    if (mutation.isLoading) {
-      e.preventDefault();
-      return;
-    }
   };
 
   return (
@@ -122,6 +120,7 @@ const RegisterForm = ({ onAuthModeChange }) => {
         handleChange,
         handleSubmit,
         setFieldValue,
+        setFieldTouched,
         resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
@@ -177,43 +176,19 @@ const RegisterForm = ({ onAuthModeChange }) => {
               helperText={touched.occupation && errors.occupation}
               sx={{ gridColumn: "span 4" }}
             />
-            <Box
-              gridColumn="span 4"
-              border={`1px solid ${medium}`}
-              borderRadius="5px"
-              p="1rem"
-            >
-              <Dropzone
-                acceptedFiles=".jpg,.jpeg,.png"
-                multiple={false}
-                onDrop={(acceptedFiles) =>
-                  setFieldValue("avatar", acceptedFiles[0])
-                }
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <Box
-                    {...getRootProps()}
-                    border={`2px dashed ${primary}`}
-                    p="1rem"
-                    sx={{
-                      "&:hover": {
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
-                    <input {...getInputProps()} />
-                    {!values.avatar ? (
-                      <p>Add Picture Here</p>
-                    ) : (
-                      <FlexBetween>
-                        <Typography>{values.avatar.name}</Typography>
-                        <EditOutlinedIcon />
-                      </FlexBetween>
-                    )}
-                  </Box>
-                )}
-              </Dropzone>
-            </Box>
+            <FileInputField
+              wrapperStyle={{ gridColumn: "span 4" }}
+              fileFieldName="avatar"
+              fileValues={values.avatar}
+              filenameValues={values.filename}
+              errors={errors.filename}
+              formikProps={{
+                handleBlur,
+                handleChange,
+                setFieldValue,
+                setFieldTouched,
+              }}
+            />
             <TextField
               label="Email"
               onBlur={handleBlur}
@@ -236,31 +211,16 @@ const RegisterForm = ({ onAuthModeChange }) => {
               sx={{ gridColumn: "span 4" }}
             />
           </Box>
-          <Box m="1.5rem 0" display="flex" justifyContent="center">
-            <Button
-              type="submit"
-              sx={{
-                width: "10rem",
-                height: "2.5rem",
-                backgroundColor: primary,
-                color: alt,
-                "&:hover": { color: primary },
-              }}
-              onClick={handleButtonDisable}
+          <FlexCentered m="1.5rem 0">
+            <CustomButton
+              buttonType="submit"
+              width="10rem"
+              inAction={mutation.isLoading}
+              actionPrompt="Registration..."
             >
-              {mutation.isLoading ? (
-                <CustomCircularLoading
-                  margin="0"
-                  size="1rem"
-                  color={alt}
-                  promptText="Registration..."
-                  promptDirectionColumn={false}
-                />
-              ) : (
-                "REGISTER"
-              )}
-            </Button>
-          </Box>
+              REGISTER
+            </CustomButton>
+          </FlexCentered>
           <Typography
             onClick={() => {
               handleAuthModeChange();
@@ -269,10 +229,10 @@ const RegisterForm = ({ onAuthModeChange }) => {
             sx={{
               textDecoration: "underline",
               textAlign: "center",
-              color: primary,
+              color: controls,
               "&:hover": {
                 cursor: "pointer",
-                color: light,
+                color: hoveredControls,
               },
             }}
           >

@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 import { Search } from "@mui/icons-material";
-import { Box, IconButton, InputBase, useTheme } from "@mui/material";
+import { IconButton, InputBase, useTheme } from "@mui/material";
 
 import useComponentVisible from "hooks/useComponentVisible";
 import FoundUsersList from "./FoundUsersList";
 import FlexBetween from "components/FlexBetween";
+import FlexCentered from "./FlexCenterd";
 
 /* Searchbar component for finding user by name or an email */
 const SearchBar = ({ width, style }) => {
@@ -16,8 +17,8 @@ const SearchBar = ({ width, style }) => {
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
-  const theme = useTheme();
-  const neutralLight = theme.palette.neutral.light;
+  const { palette } = useTheme();
+  const { background, inputsBackground } = palette.custom;
 
   // handle search without delay (on enter key or search icon press)
   const handleInstantSearch = () => {
@@ -42,10 +43,10 @@ const SearchBar = ({ width, style }) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <FlexCentered flexDirection="column">
       <FlexBetween
         width={width}
-        backgroundColor={neutralLight}
+        backgroundColor={inputsBackground}
         borderRadius="0.5rem"
         p="0.1rem 1.5rem"
       >
@@ -66,7 +67,7 @@ const SearchBar = ({ width, style }) => {
       </FlexBetween>
       {isComponentVisible && (
         <FlexBetween
-          backgroundColor={neutralLight}
+          backgroundColor={background}
           gap="1rem"
           p="1rem 1.5rem"
           borderRadius="0.5rem"
@@ -76,6 +77,8 @@ const SearchBar = ({ width, style }) => {
             boxShadow: style.boxShadow,
             position: style.position,
             top: style.top,
+            maxHeight: "32rem",
+            overflow: "hidden",
           }}
           ref={ref}
         >
@@ -85,7 +88,7 @@ const SearchBar = ({ width, style }) => {
           />
         </FlexBetween>
       )}
-    </Box>
+    </FlexCentered>
   );
 };
 

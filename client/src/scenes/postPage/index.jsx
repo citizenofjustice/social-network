@@ -1,13 +1,14 @@
 import { Box } from "@mui/material";
+import FlexCentered from "components/FlexCenterd";
 import PostPage from "scenes/mobilePages/PostPage";
 
 const PostPageDesktop = () => {
   return (
-    <Box display="flex" justifyContent="center">
+    <FlexCentered>
       <Box width="60vw">
         <PostPage />
       </Box>
-    </Box>
+    </FlexCentered>
   );
 };
 

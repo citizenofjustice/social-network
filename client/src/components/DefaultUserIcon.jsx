@@ -1,4 +1,5 @@
-import { Box, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
+import FlexCentered from "./FlexCenterd";
 
 const DefaultUserIcon = ({
   firstNameInitial,
@@ -7,22 +8,20 @@ const DefaultUserIcon = ({
   fontSize = "1rem",
 }) => {
   const { palette } = useTheme();
-  const mainColor = palette.primary.main;
+  const { controls, shadow } = palette.custom;
 
   return (
-    <Box
-      backgroundColor={mainColor}
+    <FlexCentered
+      backgroundColor={controls}
       width={size}
       height={size}
       borderRadius="50%"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
       textTransform="uppercase"
       fontSize={fontSize}
+      border={`1px solid ${shadow}`}
     >
       {firstNameInitial + lastNameInitial}
-    </Box>
+    </FlexCentered>
   );
 };
 

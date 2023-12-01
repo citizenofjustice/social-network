@@ -15,6 +15,7 @@ import {
   IconButton,
   InputBase,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
@@ -31,9 +32,10 @@ import { patchFriend } from "API";
 import { setFriends } from "state/authSlice";
 import StyledLink from "components/StyledLink";
 import DefaultUserIcon from "components/DefaultUserIcon";
+import FlexCentered from "components/FlexCenterd";
+import FlexEvenly from "components/FlexEvenly";
 
 const UserWidget = ({ viewedUserData }) => {
-  const { palette } = useTheme();
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
@@ -45,6 +47,7 @@ const UserWidget = ({ viewedUserData }) => {
       } else return false;
     })
   );
+  const isMobile = useMediaQuery("(max-width: 375px)");
 
   const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
   const [firstNameChange, setFirstNameChange] = useState(
@@ -66,12 +69,15 @@ const UserWidget = ({ viewedUserData }) => {
     /^\/profile\/.*$/.test(routerLocation.pathname) ||
     /^\/user/.test(routerLocation.pathname);
 
-  const dark = palette.neutral.dark;
-  const medium = palette.neutral.medium;
-  const light = palette.neutral.light;
-  const main = palette.neutral.main;
-  const primaryDark = palette.primary.dark;
-  const primaryLight = palette.primary.light;
+  const { palette } = useTheme();
+  const {
+    text,
+    largeText,
+    controls,
+    controlsText,
+    hoveredControls,
+    inputsBackground,
+  } = palette.custom;
 
   if (!viewedUserData) return null;
   const {
@@ -165,7 +171,7 @@ const UserWidget = ({ viewedUserData }) => {
               >
                 <InputBase
                   sx={{
-                    backgroundColor: light,
+                    backgroundColor: inputsBackground,
                     padding: "0.25rem 0.5rem",
                     borderRadius: "0.5rem",
                   }}
@@ -176,7 +182,7 @@ const UserWidget = ({ viewedUserData }) => {
                 />
                 <InputBase
                   sx={{
-                    backgroundColor: light,
+                    backgroundColor: inputsBackground,
                     padding: "0.25rem 0.5rem",
                     borderRadius: "0.5rem",
                   }}
@@ -189,7 +195,7 @@ const UserWidget = ({ viewedUserData }) => {
             </>
           ) : (
             <StyledLink path={`/profile/${_id}`}>
-              <FlexBetween gap="1rem" sx={{ width: "100%" }}>
+              <FlexBetween gap="0.5rem" sx={{ width: "100%" }}>
                 <Box>
                   {picturePath ? (
                     <UserImage image={picturePath} loading={isUserLoading} />
@@ -204,19 +210,20 @@ const UserWidget = ({ viewedUserData }) => {
                 <Box sx={{ width: "100%", padding: "0.5rem" }}>
                   <SkeletonLoad loading={isUserLoading} count={2}>
                     <Typography
-                      variant="h4"
-                      color={dark}
+                      variant={isMobile ? "h5" : "h4"}
+                      color={largeText}
                       fontWeight="500"
                       sx={{
+                        wordBreak: isMobile ? "break-word" : "normal",
                         "&:hover": {
-                          color: primaryDark,
+                          color: controls,
                           cursor: "pointer",
                         },
                       }}
                     >
                       {firstName} {lastName}
                     </Typography>
-                    <Typography color={medium}>
+                    <Typography color={text}>
                       {`${friends.length} ${
                         friends.length === 1 ? "friend" : "friends"
                       }`}
@@ -231,7 +238,10 @@ const UserWidget = ({ viewedUserData }) => {
               {isOneself ? (
                 <Box display="grid" gridTemplateColumns="1fr" rowGap="0.5rem">
                   {isProfileBeingEdited && (
-                    <IconButton onClick={handleProfileEditCancelation}>
+                    <IconButton
+                      sx={{ color: text }}
+                      onClick={handleProfileEditCancelation}
+                    >
                       <BackspaceOutlined />
                     </IconButton>
                   )}
@@ -243,12 +253,16 @@ const UserWidget = ({ viewedUserData }) => {
                         borderRadius: "50%",
                         padding: "0.5rem",
                         minWidth: "fit-content",
+                        color: text,
                       }}
                     >
                       <SaveOutlined />
                     </Button>
                   ) : (
-                    <IconButton onClick={() => setIsProfileBeingEdited(true)}>
+                    <IconButton
+                      sx={{ color: text }}
+                      onClick={() => setIsProfileBeingEdited(true)}
+                    >
                       <ManageAccountsOutlined />
                     </IconButton>
                   )}
@@ -257,14 +271,17 @@ const UserWidget = ({ viewedUserData }) => {
                 <IconButton
                   onClick={() => updateFriend()}
                   sx={{
-                    backgroundColor: primaryLight,
                     p: "0.6rem",
+                    backgroundColor: controls,
+                    "&:hover": {
+                      backgroundColor: hoveredControls,
+                    },
                   }}
                 >
                   {isFriend ? (
-                    <PersonRemoveOutlined sx={{ color: primaryDark }} />
+                    <PersonRemoveOutlined sx={{ color: controlsText }} />
                   ) : (
-                    <PersonAddOutlined sx={{ color: primaryDark }} />
+                    <PersonAddOutlined sx={{ color: controlsText }} />
                   )}
                 </IconButton>
               )}
@@ -275,27 +292,14 @@ const UserWidget = ({ viewedUserData }) => {
         <Divider />
 
         {/* SECOND ROW */}
-        <Box
-          display="flex"
-          flexWrap="wrap"
-          justifyContent="space-evenly"
-          p="0.25rem 0"
-          mb="0.5rem"
-          sx={{ width: "100%" }}
-        >
-          <Box
-            display="flex"
-            alignItems="center"
-            gap="1rem"
-            paddingRight="1rem"
-            marginTop="0.5rem"
-          >
-            <LocationOnOutlined fontSize="large" sx={{ color: main }} />
+        <FlexEvenly p="0.25rem 0" mb="0.5rem" sx={{ width: "100%" }}>
+          <FlexCentered gap="1rem" paddingRight="1rem" marginTop="0.5rem">
+            <LocationOnOutlined fontSize="large" sx={{ color: text }} />
             {isProfileBeingEdited ? (
               <InputBase
                 sx={{
                   width: "100%",
-                  backgroundColor: light,
+                  backgroundColor: inputsBackground,
                   padding: "0.25rem 0.5rem",
                   borderRadius: "0.5rem",
                 }}
@@ -306,7 +310,7 @@ const UserWidget = ({ viewedUserData }) => {
               />
             ) : (
               <Typography
-                color={medium}
+                color={text}
                 textAlign="center"
                 sx={{ width: "100%" }}
               >
@@ -315,20 +319,14 @@ const UserWidget = ({ viewedUserData }) => {
                 </SkeletonLoad>
               </Typography>
             )}
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            gap="1rem"
-            marginTop="0.5rem"
-            paddingRight="1rem"
-          >
-            <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
+          </FlexCentered>
+          <FlexCentered gap="1rem" marginTop="0.5rem" paddingRight="1rem">
+            <WorkOutlineOutlined fontSize="large" sx={{ color: text }} />
             {isProfileBeingEdited ? (
               <InputBase
                 sx={{
                   width: "100%",
-                  backgroundColor: light,
+                  backgroundColor: inputsBackground,
                   padding: "0.25rem 0.5rem",
                   borderRadius: "0.5rem",
                 }}
@@ -339,7 +337,7 @@ const UserWidget = ({ viewedUserData }) => {
               />
             ) : (
               <Typography
-                color={medium}
+                color={text}
                 textAlign="center"
                 sx={{ width: "100%" }}
               >
@@ -348,26 +346,21 @@ const UserWidget = ({ viewedUserData }) => {
                 </SkeletonLoad>
               </Typography>
             )}
-          </Box>
-        </Box>
+          </FlexCentered>
+        </FlexEvenly>
 
         <Divider />
 
         {isOneself && (
           <>
             {/* THIRD ROW */}
-            <Box
-              display="flex"
-              flexWrap="wrap"
-              justifyContent="space-evenly"
-              p="0.5rem 0"
-            >
+            <FlexEvenly p="0.5rem 0">
               <FlexBetween padding="0.5rem">
-                <Typography color={medium} mr="0.5rem">
+                <Typography color={text} mr="0.5rem">
                   Who's viewed your profile
                 </Typography>
                 <Typography
-                  color={main}
+                  color={text}
                   fontWeight="500"
                   width="2rem"
                   textAlign="right"
@@ -378,16 +371,16 @@ const UserWidget = ({ viewedUserData }) => {
                 </Typography>
               </FlexBetween>
               <FlexBetween padding="0.5rem">
-                <Typography color={medium} mr="0.5rem">
+                <Typography color={text} mr="0.5rem">
                   Impressions of your post
                 </Typography>
-                <Typography color={main} fontWeight="500" textAlign="right">
+                <Typography color={text} fontWeight="500" textAlign="right">
                   <SkeletonLoad loading={isUserLoading} width="2rem" count={1}>
                     {impressions}
                   </SkeletonLoad>
                 </Typography>
               </FlexBetween>
-            </Box>
+            </FlexEvenly>
 
             <Divider />
           </>

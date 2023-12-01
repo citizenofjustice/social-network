@@ -48,13 +48,13 @@ const SocialNetworks = ({
   socials,
   onProfilesChange,
 }) => {
-  const { palette } = useTheme();
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [profileLink, setProfileLink] = useState("");
   const [isProfileInputsActive, setIsProfileInputsActive] = useState(false);
   const [userProfiles, setUserProfiles] = useState([]);
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
+
+  const { palette } = useTheme();
+  const { text } = palette.custom;
 
   const handleProfileInputsActivation = () => {
     setIsProfileInputsActive((prevState) => !prevState);
@@ -114,8 +114,8 @@ const SocialNetworks = ({
   }, [isProfileBeingEdited]);
 
   return (
-    <Box p="1rem 0 0">
-      <Typography fontSize="1rem" color={main} fontWeight="500">
+    <Box p="1rem 0 0" color={text}>
+      <Typography fontSize="1rem" fontWeight="500">
         Social Profiles
       </Typography>
       {userProfiles.length === 0 && !isUserLoading && (
@@ -130,21 +130,19 @@ const SocialNetworks = ({
               href={profile.link}
               target="_blank"
               rel="noreferrer"
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none", color: "inherit" }}
             >
               <FlexBetween gap="1rem">
-                <FontAwesomeIcon icon={profile.icon} color={main} size="xl" />
+                <FontAwesomeIcon icon={profile.icon} size="xl" />
                 <Box>
-                  <Typography color={main} fontWeight="500">
-                    {profile.title}
-                  </Typography>
-                  <Typography color={medium}>{profile.description}</Typography>
+                  <Typography fontWeight="500">{profile.title}</Typography>
+                  <Typography>{profile.description}</Typography>
                 </Box>
               </FlexBetween>
             </a>
             {isProfileBeingEdited && isOneself && (
               <IconButton onClick={() => handleProfileRemoval(profile.title)}>
-                <Delete sx={{ color: main }} />
+                <Delete sx={{ color: text }} />
               </IconButton>
             )}
           </FlexBetween>
@@ -177,11 +175,14 @@ const SocialNetworks = ({
                   {allowedNetworks.map((network, index) => (
                     <MenuItem key={index} value={network.title}>
                       <FontAwesomeIcon
+                        color={text}
                         icon={network.icon}
-                        color={main}
                         size="xl"
+                        width="2.5rem"
                       />
-                      <Typography p="0 0.5rem">{network.title}</Typography>
+                      <Typography color={text} p="0 0.5rem">
+                        {network.title}
+                      </Typography>
                     </MenuItem>
                   ))}
                 </Select>
@@ -201,18 +202,24 @@ const SocialNetworks = ({
           )}
           <Box paddingTop="0.5rem" display="flex" justifyContent="center">
             {isProfileInputsActive && (
-              <IconButton onClick={clearProfileInputs}>
+              <IconButton sx={{ color: text }} onClick={clearProfileInputs}>
                 <CancelOutlined />
               </IconButton>
             )}
             {isProfileInputsActive ? (
               <>
-                <IconButton onClick={handleProfileAddition}>
+                <IconButton
+                  sx={{ color: text }}
+                  onClick={handleProfileAddition}
+                >
                   <BookmarkBorderOutlined />
                 </IconButton>
               </>
             ) : (
-              <IconButton onClick={handleProfileInputsActivation}>
+              <IconButton
+                sx={{ color: text }}
+                onClick={handleProfileInputsActivation}
+              >
                 <AddCircleOutline />
               </IconButton>
             )}

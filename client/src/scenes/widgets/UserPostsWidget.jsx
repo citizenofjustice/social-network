@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import PostWidget from "./PostWidget";
 import WidgetWrapper from "components/WidgetWrapper";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import { fetchUserPosts } from "API";
@@ -67,11 +67,9 @@ const UserPostsWidget = ({ userId, limit = 10 }) => {
     return (
       <WidgetWrapper marginTop="1rem">
         <Box display="flex" justifyContent="center" pb="0.75rem">
-          <Typography fontSize="1rem">
-            {loggedInUserId === userId
-              ? "You have not made post yet, try adding one..."
-              : "User have not made post yet..."}
-          </Typography>
+          {loggedInUserId === userId
+            ? "You have not made post yet, try adding one..."
+            : "User have not made post yet..."}
         </Box>
       </WidgetWrapper>
     );
