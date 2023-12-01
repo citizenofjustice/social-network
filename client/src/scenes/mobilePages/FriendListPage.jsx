@@ -1,23 +1,17 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useSelector } from "react-redux";
+import FlexCentered from "components/FlexCenterd";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 
 const FriendListPage = () => {
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-  const userId = useSelector((state) => state.auth.user._id);
+  const isMobile = useMediaQuery("(max-width: 425px)");
+  const friendsPerPage = 7; // setting how much friends fits into one slider page
 
   return (
-    <Box
-      width="100%"
-      p="2rem 6%"
-      display={isNonMobileScreens ? "flex" : "block"}
-      gap="0.5rem"
-      justifyContent="space-between"
-    >
-      <Box flexBasis="26%">
-        <FriendListWidget userId={userId} />
+    <FlexCentered pt="2rem">
+      <Box flexBasis={isMobile ? "90%" : "60%"}>
+        <FriendListWidget slideСapacity={friendsPerPage} />
       </Box>
-    </Box>
+    </FlexCentered>
   );
 };
 

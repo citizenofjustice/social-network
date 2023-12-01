@@ -18,6 +18,7 @@ import { upload } from "./middleware/multer.js";
 import { storage } from "./config/firebase.config.js";
 import sharp from "sharp";
 import imageSize from "image-size";
+import crypto from "crypto";
 
 /* CONFIGURATION */
 const __filename = fileURLToPath(import.meta.url);

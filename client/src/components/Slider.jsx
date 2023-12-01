@@ -23,7 +23,7 @@ const Slider = ({
   const lastSlideIndex = Math.ceil(itemsCounter / chunkSize) - 1; // calculate index of the last slide
 
   const { palette } = useTheme();
-  const dark = palette.neutral.dark;
+  const { largeText } = palette.custom;
 
   // transition to previous slide
   const previousSlide = () => {
@@ -46,7 +46,7 @@ const Slider = ({
   return (
     <>
       <FlexBetween>
-        <Typography color={dark} variant="h5" fontWeight="500">
+        <Typography color={largeText} variant="h5" fontWeight="500">
           {title}
         </Typography>
         {lastSlideIndex > 0 && ( // slider controls only display if slide amount is more than one

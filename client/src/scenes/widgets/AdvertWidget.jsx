@@ -5,17 +5,15 @@ import WidgetWrapper from "components/WidgetWrapper";
 
 const AdvertWidget = () => {
   const { palette } = useTheme();
-  const dark = palette.neutral.dark;
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
+  const { largeText, text, lightText, controls } = palette.custom;
 
   return (
     <WidgetWrapper>
       <FlexBetween>
-        <Typography color={dark} variant="h5" fontWeight="500">
+        <Typography color={largeText} variant="h5" fontWeight="500">
           Sponsored
         </Typography>
-        <Typography color={medium}>Create Ad</Typography>
+        <Typography color={lightText}>Create Ad</Typography>
       </FlexBetween>
       <LazyImage
         image={{
@@ -36,10 +34,20 @@ const AdvertWidget = () => {
         }}
       />
       <FlexBetween>
-        <Typography color={main}>NY Coffe</Typography>
-        <Typography color={medium}>ny-coffe.com</Typography>
+        <Typography color={text}>NY Coffe</Typography>
+        <Typography
+          color={text}
+          sx={{
+            "&:hover": {
+              color: controls,
+              cursor: "pointer",
+            },
+          }}
+        >
+          ny-coffe.com
+        </Typography>
       </FlexBetween>
-      <Typography color={medium} m="0.5rem 0">
+      <Typography color={lightText} m="0.5rem 0">
         Are you looking for a place to relax, enjoy, and savor the best coffee
         in town? Look no further than NYcoffe coffee house, the ultimate
         destination for coffee lovers!

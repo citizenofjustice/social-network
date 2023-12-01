@@ -7,7 +7,13 @@ import {
   BorderColor,
   Delete,
 } from "@mui/icons-material";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -20,6 +26,7 @@ import CommentsList from "components/CommentsList";
 import LazyImage from "components/LazyImage";
 import CopyLink from "components/CopyLink";
 import useComponentVisible from "hooks/useComponentVisible";
+import FlexCentered from "components/FlexCenterd";
 
 const PostWidget = ({
   postId,
@@ -49,6 +56,7 @@ const PostWidget = ({
   const likesCount = Object.keys(postLikes).length;
   const isLiked = Boolean(postLikes[loggedInUserId]);
   const isMyPost = postUserId === loggedInUserId;
+  const isMobile = useMediaQuery("(max-width: 375px");
 
   const { timezone, locale } = useSelector((state) => state.ui.dateTimeFormat);
   const postCreateDate = new Date(createdAt).toLocaleString(locale, {
@@ -56,9 +64,7 @@ const PostWidget = ({
   });
 
   const { palette } = useTheme();
-  const main = palette.neutral.main;
-  const primary = palette.primary.main;
-  const medium = palette.neutral.medium;
+  const { text, lightText } = palette.custom;
 
   const postDropdownMenuItems = [
     {
@@ -95,6 +101,8 @@ const PostWidget = ({
     setIsComponentVisible(state);
   };
 
+  const postDate = postCreateDate.split(" ");
+
   return (
     <WidgetWrapper mb="2rem" position="relative">
       <Box display="flex">
@@ -104,7 +112,7 @@ const PostWidget = ({
           lastName={lastName}
           subtitle={location}
           userPicturePath={userPicturePath}
-          style={{ flexBasis: "100%", marginRight: "1rem" }}
+          style={{ flexBasis: "100%", marginRight: "0.5rem" }}
         />
         {
           <Box
@@ -139,7 +147,7 @@ const PostWidget = ({
           <CopyLink link={shareLink} onCopy={handleCopyIconClick} />
         </Box>
       )}
-      <Typography color={main} sx={{ m: "0.5rem 0", whiteSpace: "pre-line" }}>
+      <Typography color={text} sx={{ m: "0.5rem 0", whiteSpace: "pre-line" }}>
         <SkeletonLoad>{description}</SkeletonLoad>
       </Typography>
       {picturePath && (
@@ -159,13 +167,17 @@ const PostWidget = ({
       )}
 
       <FlexBetween mt="0.25rem">
-        <FlexBetween gap="1rem">
+        <FlexCentered gap="1rem">
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={patchLike}>
+            <IconButton sx={{ color: text }} onClick={patchLike}>
               {isLiked ? (
-                <FavoriteOutlined sx={{ color: primary }} />
+                <FavoriteOutlined
+                  sx={{ fontSize: isMobile ? "1rem" : "1.5rem" }}
+                />
               ) : (
-                <FavoriteBorderOutlined />
+                <FavoriteBorderOutlined
+                  sx={{ fontSize: isMobile ? "1rem" : "1.5rem" }}
+                />
               )}
             </IconButton>
             <Typography>{likesCount}</Typography>
@@ -173,22 +185,52 @@ const PostWidget = ({
 
           <FlexBetween gap="0.3rem">
             <IconButton onClick={() => setIsCommentsShown(!isCommentsShown)}>
-              <ChatBubbleOutlineOutlined />
+              <ChatBubbleOutlineOutlined
+                sx={{ fontSize: isMobile ? "1rem" : "1.5rem" }}
+              />
             </IconButton>
             <Typography>{commentsCounter}</Typography>
           </FlexBetween>
-        </FlexBetween>
+        </FlexCentered>
 
         <FlexBetween>
           {isEdited && (
-            <EditOutlined sx={{ color: medium }} fontSize="0.4rem" />
+            <EditOutlined
+              sx={{ color: text, marginRight: "0.25rem" }}
+              fontSize="0.4rem"
+            />
           )}
-          <Typography
-            color={main}
-            sx={{ fontSize: "0.65rem", color: medium, pl: "0.25rem" }}
-          >
-            {postCreateDate}
-          </Typography>
+          <Box>
+            {isMobile ? (
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize: "0.65rem",
+                    color: lightText,
+                  }}
+                >
+                  {postDate[0]}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "0.65rem",
+                    color: lightText,
+                  }}
+                >
+                  {postDate[1]}
+                </Typography>
+              </Box>
+            ) : (
+              <Typography
+                sx={{
+                  fontSize: "0.65rem",
+                  color: lightText,
+                }}
+              >
+                {postCreateDate}
+              </Typography>
+            )}
+          </Box>
         </FlexBetween>
       </FlexBetween>
 

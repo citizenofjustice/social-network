@@ -17,11 +17,6 @@ const FriendListSlide = ({ data, chunkSize, idx, onSlidesDecrease }) => {
     return resultArray;
   }, []);
 
-  // if amount of slides is equal to current slide index, decrease slide index by 1
-  if (slides?.length === idx) {
-    onSlidesDecrease();
-  }
-
   return (
     <>
       {slides.length > 0 &&

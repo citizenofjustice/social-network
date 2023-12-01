@@ -6,8 +6,8 @@ import DropdownMenuItem from "components/DropdownMenuItem";
 const DropdownMenu = ({ postId, menuItems, onShareLink }) => {
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
-  const theme = useTheme();
-  const neutralLight = theme.palette.neutral.light;
+  const { palette } = useTheme();
+  const { inputsBackground } = palette.custom;
 
   const handleShareLink = (shareData) => {
     onShareLink(shareData);
@@ -22,7 +22,7 @@ const DropdownMenu = ({ postId, menuItems, onShareLink }) => {
         {isComponentVisible && (
           <Box
             sx={{
-              backgroundColor: neutralLight,
+              backgroundColor: inputsBackground,
               borderRadius: "0.5rem",
               padding: "0.5rem 1rem",
               display: "flex",

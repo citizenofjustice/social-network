@@ -13,6 +13,7 @@ import UserImage from "components/UserImage";
 import { addCommentToPost, removeCommentFromPost } from "API";
 import StyledLink from "./StyledLink";
 import DefaultUserIcon from "./DefaultUserIcon";
+import FlexBetween from "./FlexBetween";
 
 const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
   const [commentText, setCommentText] = useState("");
@@ -23,9 +24,7 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
   const { timezone, locale } = useSelector((state) => state.ui.dateTimeFormat);
 
   const { palette } = useTheme();
-  const light = palette.neutral.light;
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
+  const { largeText, text, inputsBackground } = palette.custom;
 
   const handleComment = async () => {
     if (commentText.length === 0) return;
@@ -57,7 +56,7 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
             <Box key={comment._id}>
               <Divider sx={{ margin: "1rem 0" }} />
 
-              <Box display="flex" justifyContent="space-between">
+              <FlexBetween>
                 <Box
                   display="flex"
                   justifyContent="flex-start"
@@ -82,17 +81,23 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
                         display="flex"
                         flexDirection="column"
                         justifyContent="center"
-                        backgroundColor={light}
+                        backgroundColor={inputsBackground}
                         padding="0.5rem 0.5rem"
                         borderRadius="10px"
                         width="fit-content"
                         height="45px"
                         ml="0.5rem"
                       >
-                        <Typography fontSize="0.8rem">
+                        <Typography
+                          sx={{
+                            fontSize: "0.8rem",
+                            fontWeight: "500",
+                            color: largeText,
+                          }}
+                        >
                           {`${comment.author.firstName} ${comment.author.lastName}`}
                         </Typography>
-                        <Typography sx={{ fontSize: "0.65rem", color: medium }}>
+                        <Typography sx={{ fontSize: "0.65rem", color: text }}>
                           {new Date(comment.createdAt).toLocaleString(locale, {
                             timezone,
                             year: "numeric",
@@ -106,7 +111,7 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
                     </StyledLink>
                     <Typography
                       sx={{
-                        color: main,
+                        color: text,
                         m: "0.5rem 0",
                         p: "0.25rem 0.25rem 0 ",
                         whiteSpace: "pre-line",
@@ -123,13 +128,13 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
                     >
                       <Delete
                         sx={{
-                          color: medium,
+                          color: text,
                         }}
                       />
                     </IconButton>
                   </Box>
                 )}
-              </Box>
+              </FlexBetween>
             </Box>
           ))}
           <Divider sx={{ margin: "0.75rem 0" }} />
@@ -137,7 +142,7 @@ const CommentsList = ({ postId, comments, isShown, onCounterChange }) => {
             display="flex"
             padding="0.5rem 0 0.5rem 0.75rem"
             borderRadius="0.5rem"
-            backgroundColor={palette.neutral.light}
+            backgroundColor={inputsBackground}
           >
             <InputBase
               placeholder="What's on your mind..."

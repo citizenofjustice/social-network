@@ -53,37 +53,49 @@ export const createPost = async (req, res) => {
 /* READ */
 export const getFeedPosts = async (req, res) => {
   try {
-    const { id, limit, pageNum } = req.params;
-    const totalPostCount = await Post.find({ user: { $ne: id } })
+    const { id, limit, timestamp, pageNum } = req.params;
+    const totalPostCount = await Post.find({
+      user: { $ne: id },
+      createdAt: { $lte: timestamp },
+    })
       .sort({ createdAt: -1 })
       .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
-    const postsPage = await Post.find({ user: { $ne: id } })
+    const postsPage = await Post.find({
+      user: { $ne: id },
+      createdAt: { $lte: timestamp },
+    })
       .populate(postPopulateQuery)
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
       .limit(limit);
     res.status(200).json({ pagesCount, postsPage });
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(404).json(err);
   }
 };
 
 export const getUserPosts = async (req, res) => {
   try {
-    const { userId, limit, pageNum } = req.params;
-    const totalPostCount = await Post.find({ user: userId })
+    const { userId, timestamp, limit, pageNum } = req.params;
+    const totalPostCount = await Post.find({
+      user: userId,
+      createdAt: { $lte: timestamp },
+    })
       .sort({ createdAt: -1 })
       .count();
     const pagesCount = Math.ceil(totalPostCount / parseInt(limit));
-    const postsPage = await Post.find({ user: userId })
+    const postsPage = await Post.find({
+      user: userId,
+      createdAt: { $lte: timestamp },
+    })
       .populate(postPopulateQuery)
       .sort({ createdAt: -1 })
       .skip(pageNum > 0 ? (pageNum - 1) * limit : 0)
       .limit(limit);
     res.status(200).json({ pagesCount, postsPage });
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(404).json(err);
   }
 };
 

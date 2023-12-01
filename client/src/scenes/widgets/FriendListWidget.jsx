@@ -11,7 +11,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import FriendListSlide from "components/FriendListSlide";
 import CustomCircularLoading from "components/CustomCircularLoading";
 
-const FriendListWidget = () => {
+const FriendListWidget = ({ slideСapacity = 4 }) => {
   const dispatch = useDispatch();
   const { userId } = useParams(); // getting userId form router if exist
   const [idx, setIdx] = useState(0); // declaring state for tracking slider pages
@@ -20,11 +20,10 @@ const FriendListWidget = () => {
   const loggedInUserId = useSelector((state) => state.auth.user._id); // authenticated user id
   const isOneself = loggedInUserId === userId; // checking if current page belongs to authenticated user
   const currentUserId = !!userId ? userId : loggedInUserId;
-  const slideСapacity = 4; // setting how much friends fits into one slider page
   const widgetTitle = "Friend List";
 
   const { palette } = useTheme();
-  const dark = palette.neutral.dark;
+  const { largeText } = palette.custom;
 
   // using query hook for fetching friends of user & getting loading and error states
   const { isLoading, isError, data } = useQuery({
@@ -43,17 +42,13 @@ const FriendListWidget = () => {
       const userFriends = await response.json();
       return Promise.all(userFriends);
     },
+    refetchOnWindowFocus: false,
     enabled: !!currentUserId, // disabling query in case of a lack of id parameter
   });
 
   // handle slider page change
   const handleIndexChange = (change) => {
     setIdx((prevIdx) => prevIdx + change);
-  };
-
-  // handle slider pages decreacse if user removes a friend
-  const handleSlidesDecrease = () => {
-    setIdx((prevIdx) => prevIdx - 1);
   };
 
   // display an error message if fetching failed
@@ -65,6 +60,11 @@ const FriendListWidget = () => {
         type: "error",
       })
     );
+  }
+
+  // if amount of slides is equal to current slide index, decrease slide index by 1
+  if (data && idx !== 0 && Math.ceil(data.length / slideСapacity) === idx) {
+    setIdx((prevIdx) => prevIdx - 1);
   }
 
   return (
@@ -83,12 +83,11 @@ const FriendListWidget = () => {
                 data={data}
                 chunkSize={slideСapacity}
                 idx={idx}
-                onSlidesDecrease={handleSlidesDecrease}
               />
             </Slider>
           ) : (
             <Box>
-              <Typography color={dark} variant="h5" fontWeight="500">
+              <Typography color={largeText} variant="h5" fontWeight="500">
                 {widgetTitle}
               </Typography>
               {`${isOneself ? "You" : "User"} haven't added any friends.`}
@@ -99,7 +98,7 @@ const FriendListWidget = () => {
         </>
       ) : (
         <>
-          <Typography color={dark} variant="h5" fontWeight="500">
+          <Typography color={largeText} variant="h5" fontWeight="500">
             {widgetTitle}
           </Typography>
           {isLoading && <CustomCircularLoading />}

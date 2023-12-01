@@ -1,12 +1,10 @@
 import {
   Box,
-  Button,
   FormControlLabel,
   FormGroup,
   Switch,
   TextField,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -15,6 +13,10 @@ import { changeAuthData } from "API";
 import { useDispatch, useSelector } from "react-redux";
 import PasswordTextField from "./PasswordTextField";
 import { showMessage } from "state/uiSlice";
+import WidgetWrapper from "./WidgetWrapper";
+import CustomButton from "./CustomButton";
+import FlexCentered from "./FlexCenterd";
+import FlexEvenly from "./FlexEvenly";
 
 const initialValues = {
   email: "",
@@ -26,7 +28,6 @@ const initialValues = {
 const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isPasswordChecked, setIsPasswordChecked] = useState(false);
-  const { palette } = useTheme();
   const dispatch = useDispatch();
 
   const getCharacterValidationError = (str) => {
@@ -92,7 +93,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
   };
 
   return (
-    <Box ref={refProp}>
+    <WidgetWrapper ref={refProp}>
       <Formik
         onSubmit={handleAuthDataChange}
         initialValues={initialValues}
@@ -109,9 +110,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
           <form onSubmit={handleSubmit}>
             <Box
               sx={{
-                backgroundColor: palette.background.alt,
-                padding: "1rem 2rem",
-                borderRadius: "0.5rem",
+                padding: "0.5rem 2rem",
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
@@ -127,7 +126,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
                 Choose what you want to change
               </Typography>
               <FormGroup sx={{}}>
-                <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+                <FlexEvenly>
                   <FormControlLabel
                     control={
                       <Switch
@@ -146,7 +145,7 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
                     }
                     label="Password"
                   />
-                </Box>
+                </FlexEvenly>
               </FormGroup>
               {isEmailChecked && (
                 <TextField
@@ -202,26 +201,15 @@ const AuthDataChangeForm = ({ refProp, onChangeSuccess }) => {
                 </>
               )}
               {(isEmailChecked || isPasswordChecked) && (
-                <Box>
-                  <Button
-                    type="submit"
-                    sx={{
-                      display: "block",
-                      margin: "0 auto",
-                      backgroundColor: palette.primary.main,
-                      color: palette.background.alt,
-                      "&:hover": { color: palette.primary.main },
-                    }}
-                  >
-                    Save
-                  </Button>
-                </Box>
+                <FlexCentered>
+                  <CustomButton buttonType="submit">Save</CustomButton>
+                </FlexCentered>
               )}
             </Box>
           </form>
         )}
       </Formik>
-    </Box>
+    </WidgetWrapper>
   );
 };
 

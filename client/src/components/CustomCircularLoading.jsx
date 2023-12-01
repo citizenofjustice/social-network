@@ -3,7 +3,6 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 const CustomCircularLoading = ({
   margin,
   size,
-  color,
   promptText,
   promptDirectionColumn = true,
 }) => {
@@ -16,8 +15,8 @@ const CustomCircularLoading = ({
       flexDirection={promptDirectionColumn ? "column" : "row"}
       margin={margin}
     >
-      <CircularProgress size={size} style={{ color: color }} />
-      {promptText && <Typography color={color}>{promptText}</Typography>}
+      <CircularProgress size={size} color="inherit" />
+      {promptText && <Typography>{promptText}</Typography>}
     </Box>
   );
 };

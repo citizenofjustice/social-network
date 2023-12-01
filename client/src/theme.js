@@ -1,32 +1,11 @@
 // color design tokens export
 export const colorTokens = {
-  grey: {
-    0: "#FFFFFF",
-    10: "#F6F6F6",
-    50: "#F0F0F0",
-    100: "#E0E0E0",
-    200: "#C2C2C2",
-    300: "#A3A3A3",
-    400: "#858585",
-    500: "#666666",
-    600: "#4D4D4D",
-    700: "#333333",
-    800: "#1A1A1A",
-    900: "#0A0A0A",
-    1000: "#000000",
-  },
-  primary: {
-    50: "#E6FBFF",
-    100: "#CCF7FE",
-    200: "#99EEFD",
-    300: "#66E6FC",
-    400: "#33DDFB",
-    500: "#00D5FA",
-    600: "#00A0BC",
-    700: "#006B7D",
-    800: "#00353F",
-    900: "#001519",
-  },
+  // primary: {
+  //   // main: "#81ACD6",
+  //   ligth: "#e3f2fd",
+  //   main: "#90caf9",
+  //   dark: "#42a5f5",
+  // },
 };
 
 // mui theme settings
@@ -36,41 +15,47 @@ export const themeSettings = (mode) => {
       mode: mode,
       ...(mode === "dark"
         ? {
-            // palette values for dark mode
+            custom: {
+              // palette values for dark mode
+              body: "#151515",
+              background: "#3B3B3B",
+              text: "#E9E9E9",
+              largeText: "#FFFFFF",
+              themedLargeText: "#25B0B8",
+              hoveredThemedLargeText: "#4FC8CE",
+              controls: "#50A4A9",
+              controlsText: "#FFFFFF",
+              hoveredControls: "#158288",
+              placeholderBackground: "#087F87",
+              shadow: "#C8C8C8",
+              inputsBackground: "#676767",
+              lightText: "#B2B2B2",
+              sidemenuShadow: "#2C2C2C",
+            },
             primary: {
-              dark: colorTokens.primary[200],
-              main: colorTokens.primary[500],
-              light: colorTokens.primary[800],
-            },
-            neutral: {
-              dark: colorTokens.grey[100],
-              main: colorTokens.grey[200],
-              mediumMain: colorTokens.grey[300],
-              medium: colorTokens.grey[400],
-              light: colorTokens.grey[700],
-            },
-            background: {
-              default: colorTokens.grey[900],
-              alt: colorTokens.grey[800],
+              main: "#50A4A9",
             },
           }
         : {
-            // palette values for light mode
+            custom: {
+              // palette values for light mode
+              body: "#CDCDCD",
+              background: "#F8F8F8",
+              text: "#595959",
+              largeText: "#333333",
+              themedLargeText: "#64cbd0",
+              hoveredThemedLargeText: "#52b0b5",
+              controls: "#50A4A9",
+              controlsText: "#FFFFFF",
+              hoveredControls: "#158288",
+              placeholderBackground: "#087F87",
+              shadow: "#9B9B9B",
+              inputsBackground: "#DBDBDB",
+              lightText: "#989898",
+              sidemenuShadow: "#C2C2C2",
+            },
             primary: {
-              dark: colorTokens.primary[700],
-              main: colorTokens.primary[500],
-              light: colorTokens.primary[50],
-            },
-            neutral: {
-              dark: colorTokens.grey[700],
-              main: colorTokens.grey[500],
-              mediumMain: colorTokens.grey[400],
-              medium: colorTokens.grey[300],
-              light: colorTokens.grey[50],
-            },
-            background: {
-              default: colorTokens.grey[10],
-              alt: colorTokens.grey[0],
+              main: "#50A4A9",
             },
           }),
     },

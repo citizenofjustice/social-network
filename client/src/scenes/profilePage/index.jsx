@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
-import PostsWidget from "scenes/widgets/PostsWidget";
+import UserPostsWidget from "scenes/widgets/UserPostsWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
 import UserWidget from "scenes/widgets/UserWidget";
 import { fetchUser } from "API";
@@ -18,7 +18,7 @@ const ProfilePage = () => {
   const isOneself = userId === _id;
 
   const { palette } = useTheme();
-  const background = palette.background.default;
+  const { body } = palette.custom;
 
   const getUserData = useCallback(
     async (signal) => {
@@ -44,7 +44,7 @@ const ProfilePage = () => {
         display: isNonMobileScreens ? "flex" : "block",
         width: "100%",
         padding: "0rem 6%",
-        gap: "2rem",
+        gap: "1.5rem",
         justifyContent: "center",
         alignItems: "flex-start",
       }}
@@ -58,10 +58,9 @@ const ProfilePage = () => {
             paddingTop: "2rem",
             marginBottom: "2rem",
           }}
-          minWidth="300px"
         >
           <UserWidget viewedUserData={user} />
-          <Box m="2rem 0" />
+          <Box m="1.5rem 0" />
           <FriendListWidget />
         </Box>
       )}
@@ -76,7 +75,7 @@ const ProfilePage = () => {
               top: "0",
               zIndex: "10",
               padding: "2rem 0 0",
-              backgroundColor: background,
+              background: body,
             }}
           >
             <MyPostWidget
@@ -94,7 +93,7 @@ const ProfilePage = () => {
             marginTop: isOneself ? 0 : "2rem",
           }}
         >
-          <PostsWidget userId={userId} isProfile />
+          <UserPostsWidget userId={userId} />
         </Box>
       </Box>
     </Box>
