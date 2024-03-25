@@ -3,7 +3,7 @@ import path from "path";
 
 function checkFileType(file, cb) {
   // Allowed ext
-  const fileTypes = /jpeg|jpg|png/;
+  const fileTypes = /jpeg|jpg|webp|avif|png/;
   // Check ext
   const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
   // Check mime
@@ -12,7 +12,7 @@ function checkFileType(file, cb) {
   if (mimeType && extName) {
     return cb(null, true);
   } else {
-    cb("Error: Images Only !!!");
+    cb("Error: Allowed only .jpeg, .jpg, .webp, .avif, .png formats");
   }
 }
 

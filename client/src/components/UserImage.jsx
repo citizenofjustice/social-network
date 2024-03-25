@@ -19,7 +19,7 @@ const UserImage = ({ image, size = "60px", loading }) => {
         width={size}
         height={size}
         alt="user"
-        src={image.sourceUrl}
+        src={image.placeholderUrl}
       />
     </Box>
   );

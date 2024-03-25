@@ -13,6 +13,12 @@ const LazyImage = ({ image }) => {
         style={image.style}
         effect="blur"
         placeholderSrc={image.placeholderSrc}
+        wrapperProps={{
+          style: {
+            width: "100%",
+            height: "100%",
+          },
+        }}
       />
     </Box>
   );

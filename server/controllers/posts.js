@@ -1,6 +1,6 @@
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
-import { uploadPictureAndGetUrl } from "../index.js";
+import { uploadPictureAndGetUrl } from "../utils/imageUpload.js";
 
 const postPopulateQuery = [
   { path: "user", select: "firstName lastName location picturePath" },

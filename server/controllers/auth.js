@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import { uploadPictureAndGetUrl } from "../index.js";
+import { uploadPictureAndGetUrl } from "../utils/imageUpload.js";
 
 /* REGISTER USER */
 export const register = async (req, res) => {
