@@ -89,6 +89,7 @@ const UserPostsWidget = ({ userId, limit = 10 }) => {
               likes,
               comments,
               isEdited,
+              aspectRatio,
             }) => (
               <PostWidget
                 key={_id}
@@ -105,6 +106,7 @@ const UserPostsWidget = ({ userId, limit = 10 }) => {
                 likes={likes}
                 comments={comments}
                 isEdited={isEdited}
+                aspectRatio={aspectRatio}
               />
             )
           )}

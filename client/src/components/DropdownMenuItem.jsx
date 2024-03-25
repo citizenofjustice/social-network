@@ -26,7 +26,6 @@ const DropdownMenuItem = ({ menuItem, postId, onShare }) => {
     if (menuItem.type === "SHARE") {
       const shareLink = `${window.location.origin}/post/?id=${postId}`;
       onShare({ state: true, link: shareLink });
-      console.log(shareLink);
     }
   };
 
