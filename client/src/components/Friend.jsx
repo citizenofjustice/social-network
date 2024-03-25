@@ -29,7 +29,7 @@ const Friend = ({
   const { lightText, largeText, controls, controlsText, hoveredControls } =
     palette.custom;
 
-  const isFriend = friends.find((friend) => friend._id === friendId);
+  const isFriend = friends.includes(friendId);
 
   const updateFriend = async () => {
     const friendsData = await patchFriend(_id, friendId, token);
