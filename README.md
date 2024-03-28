@@ -11,3 +11,42 @@ A full-stack social-network pet-project built with [![Static Badge](https://img.
   - **Lazy loading of images:** Optimizing initial load times with lazy loading of images not present in the viewport.
   - **Redux/Redux-toolkit state management:** Allows for dynamic state changes across the app without prop drilling.
   - **Light/Dark mode:** User able to choose a preferred color scheme. Colors were picked with [figma-polychrom](https://github.com/evilmartians/figma-polychrom).
+
+## Tech
+  - [React](https://react.dev)
+  - [MongoDB](https://www.mongodb.com)
+  - [Node.js](https://nodejs.org)
+  - [Express.js](https://expressjs.com)
+  - [Mongoose](https://mongoosejs.com)
+  - [Redux/Redux-toolkit](https://redux.js.org)
+  - [Material UI](https://mui.com/material-ui/)
+  - [Firebase-Storage](https://firebase.google.com)
+  - [Vercel](https://vercel.com)
+
+## Environment Variables
+  To run this project, you will need to add the following environment variables to your .env files in both client and server directories.
+
+#### client/.env
+  ```
+  # Your server url (for development mode use http://localhost:PORT/ )
+  REACT_APP_API_URL=https://your-site.com/
+  ```
+
+#### server/.env
+  ```
+  # Database connection string (need to set user, password, cluster)
+  MONGO_URL=mongodb+srv://myDatabaseUser:D1fficultP%40ssw0rd@cluster0.example.mongodb.net/?retryWrites=true&w=majority
+  # Set your JWT secret string
+  JWT_SECRET=...
+  # Set port for running server
+  PORT=...
+
+  # Firebase config data
+  API_KEY=...
+  AUTH_DOMAIN=...
+  PROJECT_ID=...
+  STORAGE_BUCKET=...
+  MESSAGING_SENDER_ID=...
+  APP_ID=...
+  MEASUREMENT_ID=...
+  ```
