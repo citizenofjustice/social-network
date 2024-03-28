@@ -5,13 +5,8 @@ import { CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "theme";
 import { setDateTimeFormat } from "state/uiSlice";
-import SearchPage from "scenes/mobilePages/SearchPage";
-import FriendListPage from "scenes/mobilePages/FriendListPage";
-import FeedPage from "scenes/mobilePages/FeedPage";
-import UserPage from "scenes/mobilePages/UserPage";
 import Layout from "components/Layout";
 import ProtectedRoutes from "components/ProtectedRoutes";
-import PostPage from "scenes/mobilePages/PostPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import CustomCircularLoading from "components/CustomCircularLoading";
 
@@ -19,6 +14,11 @@ const HomePage = lazy(() => import("scenes/homePage"));
 const AuthPage = lazy(() => import("scenes/AuthPage"));
 const ProfilePage = lazy(() => import("scenes/profilePage"));
 const PostPageDesktop = lazy(() => import("scenes/postPage"));
+const SearchPage = lazy(() => import("scenes/mobilePages/SearchPage"));
+const FriendListPage = lazy(() => import("scenes/mobilePages/FriendListPage"));
+const FeedPage = lazy(() => import("scenes/mobilePages/FeedPage"));
+const UserPage = lazy(() => import("scenes/mobilePages/UserPage"));
+const PostPage = lazy(() => import("scenes/mobilePages/PostPage"));
 
 // Create a client
 const queryClient = new QueryClient();

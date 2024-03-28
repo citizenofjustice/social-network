@@ -20,21 +20,20 @@ const Friend = ({
   style,
 }) => {
   const dispatch = useDispatch();
-  const { _id } = useSelector((state) => state.auth.user);
+  const { _id, friends } = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-  const friends = useSelector((state) => state.auth.user.friends);
   const isOneself = _id === friendId;
 
   const { palette } = useTheme();
   const { lightText, largeText, controls, controlsText, hoveredControls } =
     palette.custom;
 
-  const isFriend = friends.includes(friendId);
-
   const updateFriend = async () => {
     const friendsData = await patchFriend(_id, friendId, token);
     dispatch(setFriends({ friends: friendsData }));
   };
+
+  if (!friends) return <SkeletonLoad />;
 
   return (
     <FlexBetween className={className} sx={style}>
@@ -93,7 +92,7 @@ const Friend = ({
             },
           }}
         >
-          {isFriend ? (
+          {friends.find((friend) => friend === friendId) ? (
             <PersonRemoveOutlined sx={{ color: controlsText }} />
           ) : (
             <PersonAddOutlined sx={{ color: controlsText }} />

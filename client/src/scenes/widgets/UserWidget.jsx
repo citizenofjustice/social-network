@@ -40,13 +40,6 @@ const UserWidget = ({ viewedUserData }) => {
   const authUser = useSelector((state) => state.auth.user);
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const token = useSelector((state) => state.auth.token);
-  const [isFriend, setIsFriend] = useState(
-    viewedUserData.friends.find((friend) => {
-      if (friend === authUser._id) {
-        return friend;
-      } else return false;
-    })
-  );
   const isMobile = useMediaQuery("(max-width: 375px)");
 
   const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
@@ -141,7 +134,6 @@ const UserWidget = ({ viewedUserData }) => {
       token
     );
     dispatch(setFriends({ friends: friendsData }));
-    setIsFriend((prevState) => !prevState);
   };
 
   return (
@@ -278,7 +270,7 @@ const UserWidget = ({ viewedUserData }) => {
                     },
                   }}
                 >
-                  {isFriend ? (
+                  {authUser.friends.find((friend) => friend === _id) ? (
                     <PersonRemoveOutlined sx={{ color: controlsText }} />
                   ) : (
                     <PersonAddOutlined sx={{ color: controlsText }} />

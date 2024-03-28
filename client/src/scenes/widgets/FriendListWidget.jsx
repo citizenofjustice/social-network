@@ -27,7 +27,7 @@ const FriendListWidget = ({ slideСapacity = 4 }) => {
 
   // using query hook for fetching friends of user & getting loading and error states
   const { isLoading, isError, data } = useQuery({
-    queryKey: ["friends", currentUserId, friends.length], // dependencies of query (refetch on change of user page or amount of friends)
+    queryKey: ["friends", userId, friends.length], // dependencies of query (refetch on change of user page or amount of friends)
     queryFn: async ({ signal }) => {
       const response = await fetchFriends(
         currentUserId,
