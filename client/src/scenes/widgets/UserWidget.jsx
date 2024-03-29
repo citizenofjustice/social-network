@@ -218,7 +218,7 @@ const UserWidget = ({ viewedUserData }) => {
                     </Typography>
                     <Typography color={text}>
                       {`${friends.length} ${
-                        friends.length === 1 ? "friend" : "friends"
+                        friends.length === 1 ? "subscription" : "subscriptions"
                       }`}
                     </Typography>
                   </SkeletonLoad>

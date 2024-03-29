@@ -142,8 +142,8 @@ export const editPost = async (req, res) => {
       let picturePath;
       let aspectRatio;
       if (!req.file) {
-        picturePath = null;
-        aspectRatio = null;
+        picturePath = post.picturePath;
+        aspectRatio = post.aspectRatio;
       } else {
         const imageData = await uploadPictureAndGetUrl(req.file);
         picturePath = {

@@ -20,7 +20,7 @@ const FriendListWidget = ({ slideСapacity = 4 }) => {
   const loggedInUserId = useSelector((state) => state.auth.user._id); // authenticated user id
   const isOneself = loggedInUserId === userId; // checking if current page belongs to authenticated user
   const currentUserId = !!userId ? userId : loggedInUserId;
-  const widgetTitle = "Friend List";
+  const widgetTitle = "Subscribed to:";
 
   const { palette } = useTheme();
   const { largeText } = palette.custom;
