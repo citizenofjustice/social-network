@@ -13,6 +13,28 @@ A full-stack social-network pet-project built with [![Static Badge](https://img.
 - **Redux/Redux-toolkit state management:** Allows for dynamic state changes across the app without prop drilling.
 - **Light/Dark mode:** User able to choose a preferred color scheme. Colors were picked with [figma-polychrom](https://github.com/evilmartians/figma-polychrom).
 
+## Animated gifs of app
+
+  <details>
+  <summary>Mobile layout</summary>
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            ![mobile](https://github.com/citizenofjustice/social-network/assets/13840466/2bdc4c9b-9f29-483c-9477-679829cdc72d)
+          </td>
+          <td>
+            ![search](https://github.com/citizenofjustice/social-network/assets/13840466/0247d069-1ec0-4e38-a0b1-832aac0b2766)
+          </td>
+          <td>
+            ![theme](https://github.com/citizenofjustice/social-network/assets/13840466/570c5621-b3b7-4ba0-a008-73bce4310c58)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </details>
+
+
 ## Tech
 
 - [React](https://react.dev)
