@@ -20,13 +20,13 @@ A full-stack social-network pet-project built with [![Static Badge](https://img.
       <tbody>
         <tr>
           <td>
-            <img alt="auth and pagination gif" src="https://github.com/citizenofjustice/social-network/assets/13840466/2bdc4c9b-9f29-483c-9477-679829cdc72d" />            
+            <img widht="33.3%" alt="auth and pagination gif" src="https://github.com/citizenofjustice/social-network/assets/13840466/2bdc4c9b-9f29-483c-9477-679829cdc72d" />            
           </td>
           <td>
-            <img alt="search gif" src="https://github.com/citizenofjustice/social-network/assets/13840466/0247d069-1ec0-4e38-a0b1-832aac0b2766" />
+            <img widht="33.3%" alt="search gif" src="https://github.com/citizenofjustice/social-network/assets/13840466/0247d069-1ec0-4e38-a0b1-832aac0b2766" />
           </td>
           <td>
-            <img alt="light/dark mode gif" src="https://github.com/citizenofjustice/social-network/assets/13840466/570c5621-b3b7-4ba0-a008-73bce4310c58" />
+            <img widht="33.3%" alt="light/dark mode gif" src="https://github.com/citizenofjustice/social-network/assets/13840466/570c5621-b3b7-4ba0-a008-73bce4310c58" />
           </td>
         </tr>
       </tbody>
