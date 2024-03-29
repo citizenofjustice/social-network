@@ -38,18 +38,18 @@ A full-stack social-network pet-project built with [![Static Badge](https://img.
     <table>
       <tbody>
         <tr>
-          <td>
-            <img width="1024" alt="desktop auth and posts gif" src="https://github.com/citizenofjustice/social-network/assets/13840466/eb7be634-652d-46af-86c8-f8436414109e" />            
+          <td align="center">
+            <video src="https://github.com/citizenofjustice/social-network/assets/13840466/a50ace91-e5e0-4f10-81cd-40ac2534c8a0"></video>           
           </td>
         </tr>
         <tr>
-          <td>
-            <img width="1024" alt="post addition gif" src="https://github.com/citizenofjustice/social-network/assets/13840466/9c8ef5b8-e5ca-467e-b54a-f6b381422d9a" />            
+          <td align="center">
+            <video src="https://github.com/citizenofjustice/social-network/assets/13840466/c9165b6e-1ac6-45fa-913d-1461caccd9c5"></video>           
           </td>
         </tr>
         <tr>
-          <td>
-            <img width="1024" alt="post update gif gif" src="https://github.com/citizenofjustice/social-network/assets/13840466/d5c214c2-9474-482e-82b8-ba57960a8107" />            
+          <td align="center">
+            <video src="https://github.com/citizenofjustice/social-network/assets/13840466/0272c969-84b8-40d3-8cc3-bd9d7c8caa93"></video>           
           </td>
         </tr>
       </tbody>
