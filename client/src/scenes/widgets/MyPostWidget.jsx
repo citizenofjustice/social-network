@@ -22,10 +22,11 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendPost, editSelectedPost } from "API";
-import { setEditablePost, triggerReloadToggle } from "state/postsSlice";
+import { setEditablePost } from "state/postsSlice";
 import "./MyPostWidget.module.css";
 import DefaultUserIcon from "components/DefaultUserIcon";
 import CustomButton from "components/CustomButton";
+import { useMutation, useQueryClient } from "react-query";
 
 const MyPostWidget = ({
   firstName,
@@ -42,6 +43,7 @@ const MyPostWidget = ({
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const editablePost = useSelector((state) => state.posts.editablePost);
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const { palette } = useTheme();
   const { controls, text, inputsBackground } = palette.custom;
@@ -54,13 +56,7 @@ const MyPostWidget = ({
         (image !== undefined && image !== null)
       ) {
         appendFormInputs(formData);
-        const response = await editSelectedPost(
-          editablePost._id,
-          formData,
-          token,
-          _id
-        );
-        console.log(response);
+        editPostMutation.mutate(formData);
         dispatch(setEditablePost({ editablePost: {} }));
       } else {
         console.log("post has not changed");
@@ -69,11 +65,41 @@ const MyPostWidget = ({
     } else {
       const formData = new FormData();
       appendFormInputs(formData);
-      await sendPost(formData, _id, token);
+      sendPostMutation.mutate(formData);
     }
     clearForm();
-    dispatch(triggerReloadToggle());
   };
+
+  const sendPostMutation = useMutation({
+    mutationFn: async (formData) => {
+      const postData = await sendPost(formData, _id, token);
+      return postData;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: "posts" });
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
+
+  const editPostMutation = useMutation({
+    mutationFn: async (formData) => {
+      const editedPost = await editSelectedPost(
+        editablePost._id,
+        formData,
+        token,
+        _id
+      );
+      return editedPost;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: "posts" });
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
 
   const handleEditCancelation = () => {
     dispatch(setEditablePost({ editablePost: {} }));

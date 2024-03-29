@@ -22,6 +22,7 @@ const HomePageDesktop = ({ isNonMobileScreens }) => {
       <Box
         flexBasis={isNonMobileScreens ? "35%" : undefined}
         mt={isNonMobileScreens ? undefined : "2rem"}
+        mb="1rem"
       >
         <FeedWidget />
       </Box>

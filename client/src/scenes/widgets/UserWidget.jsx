@@ -27,13 +27,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { updateProfileInfo } from "API";
 import { updateUser } from "state/authSlice";
-import { triggerReloadToggle } from "state/postsSlice";
 import { patchFriend } from "API";
 import { setFriends } from "state/authSlice";
 import StyledLink from "components/StyledLink";
 import DefaultUserIcon from "components/DefaultUserIcon";
 import FlexCentered from "components/FlexCenterd";
 import FlexEvenly from "components/FlexEvenly";
+import { useQueryClient } from "react-query";
 
 const UserWidget = ({ viewedUserData }) => {
   const dispatch = useDispatch();
@@ -41,6 +41,7 @@ const UserWidget = ({ viewedUserData }) => {
   const isUserLoading = useSelector((state) => state.auth.isUserLoading);
   const token = useSelector((state) => state.auth.token);
   const isMobile = useMediaQuery("(max-width: 375px)");
+  const queryClient = useQueryClient();
 
   const [isProfileBeingEdited, setIsProfileBeingEdited] = useState(false);
   const [firstNameChange, setFirstNameChange] = useState(
@@ -108,7 +109,7 @@ const UserWidget = ({ viewedUserData }) => {
             user: result,
           })
         );
-      dispatch(triggerReloadToggle());
+      await queryClient.invalidateQueries({ queryKey: "posts" });
       setIsProfileBeingEdited(false);
     }
   };

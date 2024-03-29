@@ -91,6 +91,7 @@ const ProfilePage = () => {
             position: "relative",
             zIndex: "5",
             marginTop: isOneself ? 0 : "2rem",
+            marginBottom: "1rem",
           }}
         >
           <UserPostsWidget userId={userId} />

@@ -3,12 +3,14 @@ import { getEditablePostData, removeSelectedPost } from "API";
 import { Typography, Divider } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { triggerReloadToggle, setEditablePost } from "state/postsSlice";
+import { setEditablePost } from "state/postsSlice";
+import { useQueryClient } from "react-query";
 
 const DropdownMenuItem = ({ menuItem, postId, onShare }) => {
   const token = useSelector((state) => state.auth.token);
   const loggedInUserId = useSelector((state) => state.auth.user._id);
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const handleMenuItemClick = async () => {
     if (menuItem.type === "EDIT") {
@@ -20,8 +22,8 @@ const DropdownMenuItem = ({ menuItem, postId, onShare }) => {
       dispatch(setEditablePost({ editablePost }));
     }
     if (menuItem.type === "REMOVE") {
-      const response = await removeSelectedPost(postId, token, loggedInUserId);
-      if (response.ok) dispatch(triggerReloadToggle());
+      await removeSelectedPost(postId, token, loggedInUserId);
+      await queryClient.invalidateQueries({ queryKey: "posts" });
     }
     if (menuItem.type === "SHARE") {
       const shareLink = `${window.location.origin}/post/?id=${postId}`;

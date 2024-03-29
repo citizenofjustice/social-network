@@ -16,9 +16,6 @@ export const postsSlice = createSlice({
     clearPosts: (state) => {
       state.posts = [];
     },
-    triggerReloadToggle: (state) => {
-      state.reloadToggle = state.reloadToggle ? false : true;
-    },
     setEditablePost: (state, action) => {
       state.editablePost = action.payload.editablePost;
     },
@@ -26,7 +23,6 @@ export const postsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setPosts, clearPosts, triggerReloadToggle, setEditablePost } =
-  postsSlice.actions;
+export const { setPosts, clearPosts, setEditablePost } = postsSlice.actions;
 
 export default postsSlice.reducer;
