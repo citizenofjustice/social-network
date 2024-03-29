@@ -14,6 +14,7 @@ A full-stack social-network pet-project built with [![Static Badge](https://img.
 - **Light/Dark mode:** User able to choose a preferred color scheme. Colors were picked with [figma-polychrom](https://github.com/evilmartians/figma-polychrom).
 
 ## Animated gifs of app
+   ![mobile](https://github.com/citizenofjustice/social-network/assets/13840466/2bdc4c9b-9f29-483c-9477-679829cdc72d)
 
   <details>
   <summary>Mobile layout</summary>
@@ -21,13 +22,13 @@ A full-stack social-network pet-project built with [![Static Badge](https://img.
       <tbody>
         <tr>
           <td>
-            ![mobile](https://github.com/citizenofjustice/social-network/assets/13840466/2bdc4c9b-9f29-483c-9477-679829cdc72d)
+            <img src="https://github.com/citizenofjustice/social-network/assets/13840466/2bdc4c9b-9f29-483c-9477-679829cdc72d" />            
           </td>
           <td>
-            ![search](https://github.com/citizenofjustice/social-network/assets/13840466/0247d069-1ec0-4e38-a0b1-832aac0b2766)
+            <img src="[https://github.com/citizenofjustice/social-network/assets/13840466/2bdc4c9b-9f29-483c-9477-679829cdc72d](https://github.com/citizenofjustice/social-network/assets/13840466/0247d069-1ec0-4e38-a0b1-832aac0b2766)" />
           </td>
           <td>
-            ![theme](https://github.com/citizenofjustice/social-network/assets/13840466/570c5621-b3b7-4ba0-a008-73bce4310c58)
+            <img src="[https://github.com/citizenofjustice/social-network/assets/13840466/2bdc4c9b-9f29-483c-9477-679829cdc72d](https://github.com/citizenofjustice/social-network/assets/13840466/570c5621-b3b7-4ba0-a008-73bce4310c58)" />
           </td>
         </tr>
       </tbody>
